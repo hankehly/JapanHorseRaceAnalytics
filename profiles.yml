@@ -1,0 +1,13 @@
+myprofile:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      method: jdbc
+      url: jdbc:postgresql://localhost:5432/mydatabase
+      user: myuser
+      password: mypassword
+      schema: public
+      database: mydatabase
+      host: localhost
+      port: 5432

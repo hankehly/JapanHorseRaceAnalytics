@@ -1,0 +1,9 @@
+.venv/
+*.csv
+*.txt
+target/
+dbt_packages/
+logs/
+.user.yml
+.ipynb_checkpoints/
+.env
