@@ -1,77 +1,77 @@
 - name: レースキー_場コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 1
   comments: ""
 - name: レースキー_年
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 3
   comments: ""
 - name: レースキー_回
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 5
   comments: ""
 - name: レースキー_日
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: F
   relative: 6
   comments: ""
 - name: レースキー_Ｒ
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 7
   comments: ""
 - name: 馬番
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 9
   comments: ""
 - name: 競走成績キー_血統登録番号
-  occ: ""
+  repeat_factor: 1
   byte_length: 8
   format: X
   relative: 11
   comments: 競走馬データとのリンクに使用
 - name: 競走成績キー_年月日
-  occ: ""
+  repeat_factor: 1
   byte_length: 8
   format: "9"
   relative: 19
   comments: 競走馬データとのリンクに使用 | YYYYMMDD <-暫定版より順序
 - name: 馬名
-  occ: ""
+  repeat_factor: 1
   byte_length: 36
   format: X
   relative: 27
   comments: 全角１８文字 <-入れ替え
 - name: レース条件_距離
-  occ: ""
+  repeat_factor: 1
   byte_length: 4
   format: "9999"
   relative: 63
   comments: ""
 - name: レース条件_トラック情報_芝ダ障害コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 67
   comments: 1:芝, 2:ダート, 3:障害
 - name: レース条件_トラック情報_右左
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 68
   comments: 1:右, 2:左, 3:直, 9:他
 - name: レース条件_トラック情報_内外
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 69
@@ -85,421 +85,421 @@
 
     '
 - name: レース条件_馬場状態
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 70
   comments: ""
 - name: レース条件_種別
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 72
   comments: ４歳以上等、→成績データの説明
 - name: レース条件_条件
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: XX
   relative: 74
   comments: 900万下等、 →成績データの説明
 - name: レース条件_記号
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 76
   comments: ○混等、 →成績データの説明
 - name: レース条件_重量
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 79
   comments: ハンデ等、 →成績データの説明
 - name: レース条件_グレード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 80
   comments: ""
 - name: レース条件_レース名
-  occ: ""
+  repeat_factor: 1
   byte_length: 50
   format: X
   relative: 81
   comments: レース名の通称（全角２５文字）
 - name: レース条件_頭数
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 131
   comments: ""
 - name: レース条件_レース名略称
-  occ: ""
+  repeat_factor: 1
   byte_length: 8
   format: X
   relative: 133
   comments: 全角４文字
 - name: 馬成績_着順
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 141
   comments: ""
 - name: 馬成績_異常区分
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 143
   comments: ""
 - name: 馬成績_タイム
-  occ: ""
+  repeat_factor: 1
   byte_length: 4
   format: "9999"
   relative: 144
   comments: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
 - name: 馬成績_斤量
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 148
   comments: 0.1Kg単位
 - name: 馬成績_騎手名
-  occ: ""
+  repeat_factor: 1
   byte_length: 12
   format: X
   relative: 151
   comments: 全角６文字
 - name: 馬成績_調教師名
-  occ: ""
+  repeat_factor: 1
   byte_length: 12
   format: X
   relative: 163
   comments: 全角６文字
 - name: 馬成績_確定単勝オッズ
-  occ: ""
+  repeat_factor: 1
   byte_length: 6
   format: ZZZ9.9
   relative: 175
   comments: ""
 - name: 馬成績_確定単勝人気順位
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 181
   comments: ""
 - name: ＪＲＤＢデータ_ＩＤＭ
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZ9
   relative: 183
   comments: ""
 - name: ＪＲＤＢデータ_素点
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZ9
   relative: 186
   comments: ""
 - name: ＪＲＤＢデータ_馬場差
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZ9
   relative: 189
   comments: ""
 - name: ＪＲＤＢデータ_ペース
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 192
   comments: ""
 - name: ＪＲＤＢデータ_出遅
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 195
   comments: ""
 - name: ＪＲＤＢデータ_位置取
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 198
   comments: ""
 - name: ＪＲＤＢデータ_不利
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 201
   comments: ""
 - name: ＪＲＤＢデータ_前不利
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 204
   comments: 前３Ｆ内での不利
 - name: ＪＲＤＢデータ_中不利
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 207
   comments: 道中での不利
 - name: ＪＲＤＢデータ_後不利
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 210
   comments: 後３Ｆ内での不利
 - name: ＪＲＤＢデータ_レース
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: ZZZ
   relative: 213
   comments: ""
 - name: ＪＲＤＢデータ_コース取り
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 216
   comments: 1:最内,2:内,3:中,4:外,5:大外
 - name: ＪＲＤＢデータ_上昇度コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 217
   comments: 1:AA, 2:A, 3:B, 4:C, 5:?
 - name: ＪＲＤＢデータ_クラスコード
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 218
   comments: ""
 - name: ＪＲＤＢデータ_馬体コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 220
   comments: ""
 - name: ＪＲＤＢデータ_気配コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 221
   comments: ""
 - name: ＪＲＤＢデータ_レースペース
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: X
   relative: 222
   comments: H:ハイ, M:平均, S:スロー
 - name: ＪＲＤＢデータ_馬ペース
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: X
   relative: 223
   comments: 馬自身のペース(H:M:S)
 - name: ＪＲＤＢデータ_テン指数
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 224
   comments: 前３Ｆタイムを指数化したもの
 - name: ＪＲＤＢデータ_上がり指数
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 229
   comments: 後３Ｆタイムを指数化したもの
 - name: ＪＲＤＢデータ_ペース指数
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 234
   comments: 馬のペースを指数化したもの
 - name: ＪＲＤＢデータ_レースＰ指数
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 239
   comments: レースのペースを指数化したもの
 - name: ＪＲＤＢデータ_1(2)着馬名
-  occ: ""
+  repeat_factor: 1
   byte_length: 12
   format: X
   relative: 244
   comments: 全角６文字
 - name: ＪＲＤＢデータ_1(2)着タイム差
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 256
   comments: 0.1秒単位
 - name: ＪＲＤＢデータ_前３Ｆタイム
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 259
   comments: 0.1秒単位
 - name: ＪＲＤＢデータ_後３Ｆタイム
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 262
   comments: 0.1秒単位
 - name: ＪＲＤＢデータ_備考
-  occ: ""
+  repeat_factor: 1
   byte_length: 24
   format: X
   relative: 265
   comments: 全角１２文字（地方競馬場名等）
 - name: 予備
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: X
   relative: 289
   comments: スペース
 - name: 確定複勝オッズ下
-  occ: ""
+  repeat_factor: 1
   byte_length: 6
   format: ZZZ9.9
   relative: 291
   comments: 最終的な複勝オッズ（下限）
 - name: 10時単勝オッズ
-  occ: ""
+  repeat_factor: 1
   byte_length: 6
   format: ZZZ9.9
   relative: 297
   comments: 10時頃の単勝オッズ
 - name: 10時複勝オッズ
-  occ: ""
+  repeat_factor: 1
   byte_length: 6
   format: ZZZ9.9
   relative: 303
   comments: 10時頃の複勝オッズ
 - name: コーナー順位１
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 309
   comments: ""
 - name: コーナー順位２
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 311
   comments: ""
 - name: コーナー順位３
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 313
   comments: ""
 - name: コーナー順位４
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 315
   comments: ""
 - name: 前３Ｆ先頭差
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "99"
   relative: 317
   comments: 前３Ｆ地点での先頭とのタイム差 (0.1秒単位)
 - name: 後３Ｆ先頭差
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "99"
   relative: 320
   comments: 後３Ｆ地点での先頭とのタイム差 (0.1秒単位)
 - name: 騎手コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: "9"
   relative: 323
   comments: 騎手マスタとリンク
 - name: 調教師コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: "9"
   relative: 328
   comments: 調教師マスタとリンク
 - name: 馬体重
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: "999"
   relative: 333
   comments: データ無:スペース
 - name: 馬体重増減
-  occ: ""
+  repeat_factor: 1
   byte_length: 3
   format: XZ9
   relative: 336
   comments: 符号+数字２桁、データ無:スペース
 - name: 天候コード
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 339
   comments: コード表参照
 - name: コース
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: X
   relative: 340
   comments: 1:A,2:A1,3:A2,4:B,5:C,6:D
 - name: レース脚質
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: X
   relative: 341
   comments: 脚質コード参照
 - name: 払戻データ_単勝
-  occ: ""
+  repeat_factor: 1
   byte_length: 7
   format: ZZZZZZ9
   relative: 342
   comments: 単位（円）
 - name: 払戻データ_複勝
-  occ: ""
+  repeat_factor: 1
   byte_length: 7
   format: ZZZZZZ9
   relative: 349
   comments: 単位（円）
 - name: 本賞金
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZZZ9
   relative: 356
   comments: 単位（万円）
 - name: 収得賞金
-  occ: ""
+  repeat_factor: 1
   byte_length: 5
   format: ZZZZ9
   relative: 361
   comments: 単位（万円）
 - name: レースペース流れ
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 366
   comments: →成績データの説明
 - name: 馬ペース流れ
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 368
   comments: →成績データの説明
 - name: ４角コース取り
-  occ: ""
+  repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 370
   comments: 1:最内,2:内,3:中,4:外,5:大外
 - name: 発走時間
-  occ: ""
+  repeat_factor: 1
   byte_length: 4
   format: "9999"
   relative: 371
   comments: HHMM
 - name: 改行
-  occ: ""
+  repeat_factor: 1
   byte_length: 2
   format: X
   relative: 375
