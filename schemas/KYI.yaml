@@ -64,24 +64,6 @@
   type: ZZ9.9
   relative: 65
   comments: ""
-- name: 予備１
-  repeat_factor: 1
-  byte: 5
-  type: ZZ9.9
-  relative: 70
-  comments: 将来拡張用
-- name: 予備２
-  repeat_factor: 1
-  byte: 5
-  type: ZZ9.9
-  relative: 75
-  comments: 将来拡張用
-- name: 予備３
-  repeat_factor: 1
-  byte: 5
-  type: ZZ9.9
-  relative: 80
-  comments: 将来拡張用
 - name: 総合指数
   repeat_factor: 1
   byte: 5
@@ -256,12 +238,6 @@
   type: "99"
   relative: 167
   comments: ""
-- name: 予備
-  repeat_factor: 1
-  byte: 2
-  type: X
-  relative: 169
-  comments: スペース
 - name: ブリンカー
   repeat_factor: 1
   byte: 1
@@ -364,12 +340,6 @@
   type: "9"
   relative: 324
   comments: ""
-- name: 予備
-  repeat_factor: 1
-  byte: 2
-  type: X
-  relative: 325
-  comments: スペース
 - name: 印コード_総合印
   repeat_factor: 1
   byte: 1
@@ -436,12 +406,6 @@
   type: "9"
   relative: 341
   comments: 調教師マスタとリンク
-- name: 予備
-  repeat_factor: 1
-  byte: 1
-  type: X
-  relative: 346
-  comments: スペース
 - name: 賞金情報_獲得賞金
   repeat_factor: 1
   byte: 6
@@ -796,12 +760,6 @@
   type: "9"
   relative: 624
   comments: 高い1-9低い 内容説明参照
-- name: 予備
-  repeat_factor: 1
-  byte: 398
-  type: X
-  relative: 625
-  comments: スペース
 - name: 改行
   repeat_factor: 1
   byte: 2

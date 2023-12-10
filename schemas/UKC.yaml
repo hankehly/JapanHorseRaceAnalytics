@@ -118,15 +118,3 @@
   type: "9"
   relative: 281
   comments: ""
-- name: 予備
-  repeat_factor: 1
-  byte: 6
-  type: X
-  relative: 285
-  comments: スペース
-- name: 改行
-  repeat_factor: 1
-  byte: 2
-  type: X
-  relative: 291
-  comments: ＣＲ・ＬＦ

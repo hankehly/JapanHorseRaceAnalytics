@@ -348,12 +348,6 @@
   format: X
   relative: 265
   comments: 全角１２文字（地方競馬場名等）
-- name: 予備
-  repeat_factor: 1
-  byte_length: 2
-  format: X
-  relative: 289
-  comments: スペース
 - name: 確定複勝オッズ下
   repeat_factor: 1
   byte_length: 6
@@ -498,9 +492,3 @@
   format: "9999"
   relative: 371
   comments: HHMM
-- name: 改行
-  repeat_factor: 1
-  byte_length: 2
-  format: X
-  relative: 375
-  comments: ＣＲ・ＬＦ

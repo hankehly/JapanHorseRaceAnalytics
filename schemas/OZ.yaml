@@ -52,9 +52,3 @@
   type: "ZZ9.9"
   relative: 191
   comments: "5*18=90BYTE"
-- name: 改行
-  repeat_factor: 1
-  byte: 2
-  type: "X"
-  relative: 956
-  comments: "ＣＲ・ＬＦ"
