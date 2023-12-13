@@ -12,14 +12,16 @@ class FieldModel(BaseModel):
     name: str
 
 
-def parse_text(df: DataFrame, schema: List[FieldModel]) -> DataFrame:
+def parse_text(
+    df: DataFrame, schema: List[FieldModel], parse_column_name: str = "value"
+) -> DataFrame:
     new_df = df
     for field in schema:
         new_df = new_df.withColumn(
             field.name,
-            f.substring(f.col("value"), field.relative, field.byte_length).cast(
-                StringType()
-            ),
+            f.substring(
+                f.col(parse_column_name), field.relative, field.byte_length
+            ).cast(StringType()),
         )
     return new_df
 

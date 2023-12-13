@@ -1,120 +1,120 @@
 - name: 血統登録番号
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: X
   relative: 1
   comments: ""
 - name: 馬名
   repeat_factor: 1
-  byte: 36
+  byte_length: 36
   type: X
   relative: 9
   comments: 全角１８文字
 - name: 性別コード
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 45
   comments: 1:牡,2:牝,3,セン
 - name: 毛色コード
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "9"
   relative: 46
   comments: コード表参照
 - name: 馬記号コード
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "9"
   relative: 48
   comments: コード表参照
 - name: 血統情報_父馬名
   repeat_factor: 1
-  byte: 36
+  byte_length: 36
   type: X
   relative: 50
   comments: 全角１８文字
 - name: 血統情報_母馬名
   repeat_factor: 1
-  byte: 36
+  byte_length: 36
   type: X
   relative: 86
   comments: 全角１８文字
 - name: 血統情報_母父馬名
   repeat_factor: 1
-  byte: 36
+  byte_length: 36
   type: X
   relative: 122
   comments: 全角１８文字
 - name: 生年月日
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: "9"
   relative: 158
   comments: YYYYMMDD
 - name: 父馬生年
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9"
   relative: 166
   comments: YYYY 血統キー用
 - name: 母馬生年
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9"
   relative: 170
   comments: YYYY 血統キー用
 - name: 母父馬生年
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9"
   relative: 174
   comments: YYYY 血統キー用
 - name: 馬主名
   repeat_factor: 1
-  byte: 40
+  byte_length: 40
   type: X
   relative: 178
   comments: 全角２０文字
 - name: 馬主会コード
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 218
   comments: 競馬場毎にある。場コードと同じ
 - name: 生産者名
   repeat_factor: 1
-  byte: 40
+  byte_length: 40
   type: X
   relative: 220
   comments: 全角２０文字
 - name: 産地名
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: X
   relative: 260
   comments: 全角４文字
 - name: 登録抹消フラグ
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 268
   comments: 0:現役,1:抹消
 - name: データ年月日
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: "9"
   relative: 269
   comments: YYYYMMDD
 - name: 父系統コード
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9"
   relative: 277
   comments: ""
 - name: 母父系統コード
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9"
   relative: 281
   comments: ""

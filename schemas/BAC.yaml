@@ -1,241 +1,241 @@
 - name: レースキー_場コード
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 1
   comments: ""
 - name: レースキー_年
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 3
   comments: ""
 - name: レースキー_回
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 5
   comments: ""
 - name: レースキー_日
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: F
   relative: 6
   comments: ""
 - name: レースキー_Ｒ
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 7
   comments: ""
 - name: レースキー_年月日
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: "9"
   relative: 9
   comments: YYYYMMDD
 - name: レースキー_発走時間
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: X
   relative: 17
   comments: HHMM
 - name: レース条件_距離
   repeat_factor: 1
-  byte: 4
+  byte_length: 4
   type: "9999"
   relative: 21
   comments: ""
 - name: レース条件_トラック情報_芝ダ障害コード
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 25
   comments: 1:芝, 2:ダート, 3:障害
 - name: レース条件_トラック情報_右左
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 26
   comments: 1:右, 2:左, 3:直, 9:他
 - name: レース条件_トラック情報_内外
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 27
   comments: 1:通常(内), 2:外, 3:直ダ, 9:他, ※障害のトラックは、以下の２通りとなります。, "393":障害直線ダート, "391":障害直線芝
 - name: レース条件_種別
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 28
   comments: ４歳以上等、→JRDBデータコード表
 - name: レース条件_条件
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: XX
   relative: 30
   comments: 900万下等、 →JRDBデータコード表
 - name: レース条件_記号
   repeat_factor: 1
-  byte: 3
+  byte_length: 3
   type: "999"
   relative: 32
   comments: ○混等、 →JRDBデータコード表
 - name: レース条件_重量
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 35
   comments: ハンデ等、 →JRDBデータコード表
 - name: レース条件_グレード
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 36
   comments: Ｇ１等 →JRDBデータコード表
 - name: レース名
   repeat_factor: 1
-  byte: 50
+  byte_length: 50
   type: X
   relative: 37
   comments: レース名の通称（全角２５文字）
 - name: 回数
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: X
   relative: 87
   comments: 第ZZ9回（全角半角混在）
 - name: 頭数
   repeat_factor: 1
-  byte: 2
+  byte_length: 2
   type: "99"
   relative: 95
   comments: ""
 - name: コース
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: X
   relative: 97
   comments: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
 - name: 開催区分
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: X
   relative: 98
   comments: 1:関東, 2:関西, 3:ローカル
 - name: レース名短縮
   repeat_factor: 1
-  byte: 8
+  byte_length: 8
   type: X
   relative: 99
   comments: 全角４文字
 - name: レース名９文字
   repeat_factor: 1
-  byte: 18
+  byte_length: 18
   type: X
   relative: 107
   comments: 全角９文字
 - name: データ区分
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: X
   relative: 125
   comments: 1:特別登録, 2:想定確定, 3:前日
 - name: １着賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 126
   comments: 単位（万円）
 - name: ２着賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 131
   comments: 単位（万円）
 - name: ３着賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 136
   comments: 単位（万円）
 - name: ４着賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 141
   comments: 単位（万円）
 - name: ５着賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 146
   comments: 単位（万円）
 - name: １着算入賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 151
   comments: 単位（万円）
 - name: ２着算入賞金
   repeat_factor: 1
-  byte: 5
+  byte_length: 5
   type: ZZZZ9
   relative: 156
   comments: 単位（万円）
 
 - name: 馬券発売フラグ_単勝
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 161
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_複勝
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 162
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_枠連
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 163
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_馬連
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 164
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_馬単
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 165
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_ワイド
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 166
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_３連複
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 167
   comments: 1:発売, 0:発売無し
 - name: 馬券発売フラグ_３連単
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: "9"
   relative: 168
   comments: 1:発売, 0:発売無し
 - name: WIN5フラグ
   repeat_factor: 1
-  byte: 1
+  byte_length: 1
   type: Z
   relative: 177
   comments: 1～5
