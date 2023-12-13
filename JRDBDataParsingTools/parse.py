@@ -1,9 +1,7 @@
 import yaml
 from typing import List
-from pyspark.sql import functions as f
-from pyspark.sql.types import StringType
 from pydantic import BaseModel, TypeAdapter
-from pyspark.sql import DataFrame
+from pyspark.sql import Row
 
 
 class FieldModel(BaseModel):
@@ -12,18 +10,13 @@ class FieldModel(BaseModel):
     name: str
 
 
-def parse_text(
-    df: DataFrame, schema: List[FieldModel], parse_column_name: str = "value"
-) -> DataFrame:
-    new_df = df
+def parse_line(line, schema):
+    parsed_fields = []
     for field in schema:
-        new_df = new_df.withColumn(
-            field.name,
-            f.substring(
-                f.col(parse_column_name), field.relative, field.byte_length
-            ).cast(StringType()),
-        )
-    return new_df
+        start = field.relative - 1  # Adjust for zero-based indexing
+        end = start + field.byte_length
+        parsed_fields.append(line[start:end].decode("cp932").strip())
+    return Row(*parsed_fields)
 
 
 def decode_cp932(line):
