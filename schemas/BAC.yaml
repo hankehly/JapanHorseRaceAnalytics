@@ -184,7 +184,6 @@
   type: ZZZZ9
   relative: 156
   comments: 単位（万円）
-
 - name: 馬券発売フラグ_単勝
   repeat_factor: 1
   byte_length: 1
