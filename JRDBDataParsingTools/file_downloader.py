@@ -10,21 +10,21 @@ import datetime
 from JRDBDataParsingTools.structured_logger import logger
 
 
-def is_year_file(filename):
-    return re.match(r"KYI_\d{4}\.zip", filename)
+def is_year_file(filename) -> bool:
+    return re.search(r"_(\d{4})\.zip", filename) is not None
 
 
-def is_date_file(filename):
-    return re.match(r"\d{4}/KYI\d{6}\.zip", filename)
-
-
-def extract_year(filename):
-    match = re.search(r"KYI_(\d{4})\.zip", filename)
+def extract_year(filename) -> int:
+    match = re.search(r"_(\d{4})\.zip", filename)
     return int(match.group(1))
 
 
-def extract_date(filename):
-    match = re.search(r"\d{4}/KYI(\d{6})\.zip", filename)
+def is_date_file(filename) -> bool:
+    return re.search(r"(\d{6})\.zip", filename) is not None
+
+
+def extract_date(filename) -> datetime.date:
+    match = re.search(r"(\d{6})\.zip", filename)
     # How do we handle 2-digit years?
     # Function strptime() can parse 2-digit years when given %y format code.
     # When 2-digit years are parsed, they are converted according to the POSIX
@@ -38,10 +38,10 @@ def download_and_extract(base_url, file_link, username, password, download_dir):
     full_url = urljoin(base_url, file_link)
     logger.info(f"Downloading {full_url}")
     file_response = requests.get(full_url, auth=(username, password), stream=True)
-    logger.info(f"Response status code: {file_response.status_code}")
+    logger.debug(f"Response status code: {file_response.status_code}")
     if file_response.status_code == 200:
         with io.BytesIO(file_response.content) as file_bytes:
-            logger.info(f"Extracting files from {file_link}")
+            logger.debug(f"Extracting files from {file_link}")
             with zipfile.ZipFile(file_bytes) as zip_ref:
                 zip_ref.extractall(download_dir)
 
@@ -92,16 +92,16 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
     logger.info(f"Downloading and extracting files from {args.webpage_url}")
     response = requests.get(args.webpage_url, auth=(args.username, args.password))
 
-    logger.info(f"Response status code: {response.status_code}")
+    logger.debug(f"Response status code: {response.status_code}")
     response.raise_for_status()
 
-    logger.info("Parsing webpage")
+    logger.debug("Parsing webpage")
     soup = BeautifulSoup(response.text, "html.parser")
     links = soup.find_all("a")
 
     covered_years = set()
 
-    logger.info("Processing year files")
+    logger.debug("Processing year files")
     for link in links:
         file_link = link.get("href")
         if is_year_file(file_link):
@@ -114,7 +114,7 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
             )
             covered_years.add(extract_year(file_link))
 
-    logger.info("Processing date files")
+    logger.debug("Processing date files")
     for link in links:
         file_link = link.get("href")
         if is_date_file(link.get("href")):
