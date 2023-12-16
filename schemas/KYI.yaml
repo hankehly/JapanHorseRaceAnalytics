@@ -760,9 +760,3 @@
   type: "9"
   relative: 624
   comments: 高い1-9低い 内容説明参照
-- name: 改行
-  repeat_factor: 1
-  byte_length: 2
-  type: X
-  relative: 1023
-  comments: ＣＲ・ＬＦ

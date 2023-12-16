@@ -15,7 +15,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U postgres -d jrdb || exit 1"
+          "pg_isready -U myuser -d jrdb || exit 1"
         ]
       interval: 10s
       timeout: 5s
