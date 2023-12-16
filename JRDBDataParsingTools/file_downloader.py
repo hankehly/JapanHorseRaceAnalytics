@@ -1,4 +1,6 @@
 import requests
+from pydantic import BaseModel, HttpUrl, constr, validator, ConfigDict
+import pathlib
 from bs4 import BeautifulSoup
 import re
 from urllib.parse import urljoin
@@ -44,6 +46,22 @@ def download_and_extract(base_url, file_link, username, password, download_dir):
                 zip_ref.extractall(download_dir)
 
 
+class DownloadAndExtractFilesArgs(BaseModel):
+    webpage_url: HttpUrl
+    username: constr(strip_whitespace=True, min_length=1)
+    password: constr(strip_whitespace=True, min_length=1)
+    download_dir: str
+
+    model_config = ConfigDict(frozen=True, str_strip_whitespace=True)
+
+    @validator("download_dir")
+    def validate_download_dir(cls, v):
+        path = pathlib.Path(v)
+        if not path.is_absolute():
+            raise ValueError("download_dir must be an absolute path")
+        return v
+
+
 def download_and_extract_files(webpage_url, username, password, download_dir) -> None:
     """
     Download and extract all files from the JRDB website.
@@ -64,8 +82,15 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
     None
 
     """
-    logger.info(f"Downloading and extracting files from {webpage_url}")
-    response = requests.get(webpage_url, auth=(username, password))
+    args = DownloadAndExtractFilesArgs(
+        webpage_url=webpage_url,
+        username=username,
+        password=password,
+        download_dir=download_dir,
+    )
+
+    logger.info(f"Downloading and extracting files from {args.webpage_url}")
+    response = requests.get(args.webpage_url, auth=(args.username, args.password))
 
     logger.info(f"Response status code: {response.status_code}")
     response.raise_for_status()
@@ -73,6 +98,7 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
     logger.info("Parsing webpage")
     soup = BeautifulSoup(response.text, "html.parser")
     links = soup.find_all("a")
+
     covered_years = set()
 
     logger.info("Processing year files")
@@ -80,17 +106,24 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
         file_link = link.get("href")
         if is_year_file(file_link):
             download_and_extract(
-                webpage_url, file_link, username, password, download_dir
+                str(args.webpage_url),
+                file_link,
+                args.username,
+                args.password,
+                str(args.download_dir),
             )
             covered_years.add(extract_year(file_link))
 
     logger.info("Processing date files")
     for link in links:
         file_link = link.get("href")
-        logger.info(f"Processing {file_link}")
         if is_date_file(link.get("href")):
             date = extract_date(file_link)
             if date.year not in covered_years:
                 download_and_extract(
-                    webpage_url, file_link, username, password, download_dir
+                    str(args.webpage_url),
+                    file_link,
+                    args.username,
+                    args.password,
+                    str(args.download_dir),
                 )

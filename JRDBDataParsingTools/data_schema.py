@@ -1,7 +1,6 @@
 import yaml
 from typing import List
 from pydantic import BaseModel, TypeAdapter
-from pyspark.sql import Row
 from pyspark.sql.types import StructType, StructField, StringType, ArrayType
 
 
@@ -24,29 +23,6 @@ def create_pyspark_schema(schema: List[FieldModel]) -> StructType:
             data_type = StringType()
         fields.append(StructField(field_name, data_type, True, metadata))
     return StructType(fields)
-
-
-def parse_line(line, schema: List[FieldModel]):
-    parsed_fields = []
-    for field in schema:
-        if field.repeat_factor == 1:
-            start = field.relative - 1  # Adjust for zero-based indexing
-            end = start + field.byte_length
-            parsed_fields.append(line[start:end].decode("cp932").strip())
-        else:
-            repeated_fields = []
-            start = field.relative - 1
-            for _ in range(field.repeat_factor):
-                end = start + field.byte_length
-                repeated_fields.append(line[start:end].decode("cp932").strip())
-                start = end  # Update start for next iteration
-            parsed_fields.append(repeated_fields)
-
-    return Row(*parsed_fields)
-
-
-def decode_cp932(line):
-    return line.decode("cp932", errors="ignore")
 
 
 def load_schema(file_path: str) -> List[FieldModel]:
