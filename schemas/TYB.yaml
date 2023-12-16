@@ -1,85 +1,85 @@
 - name: レースキー_場コード
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 1
   comments: ""
 - name: レースキー_年
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 3
   comments: ""
 - name: レースキー_回
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 5
   comments: ""
 - name: レースキー_日
   repeat_factor: 1
   byte_length: 1
-  type: F
+  format: F
   relative: 6
   comments: 16進数(数字 or 小文字アルファベット)
 - name: レースキー_Ｒ
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 7
   comments: ""
 - name: 馬番
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 9
   comments: ""
 - name: ＩＤＭ
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 11
   comments: 前日情報と同じ
 - name: 騎手指数
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 16
   comments: 前日情報と同じ
 - name: 情報指数
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 21
   comments: 前日情報と同じ
 - name: オッズ指数
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 26
   comments: ""
 - name: パドック指数
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 31
   comments: ""
 - name: 予備１
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 36
   comments: 将来拡張用
 - name: 総合指数
   repeat_factor: 1
   byte_length: 5
-  type: ZZ9.9
+  format: ZZ9.9
   relative: 41
   comments: ""
 - name: 馬具変更情報
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 46
   comments: |
     0:馬具変更なし
@@ -88,7 +88,7 @@
 - name: 脚元情報
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 47
   comments: |
     0:平行線
@@ -98,108 +98,108 @@
 - name: 取消フラグ
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 48
   comments: 取消フラグ
 - name: 騎手コード
   repeat_factor: 1
   byte_length: 5
-  type: "9"
+  format: "9"
   relative: 49
   comments: 騎手マスタリンク用
 - name: 騎手名
   repeat_factor: 1
   byte_length: 12
-  type: X
+  format: X
   relative: 54
   comments: 全角６文字
 - name: 負担重量
   repeat_factor: 1
   byte_length: 3
-  type: "999"
+  format: "999"
   relative: 66
   comments: 0.1Kg単位
 - name: 見習い区分
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 69
   comments: 1:☆(1K減),2:△(2K減),3:▲(3K減)
 - name: 馬場状態コード
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 70
   comments: コード表参照
 - name: 天候コード
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 72
   comments: コード表参照
 - name: 単勝オッズ
   repeat_factor: 1
   byte_length: 6
-  type: ZZZ9.9
+  format: ZZZ9.9
   relative: 73
   comments: 単勝オッズ（データ作成時点）
 - name: 複勝オッズ
   repeat_factor: 1
   byte_length: 6
-  type: ZZZ9.9
+  format: ZZZ9.9
   relative: 79
   comments: 複勝オッズの下側
 - name: オッズ取得時間
   repeat_factor: 1
   byte_length: 4
-  type: "9999"
+  format: "9999"
   relative: 85
   comments: HHMM
 - name: 馬体重
   repeat_factor: 1
   byte_length: 3
-  type: "999"
+  format: "999"
   relative: 89
   comments: データ無:スペース
 - name: 馬体重増減
   repeat_factor: 1
   byte_length: 3
-  type: XZ9
+  format: XZ9
   relative: 92
   comments: 符号+数字２桁、データ無:スペース
 - name: オッズ印
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 95
   comments: ""
 - name: パドック印
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 96
   comments: ""
 - name: 直前総合印
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 97
   comments: ""
 - name: 馬体コード
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 98
   comments: 第4a版で追加
 - name: 気配コード
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 99
   comments: 第4a版で追加
 - name: 発走時間
   repeat_factor: 1
   byte_length: 4
-  type: "9999"
+  format: "9999"
   relative: 100
   comments: HHMM

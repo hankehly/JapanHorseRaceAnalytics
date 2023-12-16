@@ -1,150 +1,150 @@
 - name: レースキー_場コード
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 1
   comments: ""
 - name: レースキー_年
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 3
   comments: ""
 - name: レースキー_回
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 5
   comments: ""
 - name: レースキー_日
   repeat_factor: 1
   byte_length: 1
-  type: F
+  format: F
   relative: 6
   comments: ""
 - name: レースキー_Ｒ
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 7
   comments: ""
 - name: 馬番
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 9
   comments: ""
 - name: 曜日
   repeat_factor: 1
   byte_length: 2
-  type: X
+  format: X
   relative: 11
   comments: 基本的に、"水"か"木"
 - name: 調教年月日
   repeat_factor: 1
   byte_length: 8
-  type: "9"
+  format: "9"
   relative: 13
   comments: YYYYMMDD
 - name: 回数
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 21
   comments: 本追切当日の追切回数合計
 - name: 調教コースコード
   repeat_factor: 1
   byte_length: 2
-  type: X
+  format: X
   relative: 22
   comments: コード表参照1
 - name: 追切種類
   repeat_factor: 1
   byte_length: 1
-  type: "99"
+  format: "99"
   relative: 24
   comments: 1:一杯, 2:強目, 3:馬なり
 - name: 追い状態
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 25
   comments: コード表参照
 - name: 乗り役
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 27
   comments: 1:助手,2:調教師,3:本番騎手,4:調教騎手,5:見習
 - name: 調教Ｆ
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 28
   comments: 調教ハロンの長さ
 - name: 時計分析データ_テンＦ
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 29
   comments: ※4
 - name: 時計分析データ_中間Ｆ
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 32
   comments: ""
 - name: 時計分析データ_終いＦ
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 35
   comments: ""
 - name: 時計分析データ_テンＦ指数
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 38
   comments: ""
 - name: 時計分析データ_中間Ｆ指数
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 41
   comments: ""
 - name: 時計分析データ_終いＦ指数
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 44
   comments: ""
 - name: 時計分析データ_追切指数
   repeat_factor: 1
   byte_length: 3
-  type: ZZ9
+  format: ZZ9
   relative: 47
   comments: ""
 - name: 併せ馬相手データ_併せ結果
   repeat_factor: 1
   byte_length: 1
-  type: X
+  format: X
   relative: 50
   comments: 1:先着, 2:同入, 3:遅れ
 - name: 併せ馬相手データ_追切種類
   repeat_factor: 1
   byte_length: 1
-  type: "99"
+  format: "99"
   relative: 51
   comments: 1:一杯, 2:強目, 3:馬なり
 - name: 併せ馬相手データ_年齢
   repeat_factor: 1
   byte_length: 2
-  type: Z9
+  format: Z9
   relative: 52
   comments: ""
 - name: 併せ馬相手データ_クラス
   repeat_factor: 1
   byte_length: 2
-  type: XX
+  format: XX
   relative: 54
   comments: 競走条件コード

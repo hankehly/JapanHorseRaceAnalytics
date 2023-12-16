@@ -1,54 +1,54 @@
 - name: レースキー_場コード
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 1
   comments: ""
 - name: レースキー_年
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 3
   comments: ""
 - name: レースキー_回
   repeat_factor: 1
   byte_length: 1
-  type: "9"
+  format: "9"
   relative: 5
   comments: ""
 - name: レースキー_日
   repeat_factor: 1
   byte_length: 1
-  type: F
+  format: F
   relative: 6
   comments: 16進数(数字 or 小文字アルファベット)
 - name: レースキー_Ｒ
   repeat_factor: 1
   byte_length: 2
-  type: "99"
+  format: "99"
   relative: 7
   comments: ""
 - name: 登録頭数
   repeat_factor: 1
   byte_length: 2
-  type: "Z9"
+  format: "Z9"
   relative: 9
   comments: ""
 - name: 単勝オッズ
   repeat_factor: 18
   byte_length: 5
-  type: "ZZ9.9"
+  format: "ZZ9.9"
   relative: 11
   comments: "5*18=90BYTE"
 - name: 複勝オッズ
   repeat_factor: 18
   byte_length: 5
-  type: "ZZ9.9"
+  format: "ZZ9.9"
   relative: 101
   comments: "5*18=90BYTE"
 - name: 連勝オッズ
   repeat_factor: 153
   byte_length: 5
-  type: "ZZ9.9"
+  format: "ZZ9.9"
   relative: 191
   comments: "5*153=765BYTE"

@@ -1,0 +1,126 @@
+- name: レースキー_場コード
+  repeat_factor: 1
+  byte_length: 2
+  format: "99"
+  relative: 1
+  comments: ""
+- name: レースキー_年
+  repeat_factor: 1
+  byte_length: 2
+  format: "99"
+  relative: 3
+  comments: ""
+- name: レースキー_回
+  repeat_factor: 1
+  byte_length: 1
+  format: "9"
+  relative: 5
+  comments: ""
+- name: レースキー_日
+  repeat_factor: 1
+  byte_length: 1
+  format: F
+  relative: 6
+  comments: 16進数(数字 or 小文字アルファベット)
+- name: レースキー_Ｒ
+  repeat_factor: 1
+  byte_length: 2
+  format: "99"
+  relative: 7
+  comments: ""
+- name: 単勝払戻
+  repeat_factor: 3
+  byte_length: 27
+  relative: 9
+  comments: "9 * 3 = 27 BYTE"
+  struct_schema:
+    - name: 馬番
+      byte_length: 2
+      format: "99"
+    - name: 払戻金
+      byte_length: 7
+      format: "ZZZZZZ9"
+- name: 複勝払戻
+  repeat_factor: 5
+  byte_length: 45
+  relative: 36
+  comments: "9 * 5 = 45 BYTE"
+  struct_schema:
+    - name: 馬番
+      byte_length: 2
+      format: "99"
+    - name: 払戻金
+      byte_length: 7
+      format: "ZZZZZZ9"
+- name: 枠連払戻
+  repeat_factor: 3
+  byte_length: 27
+  relative: 81
+  comments: "9 * 3 = 27 BYTE"
+  struct_schema:
+    - name: 枠番組合せ
+      byte_length: 2
+      format: "99"
+    - name: 払戻金
+      byte_length: 7
+      format: "ZZZZZZ9"
+- name: 馬連払戻
+  repeat_factor: 3
+  byte_length: 36
+  relative: 108
+  comments: "12 * 3 = 36 BYTE"
+  struct_schema:
+    - name: 馬番組合せ
+      byte_length: 4
+      format: "9999"
+    - name: 払戻金
+      byte_length: 8
+      format: "ZZZZZZZ9"
+- name: ワイド払戻
+  repeat_factor: 7
+  byte_length: 84
+  relative: 144
+  comments: "12 * 7 = 84 BYTE"
+  struct_schema:
+    - name: 馬番組合せ
+      byte_length: 4
+      format: "9999"
+    - name: 払戻金
+      byte_length: 8
+      format: "ZZZZZZZ9"
+- name: 馬単払戻
+  repeat_factor: 6
+  byte_length: 72
+  relative: 228
+  comments: "12 * 6 = 72 BYTE"
+  struct_schema:
+    - name: 馬番組合せ
+      byte_length: 4
+      format: "9999"
+    - name: 払戻金
+      byte_length: 8
+      format: "ZZZZZZZ9"
+- name: ３連複払戻
+  repeat_factor: 3
+  byte_length: 42
+  relative: 300
+  comments: "14 * 3 = 42 BYTE"
+  struct_schema:
+    - name: 馬番組合せ
+      byte_length: 6
+      format: "999999"
+    - name: 払戻金
+      byte_length: 8
+      format: "ZZZZZZZ9"
+- name: ３連複払戻
+  repeat_factor: 6
+  byte_length: 90
+  relative: 342
+  comments: " 15 * 6 = 90 BYTE"
+  struct_schema:
+    - name: 馬番組合せ
+      byte_length: 6
+      format: "999999"
+    - name: 払戻金
+      byte_length: 9
+      format: "ZZZZZZZ9"
