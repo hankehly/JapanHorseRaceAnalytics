@@ -1,5 +1,5 @@
 import yaml
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel, TypeAdapter
 from pyspark.sql.types import StructType, StructField, StringType, ArrayType
 
