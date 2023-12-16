@@ -1,9 +1,16 @@
 import sys
-import re
 import yaml
 
 
 def parse_schema(schema_text):
+    """
+    Parses the schema text and returns a list of dictionaries containing the field details.
+    :param schema_text: The schema text to be parsed
+    :return: A list of dictionaries containing the field details
+
+    This is a best effort parser and does not work for all schema documents.
+    It is just for getting a head start on the schema parsing, instead of having to type everything manually.
+    """
     # Splitting the schema text into lines
     lines = schema_text.split("\n")
 
@@ -40,8 +47,8 @@ def parse_schema(schema_text):
                 field_entry = {
                     "name": field_name,
                     # "occ": parts[1],
-                    "byte": parts[1],
-                    "type": parts[2],
+                    "byte_length": int(parts[1]),
+                    "format": parts[2],
                     "relative": parts[3] if len(parts) > 3 else "",
                     "comments": " ".join(parts[4:]) if len(parts) > 4 else "",
                 }
