@@ -1,0 +1,45 @@
+- name: レースキー_場コード
+  repeat_factor: 1
+  byte_length: 2
+  type: "99"
+  relative: 1
+  comments: ""
+- name: レースキー_年
+  repeat_factor: 1
+  byte_length: 2
+  type: "99"
+  relative: 3
+  comments: ""
+- name: レースキー_回
+  repeat_factor: 1
+  byte_length: 1
+  type: "9"
+  relative: 5
+  comments: ""
+- name: レースキー_日
+  repeat_factor: 1
+  byte_length: 1
+  type: F
+  relative: 6
+  comments: 16進数(数字 or 小文字アルファベット)
+- name: レースキー_Ｒ
+  repeat_factor: 1
+  byte_length: 2
+  type: "99"
+  relative: 7
+  comments: ""
+- name: 登録頭数
+  repeat_factor: 1
+  byte_length: 2
+  type: "Z9"
+  relative: 9
+  comments: ""
+- name: ３連複オッズ
+  repeat_factor: 816
+  byte_length: 6
+  type: "ZZZ9.9"
+  relative: 11
+  comments: |
+    01-02-03 ～ 最後16-17-18
+    6*816=4896BYTE
+    取消時は 9999.9
