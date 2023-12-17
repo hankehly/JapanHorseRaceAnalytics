@@ -1,0 +1,129 @@
+models:
+  - name: stg_jrdb__bac
+    columns:
+      - name: レースキー_場コード
+        tests:
+          - not_null
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 年月日
+        description: YYYYMMDD
+        tests:
+          - not_null
+      - name: 発走時間
+        tests:
+          - not_null
+      - name: レース条件_距離
+        tests:
+          - not_null
+      - name: レース条件_トラック情報_芝ダ障害コード
+        description: 1:芝, 2:ダート, 3:障害
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: レース条件_トラック情報_右左
+        description: 1:右, 2:左, 3:直, 9:他
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 9]
+      - name: レース条件_トラック情報_内外
+        description: 1:通常(内), 2:外, 3,直ダ, 9:他
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 9]
+      - name: レース条件_種別
+        tests:
+          - not_null
+      - name: レース条件_条件
+        tests:
+          - not_null
+      - name: レース条件_記号
+        tests:
+          - not_null
+      - name: レース条件_重量
+        tests:
+          - not_null
+      - name: レース条件_グレード
+      - name: レース名
+      - name: 回数
+        description: 第123回など
+      - name: 頭数
+        tests:
+          - not_null
+      - name: コース
+        description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6]
+      - name: 開催区分
+        description: 1:関東, 2:関西, 3:ローカル
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: レース名短縮
+      - name: レース名９文字
+        tests:
+          - not_null
+      - name: データ区分
+        tests:
+          - not_null
+      - name: １着賞金
+        tests:
+          - not_null
+      - name: ２着賞金
+        tests:
+          - not_null
+      - name: ３着賞金
+        tests:
+          - not_null
+      - name: ４着賞金
+        tests:
+          - not_null
+      - name: ５着賞金
+        tests:
+          - not_null
+      - name: １着算入賞金
+        tests:
+          - not_null
+      - name: ２着算入賞金
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_単勝
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_複勝
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_枠連
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_馬連
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_馬単
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_ワイド
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_３連複
+        tests:
+          - not_null
+      - name: 馬券発売フラグ_３連単
+        tests:
+          - not_null
+      - name: WIN5フラグ
