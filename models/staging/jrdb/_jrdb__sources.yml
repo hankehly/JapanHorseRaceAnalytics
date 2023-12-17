@@ -1,0 +1,217 @@
+version: 2
+
+sources:
+  - name: jrdb
+    database: jrdb
+    schema: staging
+    tables:
+      - name: bac
+        description: 番組データ仕様
+        columns: 
+          - name: レースキー_場コード
+            tests:
+              - not_null
+          - name: レースキー_年
+            tests:
+              - not_null
+          - name: レースキー_回
+            tests:
+              - not_null
+          - name: レースキー_日
+            tests:
+              - not_null
+          - name: レースキー_Ｒ
+            tests:
+              - not_null
+          - name: レースキー_年月日
+            tests:
+              - not_null
+          - name: レースキー_発走時間
+            tests:
+              - not_null
+          - name: レース条件_距離
+            tests:
+              - not_null
+          - name: レース条件_トラック情報_芝ダ障害コード
+            tests:
+              - not_null
+          - name: レース条件_トラック情報_右左
+            tests:
+              - not_null
+          - name: レース条件_トラック情報_内外
+            tests:
+              - not_null
+          - name: レース条件_種別
+            tests:
+              - not_null
+          - name: レース条件_条件
+            tests:
+              - not_null
+          - name: レース条件_記号
+            tests:
+              - not_null
+          - name: レース条件_重量
+            tests:
+              - not_null
+          - name: レース条件_グレード
+            tests:
+              - not_null
+          - name: レース名
+            tests:
+              - not_null
+          - name: 回数
+            tests:
+              - not_null
+          - name: 頭数
+            tests:
+              - not_null
+          - name: コース
+            tests:
+              - not_null
+          - name: 開催区分
+            tests:
+              - not_null
+          - name: レース名短縮
+            tests:
+              - not_null
+          - name: レース名９文字
+            tests:
+              - not_null
+          - name: データ区分
+            tests:
+              - not_null
+          - name: １着賞金
+            tests:
+              - not_null
+          - name: ２着賞金
+            tests:
+              - not_null
+          - name: ３着賞金
+            tests:
+              - not_null
+          - name: ４着賞金
+            tests:
+              - not_null
+          - name: ５着賞金
+            tests:
+              - not_null
+          - name: １着算入賞金
+            tests:
+              - not_null
+          - name: ２着算入賞金
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_単勝
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_複勝
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_枠連
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_馬連
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_馬単
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_ワイド
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_３連複
+            tests:
+              - not_null
+          - name: 馬券発売フラグ_３連単
+            tests:
+              - not_null
+          - name: WIN5フラグ
+      # - name: orders
+      #   description: the raw orders data
+      #   columns:
+      #     - name: id
+      #       description: primary key of orders table
+      #       # You can configure tests on the sources the same way
+      #       # you configure them for models
+      #       tests:
+      #         - unique
+      #         - not_null
+      #     - name: status
+      #       tests:
+      #         - accepted_values:
+      #             values:
+      #               - completed
+      #               - shipped
+      #               - returned
+      #               - return_pending
+      #               - placed
+      #     - name: customer_id
+      #       tests:
+      #         - relationships:
+      #             to: ref('customers')
+      #             field: id
+
+# sources:
+#   - name: <string> # required
+#     description: <markdown_string>
+#     database: <database_name>
+#     schema: <schema_name>
+#     loader: <string>
+#     loaded_at_field: <column_name>
+#     meta: { <dictionary> }
+#     tags: [<string>]
+
+#     # requires v1.1+
+#     config:
+#       <source_config>: <config_value>
+
+#     overrides: <string>
+
+#     freshness:
+#       warn_after:
+#         count: <positive_integer>
+#         period: minute | hour | day
+#       error_after:
+#         count: <positive_integer>
+#         period: minute | hour | day
+#       filter: <where-condition>
+
+#     quoting:
+#       database: true | false
+#       schema: true | false
+#       identifier: true | false
+
+#     tables:
+#       - name: <string> #required
+#         description: <markdown_string>
+#         meta: { <dictionary> }
+#         identifier: <table_name>
+#         loaded_at_field: <column_name>
+#         tests:
+#           - <test>
+#           - ... # declare additional tests
+#         tags: [<string>]
+#         freshness:
+#           warn_after:
+#             count: <positive_integer>
+#             period: minute | hour | day
+#           error_after:
+#             count: <positive_integer>
+#             period: minute | hour | day
+#           filter: <where-condition>
+
+#         quoting:
+#           database: true | false
+#           schema: true | false
+#           identifier: true | false
+#         external: { <dictionary> }
+#         columns:
+#           - name: <column_name> # required
+#             description: <markdown_string>
+#             meta: { <dictionary> }
+#             quote: true | false
+#             tests:
+#               - <test>
+#               - ... # declare additional tests
+#             tags: [<string>]
+#           - name: ... # declare properties of additional columns

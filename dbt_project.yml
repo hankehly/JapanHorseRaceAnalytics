@@ -1,7 +1,7 @@
-name: "jrdbparsingtools"
+name: "JRDBDataParsingTools"
 version: "1.0.0"
 config-version: 2
-profile: "myprofile"
+profile: "default"
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -12,6 +12,8 @@ clean-targets:
   - "target"
   - "dbt_packages"
 models:
-  jrdbparsingtools:
-    example:
-      +materialized: view
+  JRDBDataParsingTools:
+    staging:
+      +schema: staging
+    curated:
+      +schema: curated

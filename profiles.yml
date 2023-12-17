@@ -1,13 +1,12 @@
-myprofile:
-  target: dev
+default:
+  target: local
   outputs:
-    dev:
+    local:
       type: postgres
       method: jdbc
-      url: jdbc:postgresql://localhost:5432/mydatabase
-      user: myuser
-      password: mypassword
-      schema: public  # how to use raw/standardized/curated?
-      database: mydatabase
+      user: admin
+      password: admin
+      schema: public # change in dbt_project.yml to staging or curated
+      database: jrdb
       host: localhost
       port: 5432
