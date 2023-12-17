@@ -1,5 +1,6 @@
 .venv/
 *.csv
+!seeds/*.csv
 *.txt
 target/
 dbt_packages/

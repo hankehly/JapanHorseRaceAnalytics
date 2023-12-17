@@ -7,7 +7,7 @@ sources:
     tables:
       - name: bac
         description: 番組データ仕様
-        columns: 
+        columns:
           - name: レースキー_場コード
             tests:
               - not_null
@@ -23,24 +23,34 @@ sources:
           - name: レースキー_Ｒ
             tests:
               - not_null
-          - name: レースキー_年月日
+          - name: 年月日
+            description: YYYYMMDD
             tests:
               - not_null
-          - name: レースキー_発走時間
+          - name: 発走時間
             tests:
               - not_null
           - name: レース条件_距離
             tests:
               - not_null
           - name: レース条件_トラック情報_芝ダ障害コード
+            description: 1:芝, 2:ダート, 3:障害
             tests:
               - not_null
+              - accepted_values:
+                  values: [1, 2, 3]
           - name: レース条件_トラック情報_右左
+            description: 1:右, 2:左, 3:直, 9:他
             tests:
               - not_null
+              - accepted_values:
+                  values: [1, 2, 3, 9]
           - name: レース条件_トラック情報_内外
+            description: 1:通常(内), 2:外, 3,直ダ, 9:他
             tests:
               - not_null
+              - accepted_values:
+                  values: [1, 2, 3, 9]
           - name: レース条件_種別
             tests:
               - not_null
@@ -126,92 +136,3 @@ sources:
             tests:
               - not_null
           - name: WIN5フラグ
-      # - name: orders
-      #   description: the raw orders data
-      #   columns:
-      #     - name: id
-      #       description: primary key of orders table
-      #       # You can configure tests on the sources the same way
-      #       # you configure them for models
-      #       tests:
-      #         - unique
-      #         - not_null
-      #     - name: status
-      #       tests:
-      #         - accepted_values:
-      #             values:
-      #               - completed
-      #               - shipped
-      #               - returned
-      #               - return_pending
-      #               - placed
-      #     - name: customer_id
-      #       tests:
-      #         - relationships:
-      #             to: ref('customers')
-      #             field: id
-
-# sources:
-#   - name: <string> # required
-#     description: <markdown_string>
-#     database: <database_name>
-#     schema: <schema_name>
-#     loader: <string>
-#     loaded_at_field: <column_name>
-#     meta: { <dictionary> }
-#     tags: [<string>]
-
-#     # requires v1.1+
-#     config:
-#       <source_config>: <config_value>
-
-#     overrides: <string>
-
-#     freshness:
-#       warn_after:
-#         count: <positive_integer>
-#         period: minute | hour | day
-#       error_after:
-#         count: <positive_integer>
-#         period: minute | hour | day
-#       filter: <where-condition>
-
-#     quoting:
-#       database: true | false
-#       schema: true | false
-#       identifier: true | false
-
-#     tables:
-#       - name: <string> #required
-#         description: <markdown_string>
-#         meta: { <dictionary> }
-#         identifier: <table_name>
-#         loaded_at_field: <column_name>
-#         tests:
-#           - <test>
-#           - ... # declare additional tests
-#         tags: [<string>]
-#         freshness:
-#           warn_after:
-#             count: <positive_integer>
-#             period: minute | hour | day
-#           error_after:
-#             count: <positive_integer>
-#             period: minute | hour | day
-#           filter: <where-condition>
-
-#         quoting:
-#           database: true | false
-#           schema: true | false
-#           identifier: true | false
-#         external: { <dictionary> }
-#         columns:
-#           - name: <column_name> # required
-#             description: <markdown_string>
-#             meta: { <dictionary> }
-#             quote: true | false
-#             tests:
-#               - <test>
-#               - ... # declare additional tests
-#             tags: [<string>]
-#           - name: ... # declare properties of additional columns

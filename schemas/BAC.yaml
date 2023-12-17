@@ -28,13 +28,13 @@
   format: "99"
   relative: 7
   comments: ""
-- name: レースキー_年月日
+- name: 年月日
   repeat_factor: 1
   byte_length: 8
   format: "9"
   relative: 9
   comments: YYYYMMDD
-- name: レースキー_発走時間
+- name: 発走時間
   repeat_factor: 1
   byte_length: 4
   format: X

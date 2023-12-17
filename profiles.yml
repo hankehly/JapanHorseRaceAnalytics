@@ -6,7 +6,11 @@ default:
       method: jdbc
       user: admin
       password: admin
-      schema: public # change in dbt_project.yml to staging or curated
+      # Behavior is a little odd.
+      # When combined with custom schema name, results in schema name of "dbt_<custom_schema_name>".
+      # e.g. "dbt_staging"
+      # See https://docs.getdbt.com/docs/build/custom-schemas#understanding-custom-schemas
+      schema: dbt
       database: jrdb
       host: localhost
       port: 5432
