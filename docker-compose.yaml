@@ -1,22 +1,22 @@
 services:
-  # psql -U myuser -h localhost -p 5432 -d jrdb
+  # psql -U admin -h localhost -p 5432 -d jrdb
   # https://hub.docker.com/_/postgres
-  postgres:
+  warehouse:
     image: postgres:latest
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: jrdb
     ports:
       - 5432:5432
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - warehouse:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U myuser -d jrdb || exit 1"
+          "pg_isready -U admin -d jrdb || exit 1"
         ]
       interval: 10s
       timeout: 5s
@@ -33,7 +33,7 @@ services:
     ports:
       - 5050:80
     depends_on:
-      - postgres
+      - warehouse
     volumes:
       - pgadmin:/var/lib/pgadmin
     healthcheck:
@@ -47,5 +47,5 @@ services:
       retries: 3
 
 volumes:
-  postgres:
+  warehouse:
   pgadmin:
