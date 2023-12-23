@@ -19,4 +19,13 @@ models:
       +schema: curated
 seeds:
   JRDBDataParsingTools:
-    schema: seed
+    +schema: seed
+    場コード:
+      +column_types:
+        code: text
+        name: text
+    特記コード:
+      +column_types:
+        コード: text
+        短縮: text
+        内容: text

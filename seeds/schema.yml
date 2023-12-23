@@ -1,0 +1,24 @@
+version: 2
+seeds:
+  - name: 場コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: name
+        tests:
+          - not_null
+
+  - name: 特記コード
+    columns:
+      - name: コード
+        tests:
+          - unique
+          - not_null
+      - name: 短縮
+        tests:
+          - not_null
+      - name: 内容
+        tests:
+          - not_null

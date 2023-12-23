@@ -1,9 +1,17 @@
 models:
   - name: stg_jrdb__bac
     columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      # original
       - name: レースキー_場コード
         tests:
           - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
       - name: レースキー_年
         tests:
           - not_null
@@ -53,6 +61,9 @@ models:
       - name: レース条件_記号
         tests:
           - not_null
+          # - relationships:
+          #     to: ref('特記コード')
+          #     field: コード
       - name: レース条件_重量
         tests:
           - not_null
@@ -127,3 +138,89 @@ models:
         tests:
           - not_null
       - name: WIN5フラグ
+
+  - name: stg_jrdb__cha
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 馬番
+        tests:
+          - not_null
+      - name: 曜日
+        tests:
+          - not_null
+      - name: 調教年月日
+        tests:
+          - not_null
+      - name: 回数
+        tests:
+          - not_null
+      - name: 調教コースコード
+        # tests:
+        #   - not_null
+      - name: 追切種類
+        # tests:
+        #   - not_null
+      - name: 追い状態
+        # tests:
+        #   - not_null
+      - name: 乗り役
+        # tests:
+        #   - not_null
+      - name: 調教Ｆ
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_テンＦ
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_中間Ｆ
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_終いＦ
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_テンＦ指数
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_中間Ｆ指数
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_終いＦ指数
+        # tests:
+        #   - not_null
+      - name: 時計分析データ_追切指数
+        # tests:
+        #   - not_null
+      - name: 併せ馬相手データ_併せ結果
+        # tests:
+        #   - not_null
+      - name: 併せ馬相手データ_追切種類
+        # tests:
+        #   - not_null
+      - name: 併せ馬相手データ_年齢
+        # tests:
+        #   - not_null
+      - name: 併せ馬相手データ_クラス
+        # tests:
+        #   - not_null
