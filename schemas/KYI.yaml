@@ -226,7 +226,7 @@
   format: "99"
   relative: 164
   comments: ""
-- name: 重適正コード
+- name: 重適性コード
   repeat_factor: 1
   byte_length: 1
   format: "9"

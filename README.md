@@ -6,6 +6,7 @@
 - [Data Index (restricted)](http://www.jrdb.com/member/dataindex.html)
 - [馬券の種類：はじめての方へ](https://www.jra.go.jp/kouza/beginner/baken/)
 - [PostgreSQL JDBC driver](https://jdbc.postgresql.org/download/)
+- [dbt - How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
 
 
 ![ER](./images/JRDB.drawio.png)
@@ -41,3 +42,6 @@
 | 血統登録番号 | 99101712　など                                                       |
 | 開催キー     | 「場コード・年・回・日」の組み合わせ。レースキーの一部とリンク可能。 |
 
+
+
+Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist in the codes. Could this be because you're using the 年パック instead of individual files? Test this hypothesis.

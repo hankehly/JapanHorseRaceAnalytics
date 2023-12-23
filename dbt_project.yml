@@ -23,23 +23,44 @@ seeds:
     # Make sure "code" columns are parsed as strings, not integers
     天候コード:
       +column_types:
-        code: text
+        code: varchar
     場コード:
       +column_types:
-        code: text
+        code: varchar
     特記コード:
       +column_types:
-        コード: text
+        コード: varchar
     調教コースコード:
       +column_types:
-        コード: text
+        コード: varchar
     追い状態コード:
       +column_types:
-        コード: text
+        コード: varchar
     条件コード:
       +column_types:
-        code: text
-        group_code: text
+        code: varchar
+        group_code: varchar
     馬場状態コード:
       +column_types:
-        code: text
+        code: varchar
+    調教矢印コード:
+      +column_types:
+        code: varchar
+    厩舎評価コード:
+      +column_types:
+        code: varchar
+    蹄コード:
+      +column_types:
+        code: varchar
+    重適性コード:
+      +column_types:
+        code: varchar
+    クラスコード:
+      +column_types:
+        code: varchar
+    印コード:
+      +column_types:
+        code: varchar
+    展開記号コード:
+      +column_types:
+        code: varchar

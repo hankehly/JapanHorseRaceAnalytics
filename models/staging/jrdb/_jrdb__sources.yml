@@ -196,7 +196,7 @@ sources:
           - name: 騎手期待連対率
           - name: 激走指数
           - name: 蹄コード
-          - name: 重適正コード
+          - name: 重適性コード
           - name: クラスコード
           - name: ブリンカー
           - name: 騎手名
