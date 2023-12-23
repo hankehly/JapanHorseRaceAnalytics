@@ -177,8 +177,10 @@ models:
         tests:
           - not_null
       - name: 調教コースコード
-        # tests:
-        #   - not_null
+        tests:
+          - relationships:
+              to: ref('調教コースコード')
+              field: コード
       - name: 追切種類
         # tests:
         #   - not_null

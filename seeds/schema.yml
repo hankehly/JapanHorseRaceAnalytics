@@ -9,7 +9,6 @@ seeds:
       - name: name
         tests:
           - not_null
-
   - name: 特記コード
     columns:
       - name: コード
@@ -20,5 +19,17 @@ seeds:
         tests:
           - not_null
       - name: 内容
+        tests:
+          - not_null
+  - name: 調教コースコード
+    columns:
+      - name: コード
+        tests:
+          - unique
+          - not_null
+      - name: 調教コース
+        tests:
+          - not_null
+      - name: 調教コース短縮
         tests:
           - not_null

@@ -20,12 +20,13 @@ models:
 seeds:
   JRDBDataParsingTools:
     +schema: seed
+    # Make sure "code" columns are parsed as strings, not integers
     場コード:
       +column_types:
         code: text
-        name: text
     特記コード:
       +column_types:
         コード: text
-        短縮: text
-        内容: text
+    調教コースコード:
+      +column_types:
+        コード: text

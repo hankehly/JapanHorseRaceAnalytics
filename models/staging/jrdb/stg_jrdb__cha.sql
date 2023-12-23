@@ -17,7 +17,7 @@ final as (
         nullif("レースキー_Ｒ", '') AS "レースキー_Ｒ",
         nullif("馬番", '') AS "馬番",
         nullif("曜日", '') AS "曜日",
-        nullif("調教年月日", '') AS "調教年月日",
+        to_date(nullif("調教年月日", ''), 'YYYYMMDD') as "調教年月日",
         nullif("回数", '') AS "回数",
         nullif("調教コースコード", '') AS "調教コースコード",
         nullif("追切種類", '') AS "追切種類",
