@@ -211,3 +211,94 @@ models:
           - relationships:
               to: ref('条件コード')
               field: code
+
+  - name: stg_jrdb__cyb
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 馬番
+        tests:
+          - not_null
+      - name: 調教タイプ # ??
+      - name: 調教コース種別 # ??
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4, 5]
+      - name: 調教コース種類_坂
+        tests:
+          - not_null
+      - name: 調教コース種類_Ｗ
+        tests:
+          - not_null
+      - name: 調教コース種類_ダ
+        tests:
+          - not_null
+      - name: 調教コース種類_芝
+        tests:
+          - not_null
+      - name: 調教コース種類_プ
+        tests:
+          - not_null
+      - name: 調教コース種類_障
+        tests:
+          - not_null
+      - name: 調教コース種類_ポ
+        tests:
+          - not_null
+      - name: 調教距離
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4]
+      - name: 調教重点
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4]
+      - name: 追切指数
+      - name: 仕上指数
+      - name: 調教量評価 # ?? where are these codes coming from
+        description: A,B,C,Dに分類 (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
+        tests:
+          - accepted_values:
+              values: ["A", "B", "C", "D"]
+      - name: 仕上指数変化 # ?? where are these codes coming from
+        tests:
+          - accepted_values:
+              values: [0, 1, 2, 3, 4]
+      - name: 調教コメント
+      - name: コメント年月日
+      - name: 調教評価
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 一週前追切指数
+
+      - name: 一週前追切コース
+        description: 一週前追切の調教の追切コース (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
+        tests:
+          - relationships:
+              to: ref('調教コースコード')
+              field: コード

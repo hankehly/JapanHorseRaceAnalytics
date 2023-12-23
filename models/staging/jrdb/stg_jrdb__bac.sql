@@ -43,14 +43,14 @@ final as (
         cast(nullif("５着賞金", '') as integer) as "５着賞金",
         cast(nullif("１着算入賞金", '') as integer) as "１着算入賞金",
         cast(nullif("２着算入賞金", '') as integer) as "２着算入賞金",
-        coalesce(nullif("馬券発売フラグ_単勝", ''), '0')::boolean as "馬券発売フラグ_単勝",
-        coalesce(nullif("馬券発売フラグ_複勝", ''), '0')::boolean as "馬券発売フラグ_複勝",
-        coalesce(nullif("馬券発売フラグ_枠連", ''), '0')::boolean as "馬券発売フラグ_枠連",
-        coalesce(nullif("馬券発売フラグ_馬連", '') , '0')::boolean as "馬券発売フラグ_馬連",
-        coalesce(nullif("馬券発売フラグ_馬単", '') , '0')::boolean as "馬券発売フラグ_馬単",
-        coalesce(nullif("馬券発売フラグ_ワイド", ''), '0')::boolean as "馬券発売フラグ_ワイド",
-        coalesce(nullif("馬券発売フラグ_３連複", ''), '0')::boolean as "馬券発売フラグ_３連複",
-        coalesce(nullif("馬券発売フラグ_３連単", ''), '0')::boolean as "馬券発売フラグ_３連単",
+        cast(coalesce(nullif("馬券発売フラグ_単勝", ''), '0') as boolean) as "馬券発売フラグ_単勝",
+        cast(coalesce(nullif("馬券発売フラグ_複勝", ''), '0') as boolean) as "馬券発売フラグ_複勝",
+        cast(coalesce(nullif("馬券発売フラグ_枠連", ''), '0') as boolean) as "馬券発売フラグ_枠連",
+        cast(coalesce(nullif("馬券発売フラグ_馬連", ''), '0') as boolean) as "馬券発売フラグ_馬連",
+        cast(coalesce(nullif("馬券発売フラグ_馬単", ''), '0') as boolean) as "馬券発売フラグ_馬単",
+        cast(coalesce(nullif("馬券発売フラグ_ワイド", ''), '0') as boolean) as "馬券発売フラグ_ワイド",
+        cast(coalesce(nullif("馬券発売フラグ_３連複", ''), '0') as boolean) as "馬券発売フラグ_３連複",
+        cast(coalesce(nullif("馬券発売フラグ_３連単", ''), '0') as boolean) as "馬券発売フラグ_３連単",
         nullif("WIN5フラグ", '') as "WIN5フラグ"
     from source
 )
