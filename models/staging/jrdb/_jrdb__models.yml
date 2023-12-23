@@ -295,10 +295,58 @@ models:
           - accepted_values:
               values: [1, 2, 3]
       - name: 一週前追切指数
-
       - name: 一週前追切コース
         description: 一週前追切の調教の追切コース (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - relationships:
               to: ref('調教コースコード')
               field: コード
+  - name: stg_jrdb__hjc
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 単勝払戻
+        tests:
+          - not_null
+      - name: 複勝払戻
+        tests:
+          - not_null
+      - name: 枠連払戻
+        tests:
+          - not_null
+      - name: 馬連払戻
+        tests:
+          - not_null
+      - name: ワイド払戻
+        tests:
+          - not_null
+      - name: 馬単払戻
+        tests:
+          - not_null
+      - name: ３連複払戻
+        tests:
+          - not_null
+      - name: ３連単払戻
+        tests:
+          - not_null

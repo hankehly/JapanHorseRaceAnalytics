@@ -8,3 +8,4 @@ logs/
 .user.yml
 .ipynb_checkpoints/
 .env
+.vscode/
