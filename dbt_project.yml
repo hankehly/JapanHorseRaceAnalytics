@@ -30,3 +30,10 @@ seeds:
     調教コースコード:
       +column_types:
         コード: text
+    追い状態コード:
+      +column_types:
+        コード: text
+    条件コード:
+      +column_types:
+        code: text
+        group_code: text

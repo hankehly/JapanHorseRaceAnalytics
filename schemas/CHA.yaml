@@ -87,7 +87,12 @@
   byte_length: 3
   format: ZZ9
   relative: 29
-  comments: ※4
+  comments: |
+    ※4 テンＦ、中間Ｆ、終いＦ　について
+    テンＦ：最初の１～２ハロン
+    中間Ｆ：テンＦ、終いＦではない部分
+    終いＦ：最後の１ハロン
+    ※２ハロン以上の場合は平均です。
 - name: 時計分析データ_中間Ｆ
   repeat_factor: 1
   byte_length: 3

@@ -25,7 +25,6 @@ models:
         tests:
           - not_null
       - name: 年月日
-        description: YYYYMMDD
         tests:
           - not_null
       - name: 発走時間
@@ -35,19 +34,16 @@ models:
         tests:
           - not_null
       - name: レース条件_トラック情報_芝ダ障害コード
-        description: 1:芝, 2:ダート, 3:障害
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: レース条件_トラック情報_右左
-        description: 1:右, 2:左, 3:直, 9:他
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 9]
       - name: レース条件_トラック情報_内外
-        description: 1:通常(内), 2:外, 3,直ダ, 9:他
         tests:
           - not_null
           - accepted_values:
@@ -70,17 +66,14 @@ models:
       - name: レース条件_グレード
       - name: レース名
       - name: 回数
-        description: 第123回など
       - name: 頭数
         tests:
           - not_null
       - name: コース
-        description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6]
       - name: 開催区分
-        description: 1:関東, 2:関西, 3:ローカル
         tests:
           - not_null
           - accepted_values:
@@ -176,53 +169,45 @@ models:
       - name: 回数
         tests:
           - not_null
-      - name: 調教コースコード
+      - name: 調教コースコード # there's only 1 null value in the whole dataset..
         tests:
           - relationships:
               to: ref('調教コースコード')
               field: コード
       - name: 追切種類
-        # tests:
-        #   - not_null
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
       - name: 追い状態
-        # tests:
-        #   - not_null
+        tests:
+          - relationships:
+              to: ref('追い状態コード')
+              field: コード
       - name: 乗り役
-        # tests:
-        #   - not_null
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
       - name: 調教Ｆ
-        # tests:
-        #   - not_null
+        tests:
+          - not_null
       - name: 時計分析データ_テンＦ
-        # tests:
-        #   - not_null
       - name: 時計分析データ_中間Ｆ
-        # tests:
-        #   - not_null
       - name: 時計分析データ_終いＦ
-        # tests:
-        #   - not_null
       - name: 時計分析データ_テンＦ指数
-        # tests:
-        #   - not_null
       - name: 時計分析データ_中間Ｆ指数
-        # tests:
-        #   - not_null
       - name: 時計分析データ_終いＦ指数
-        # tests:
-        #   - not_null
       - name: 時計分析データ_追切指数
-        # tests:
-        #   - not_null
       - name: 併せ馬相手データ_併せ結果
-        # tests:
-        #   - not_null
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
       - name: 併せ馬相手データ_追切種類
-        # tests:
-        #   - not_null
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
       - name: 併せ馬相手データ_年齢
-        # tests:
-        #   - not_null
       - name: 併せ馬相手データ_クラス
-        # tests:
-        #   - not_null
+        tests:
+          - relationships:
+              to: ref('条件コード')
+              field: code

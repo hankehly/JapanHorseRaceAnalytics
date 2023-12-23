@@ -33,3 +33,28 @@ seeds:
       - name: 調教コース短縮
         tests:
           - not_null
+  - name: 追い状態コード
+    columns:
+      - name: コード
+        tests:
+          - unique
+          - not_null
+      - name: 追い状態名
+        tests:
+          - not_null
+  - name: 条件コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: group_code
+        tests:
+          - not_null
+      - name: group_name
+        tests:
+          - not_null
+      - name: old_code_name
