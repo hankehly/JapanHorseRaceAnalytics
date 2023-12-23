@@ -1,7 +1,7 @@
 sources:
   - name: jrdb
     database: jrdb
-    schema: staging
+    schema: jrdb_raw
     tables:
       - name: bac
         description: 番組データ仕様
@@ -12,24 +12,11 @@ sources:
           - name: レースキー_日
           - name: レースキー_Ｒ
           - name: 年月日
-            description: YYYYMMDD
           - name: 発走時間
           - name: レース条件_距離
           - name: レース条件_トラック情報_芝ダ障害コード
-            description: 1:芝, 2:ダート, 3:障害
-            tests:
-              - accepted_values:
-                  values: [1, 2, 3]
           - name: レース条件_トラック情報_右左
-            description: 1:右, 2:左, 3:直, 9:他
-            tests:
-              - accepted_values:
-                  values: [1, 2, 3, 9]
           - name: レース条件_トラック情報_内外
-            description: 1:通常(内), 2:外, 3,直ダ, 9:他
-            tests:
-              - accepted_values:
-                  values: [1, 2, 3, 9]
           - name: レース条件_種別
           - name: レース条件_条件
           - name: レース条件_記号
@@ -39,15 +26,7 @@ sources:
           - name: 回数
           - name: 頭数
           - name: コース
-            description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
-            tests:
-              - accepted_values:
-                  values: ["", 1, 2, 3, 4, 5, 6]
           - name: 開催区分
-            description: 1:関東, 2:関西, 3:ローカル
-            tests:
-              - accepted_values:
-                  values: [1, 2, 3]
           - name: レース名短縮
           - name: レース名９文字
           - name: データ区分
@@ -67,3 +46,463 @@ sources:
           - name: 馬券発売フラグ_３連複
           - name: 馬券発売フラグ_３連単
           - name: WIN5フラグ
+      - name: cha
+        description: 調教本追切データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: 曜日
+          - name: 調教年月日
+          - name: 回数
+          - name: 調教コースコード
+          - name: 追切種類
+          - name: 追い状態
+          - name: 乗り役
+          - name: 調教Ｆ
+          - name: 時計分析データ_テンＦ
+          - name: 時計分析データ_中間Ｆ
+          - name: 時計分析データ_終いＦ
+          - name: 時計分析データ_テンＦ指数
+          - name: 時計分析データ_中間Ｆ指数
+          - name: 時計分析データ_終いＦ指数
+          - name: 時計分析データ_追切指数
+          - name: 併せ馬相手データ_併せ結果
+          - name: 併せ馬相手データ_追切種類
+          - name: 併せ馬相手データ_年齢
+          - name: 併せ馬相手データ_クラス
+      - name: cyb
+        description: 調教分析データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: 調教タイプ
+          - name: 調教コース種別
+          - name: 調教コース種類_坂
+          - name: 調教コース種類_Ｗ
+          - name: 調教コース種類_ダ
+          - name: 調教コース種類_芝
+          - name: 調教コース種類_プ
+          - name: 調教コース種類_障
+          - name: 調教コース種類_ポ
+          - name: 調教距離
+          - name: 調教重点
+          - name: 追切指数
+          - name: 仕上指数
+          - name: 調教量評価
+          - name: 仕上指数変化
+          - name: 調教コメント
+          - name: コメント年月日
+          - name: 調教評価
+          - name: 一週前追切指数
+          - name: 一週前追切コース
+      - name: hjc
+        description: 払戻情報データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 単勝払戻
+          - name: 複勝払戻
+          - name: 枠連払戻
+          - name: 馬連払戻
+          - name: ワイド払戻
+          - name: 馬単払戻
+          - name: ３連複払戻
+          - name: ３連単払戻
+      - name: kab
+        description: 開催データ仕様
+        columns:
+          - name: 開催キー_場コード
+          - name: 開催キー_年
+          - name: 開催キー_回
+          - name: 開催キー_日
+          - name: 年月日
+          - name: 開催区分
+          - name: 曜日
+          - name: 場名
+          - name: 天候コード
+          - name: 芝馬場状態コード
+          - name: 芝馬場状態内
+          - name: 芝馬場状態中
+          - name: 芝馬場状態外
+          - name: 芝馬場差
+          - name: 直線馬場差最内
+          - name: 直線馬場差内
+          - name: 直線馬場差中
+          - name: 直線馬場差外
+          - name: 直線馬場差大外
+          - name: ダ馬場状態コード
+          - name: ダ馬場状態内
+          - name: ダ馬場状態中
+          - name: ダ馬場状態外
+          - name: ダ馬場差
+          - name: データ区分
+          - name: 連続何日目
+          - name: 芝種類
+          - name: 草丈
+          - name: 転圧
+          - name: 凍結防止剤
+          - name: 中間降水量
+      - name: kyi
+        description: 競走馬データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: 血統登録番号
+          - name: 馬名
+          - name: ＩＤＭ
+          - name: 騎手指数
+          - name: 情報指数
+          - name: 総合指数
+          - name: 脚質
+          - name: 距離適性
+          - name: 上昇度
+          - name: ローテーション
+          - name: 基準オッズ
+          - name: 基準人気順位
+          - name: 基準複勝オッズ
+          - name: 基準複勝人気順位
+          - name: 特定情報◎
+          - name: 特定情報○
+          - name: 特定情報▲
+          - name: 特定情報△
+          - name: 特定情報×
+          - name: 総合情報◎
+          - name: 総合情報○
+          - name: 総合情報▲
+          - name: 総合情報△
+          - name: 総合情報×
+          - name: 人気指数
+          - name: 調教指数
+          - name: 厩舎指数
+          - name: 調教矢印コード
+          - name: 厩舎評価コード
+          - name: 騎手期待連対率
+          - name: 激走指数
+          - name: 蹄コード
+          - name: 重適正コード
+          - name: クラスコード
+          - name: ブリンカー
+          - name: 騎手名
+          - name: 負担重量
+          - name: 見習い区分
+          - name: 調教師名
+          - name: 調教師所属
+          - name: 他データリンク用キー_前走１競走成績キー
+          - name: 他データリンク用キー_前走２競走成績キー
+          - name: 他データリンク用キー_前走３競走成績キー
+          - name: 他データリンク用キー_前走４競走成績キー
+          - name: 他データリンク用キー_前走５競走成績キー
+          - name: 他データリンク用キー_前走１レースキー
+          - name: 他データリンク用キー_前走２レースキー
+          - name: 他データリンク用キー_前走３レースキー
+          - name: 他データリンク用キー_前走４レースキー
+          - name: 他データリンク用キー_前走５レースキー
+          - name: 枠番
+          - name: 印コード_総合印
+          - name: 印コード_ＩＤＭ印
+          - name: 印コード_情報印
+          - name: 印コード_騎手印
+          - name: 印コード_厩舎印
+          - name: 印コード_調教印
+          - name: 印コード_激走印
+          - name: 芝適性コード
+          - name: ダ適性コード
+          - name: 騎手コード
+          - name: 調教師コード
+          - name: 賞金情報_獲得賞金
+          - name: 賞金情報_収得賞金
+          - name: 賞金情報_条件クラス
+          - name: 展開予想データ_テン指数
+          - name: 展開予想データ_ペース指数
+          - name: 展開予想データ_上がり指数
+          - name: 展開予想データ_位置指数
+          - name: 展開予想データ_ペース予想
+          - name: 展開予想データ_道中順位
+          - name: 展開予想データ_道中差
+          - name: 展開予想データ_道中内外
+          - name: 展開予想データ_後３Ｆ順位
+          - name: 展開予想データ_後３Ｆ差
+          - name: 展開予想データ_後３Ｆ内外
+          - name: 展開予想データ_ゴール順位
+          - name: 展開予想データ_ゴール差
+          - name: 展開予想データ_ゴール内外
+          - name: 展開予想データ_展開記号
+          - name: 距離適性２
+          - name: 枠確定馬体重
+          - name: 枠確定馬体重増減
+          - name: 取消フラグ
+          - name: 性別コード
+          - name: 馬主名
+          - name: 馬主会コード
+          - name: 馬記号コード
+          - name: 激走順位
+          - name: LS指数順位
+          - name: テン指数順位
+          - name: ペース指数順位
+          - name: 上がり指数順位
+          - name: 位置指数順位
+          - name: 騎手期待単勝率
+          - name: 騎手期待３着内率
+          - name: 輸送区分
+          - name: 走法
+          - name: 体型
+          - name: 体型総合１
+          - name: 体型総合２
+          - name: 体型総合３
+          - name: 馬特記１
+          - name: 馬特記２
+          - name: 馬特記３
+          - name: 展開参考データ_馬スタート指数
+          - name: 展開参考データ_馬出遅率
+          - name: 展開参考データ_参考前走
+          - name: 展開参考データ_参考前走騎手コード
+          - name: 万券指数
+          - name: 万券印
+          - name: 降級フラグ
+          - name: 激走タイプ
+          - name: 休養理由分類コード
+          - name: フラグ
+          - name: 入厩何走目
+          - name: 入厩年月日
+          - name: 入厩何日前
+          - name: 放牧先
+          - name: 放牧先ランク
+          - name: 厩舎ランク
+      - name: ot
+        description: 基準オッズ３連複データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 登録頭数
+          - name: ３連複オッズ
+      - name: ou
+        description: 基準オッズ馬単データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 登録頭数
+          - name: 馬単オッズ
+      - name: ov
+        description: 基準オッズ３連単データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 登録頭数
+          - name: ３連単オッズ
+      - name: ow
+        description: 基準オッズワイドデータ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 登録頭数
+          - name: ワイドオッズ
+      - name: oz
+        description: 基準オッズデータ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 登録頭数
+          - name: 単勝オッズ
+          - name: 複勝オッズ
+          - name: 連勝オッズ
+      - name: sed
+        description: 成績データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: 競走成績キー_血統登録番号
+          - name: 競走成績キー_年月日
+          - name: 馬名
+          - name: レース条件_距離
+          - name: レース条件_トラック情報_芝ダ障害コード
+          - name: レース条件_トラック情報_右左
+          - name: レース条件_トラック情報_内外
+          - name: レース条件_馬場状態
+          - name: レース条件_種別
+          - name: レース条件_条件
+          - name: レース条件_記号
+          - name: レース条件_重量
+          - name: レース条件_グレード
+          - name: レース条件_レース名
+          - name: レース条件_頭数
+          - name: レース条件_レース名略称
+          - name: 馬成績_着順
+          - name: 馬成績_異常区分
+          - name: 馬成績_タイム
+          - name: 馬成績_斤量
+          - name: 馬成績_騎手名
+          - name: 馬成績_調教師名
+          - name: 馬成績_確定単勝オッズ
+          - name: 馬成績_確定単勝人気順位
+          - name: ＪＲＤＢデータ_ＩＤＭ
+          - name: ＪＲＤＢデータ_素点
+          - name: ＪＲＤＢデータ_馬場差
+          - name: ＪＲＤＢデータ_ペース
+          - name: ＪＲＤＢデータ_出遅
+          - name: ＪＲＤＢデータ_位置取
+          - name: ＪＲＤＢデータ_不利
+          - name: ＪＲＤＢデータ_前不利
+          - name: ＪＲＤＢデータ_中不利
+          - name: ＪＲＤＢデータ_後不利
+          - name: ＪＲＤＢデータ_レース
+          - name: ＪＲＤＢデータ_コース取り
+          - name: ＪＲＤＢデータ_上昇度コード
+          - name: ＪＲＤＢデータ_クラスコード
+          - name: ＪＲＤＢデータ_馬体コード
+          - name: ＪＲＤＢデータ_気配コード
+          - name: ＪＲＤＢデータ_レースペース
+          - name: ＪＲＤＢデータ_馬ペース
+          - name: ＪＲＤＢデータ_テン指数
+          - name: ＪＲＤＢデータ_上がり指数
+          - name: ＪＲＤＢデータ_ペース指数
+          - name: ＪＲＤＢデータ_レースＰ指数
+          - name: ＪＲＤＢデータ_1(2)着馬名
+          - name: ＪＲＤＢデータ_1(2)着タイム差
+          - name: ＪＲＤＢデータ_前３Ｆタイム
+          - name: ＪＲＤＢデータ_後３Ｆタイム
+          - name: ＪＲＤＢデータ_備考
+          - name: 確定複勝オッズ下
+          - name: 10時単勝オッズ
+          - name: 10時複勝オッズ
+          - name: コーナー順位１
+          - name: コーナー順位２
+          - name: コーナー順位３
+          - name: コーナー順位４
+          - name: 前３Ｆ先頭差
+          - name: 後３Ｆ先頭差
+          - name: 騎手コード
+          - name: 調教師コード
+          - name: 馬体重
+          - name: 馬体重増減
+          - name: 天候コード
+          - name: コース
+          - name: レース脚質
+          - name: 払戻データ_単勝
+          - name: 払戻データ_複勝
+          - name: 本賞金
+          - name: 収得賞金
+          - name: レースペース流れ
+          - name: 馬ペース流れ
+          - name: ４角コース取り
+          - name: 発走時間
+      - name: skb
+        description: 成績拡張データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: 競走成績キー_血統登録番号
+          - name: 競走成績キー_年月日
+          - name: 特記コード
+          - name: 馬具コード
+          - name: 脚元コード_総合
+          - name: 脚元コード_左前
+          - name: 脚元コード_右前
+          - name: 脚元コード_左後
+          - name: 脚元コード_右後
+          - name: パドックコメント
+          - name: 脚元コメント
+          - name: 馬具(その他)コメント
+          - name: レースコメント
+          - name: 分析用データ_ハミ
+          - name: 分析用データ_バンテージ
+          - name: 分析用データ_蹄鉄
+          - name: 分析用データ_蹄状態
+          - name: 分析用データ_ソエ
+          - name: 分析用データ_骨瘤
+      - name: tyb
+        description: 直前情報データ仕様
+        columns:
+          - name: レースキー_場コード
+          - name: レースキー_年
+          - name: レースキー_回
+          - name: レースキー_日
+          - name: レースキー_Ｒ
+          - name: 馬番
+          - name: ＩＤＭ
+          - name: 騎手指数
+          - name: 情報指数
+          - name: オッズ指数
+          - name: パドック指数
+          - name: 予備１
+          - name: 総合指数
+          - name: 馬具変更情報
+          - name: 脚元情報
+          - name: 取消フラグ
+          - name: 騎手コード
+          - name: 騎手名
+          - name: 負担重量
+          - name: 見習い区分
+          - name: 馬場状態コード
+          - name: 天候コード
+          - name: 単勝オッズ
+          - name: 複勝オッズ
+          - name: オッズ取得時間
+          - name: 馬体重
+          - name: 馬体重増減
+          - name: オッズ印
+          - name: パドック印
+          - name: 直前総合印
+          - name: 馬体コード
+          - name: 気配コード
+          - name: 発走時間
+      - name: ukc
+        description: 馬基本データ仕様
+        columns:
+          - name: 血統登録番号
+          - name: 馬名
+          - name: 性別コード
+          - name: 毛色コード
+          - name: 馬記号コード
+          - name: 血統情報_父馬名
+          - name: 血統情報_母馬名
+          - name: 血統情報_母父馬名
+          - name: 生年月日
+          - name: 父馬生年
+          - name: 母馬生年
+          - name: 母父馬生年
+          - name: 馬主名
+          - name: 馬主会コード
+          - name: 生産者名
+          - name: 産地名
+          - name: 登録抹消フラグ
+          - name: データ年月日
+          - name: 父系統コード
+          - name: 母父系統コード
