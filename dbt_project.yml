@@ -1,7 +1,7 @@
 name: "JRDBDataParsingTools"
 version: "1.0.0"
 config-version: 2
-profile: "default"
+profile: JRDBDataParsingTools
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -17,3 +17,6 @@ models:
       +schema: staging
     curated:
       +schema: curated
+seeds:
+  JRDBDataParsingTools:
+    schema: seed

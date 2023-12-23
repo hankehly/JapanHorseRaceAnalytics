@@ -1,16 +1,18 @@
-default:
+JRDBDataParsingTools:
+  # default target
   target: local
+
   outputs:
     local:
       type: postgres
       method: jdbc
       user: admin
       password: admin
-      # Behavior is a little odd.
-      # When combined with custom schema name, results in schema name of "dbt_<custom_schema_name>".
-      # e.g. "dbt_staging"
-      # See https://docs.getdbt.com/docs/build/custom-schemas#understanding-custom-schemas
-      schema: dbt
+      # This is the target schema name.
+      # When combined with custom schema name (e.g. in dbt_profile.yml)
+      # the resulting schema name is "jrdb_<custom_schema_name>".
+      # https://docs.getdbt.com/docs/build/custom-schemas#understanding-custom-schemas
+      schema: jrdb
       database: jrdb
       host: localhost
       port: 5432
