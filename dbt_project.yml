@@ -21,6 +21,9 @@ seeds:
   JRDBDataParsingTools:
     +schema: seed
     # Make sure "code" columns are parsed as strings, not integers
+    天候コード:
+      +column_types:
+        code: text
     場コード:
       +column_types:
         code: text
@@ -37,3 +40,6 @@ seeds:
       +column_types:
         code: text
         group_code: text
+    馬場状態コード:
+      +column_types:
+        code: text

@@ -1,5 +1,14 @@
 version: 2
 seeds:
+  - name: 天候コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: weather_condition
+        tests:
+          - not_null
   - name: 場コード
     columns:
       - name: code
@@ -58,3 +67,12 @@ seeds:
         tests:
           - not_null
       - name: old_code_name
+  - name: 馬場状態コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: name
+        tests:
+          - not_null

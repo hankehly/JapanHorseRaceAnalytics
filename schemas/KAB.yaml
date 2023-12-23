@@ -57,7 +57,12 @@
   byte_length: 2
   format: "9"
   relative: 23
-  comments: 推 →JRDBデータコード表
+  comments: |
+    推 →JRDBデータコード表
+    1  良
+    2  稍重
+    3  重
+    4  不良
 - name: 芝馬場状態内
   repeat_factor: 1
   byte_length: 1

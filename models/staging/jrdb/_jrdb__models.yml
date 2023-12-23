@@ -350,3 +350,100 @@ models:
       - name: ３連単払戻
         tests:
           - not_null
+  - name: stg_jrdb__kab
+    columns:
+      # derived
+      - name: 開催キー
+        tests:
+          - not_null
+      # original
+      - name: 開催キー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: 開催キー_年
+        tests:
+          - not_null
+      - name: 開催キー_回
+        tests:
+          - not_null
+      - name: 開催キー_日
+        tests:
+          - not_null
+      - name: 年月日
+        tests:
+          - not_null
+      - name: 開催区分
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 曜日
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["月", "火", "水", "木", "金", "土", "日"]
+      - name: 場名
+      - name: 天候コード
+        tests:
+          - relationships:
+              to: ref('天候コード')
+              field: code
+
+      - name: 芝馬場状態コード
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: 芝馬場状態内
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: 芝馬場状態中
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: 芝馬場状態外
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: 芝馬場差
+      - name: 直線馬場差最内
+      - name: 直線馬場差内
+      - name: 直線馬場差中
+      - name: 直線馬場差外
+      - name: 直線馬場差大外
+      - name: ダ馬場状態コード
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: ダ馬場状態内
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: ダ馬場状態中
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: ダ馬場状態外
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: ダ馬場差
+      - name: データ区分
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: 連続何日目
+        tests:
+          - not_null
+      - name: 芝種類
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 草丈
+      - name: 転圧
+      - name: 凍結防止剤
+      - name: 中間降水量
