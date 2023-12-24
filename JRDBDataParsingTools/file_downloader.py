@@ -8,6 +8,7 @@ import zipfile
 import io
 import datetime
 from JRDBDataParsingTools.structured_logger import logger
+from concurrent.futures import ThreadPoolExecutor
 
 
 def is_year_file(filename) -> bool:
@@ -62,7 +63,14 @@ class DownloadAndExtractFilesArgs(BaseModel):
         return v
 
 
-def download_and_extract_files(webpage_url, username, password, download_dir) -> None:
+def download_and_extract_files(
+    webpage_url: str,
+    username: str,
+    password: str,
+    download_dir: str,
+    skip_year_files: bool = False,
+    threads: int = None,
+) -> None:
     """
     Download and extract all files from the JRDB website.
 
@@ -76,6 +84,13 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
         The password to use for authentication.
     download_dir : str
         The directory to download and extract the files to.
+    skip_year_files : bool, optional
+        If True, skip downloading and extracting year files.
+        Defaults to False.
+    threads : int, optional
+        The number of threads to use for downloading and extracting files.
+        If None, use the number of CPUs on the system.
+        Defaults to None.
 
     Returns
     -------
@@ -101,29 +116,36 @@ def download_and_extract_files(webpage_url, username, password, download_dir) ->
 
     covered_years = set()
 
-    logger.debug("Processing year files")
-    for link in links:
-        file_link = link.get("href")
-        if is_year_file(file_link):
-            download_and_extract(
-                str(args.webpage_url),
-                file_link,
-                args.username,
-                args.password,
-                str(args.download_dir),
-            )
-            covered_years.add(extract_year(file_link))
+    if skip_year_files:
+        logger.debug("Skipping year files")
+    else:
+        logger.debug("Processing year files")
+        with ThreadPoolExecutor(max_workers=threads) as executor:
+            for link in links:
+                file_link = link.get("href")
+                if is_year_file(file_link):
+                    executor.submit(
+                        download_and_extract,
+                        str(args.webpage_url),
+                        file_link,
+                        args.username,
+                        args.password,
+                        str(args.download_dir),
+                    )
+                    covered_years.add(extract_year(file_link))
 
     logger.debug("Processing date files")
-    for link in links:
-        file_link = link.get("href")
-        if is_date_file(link.get("href")):
-            date = extract_date(file_link)
-            if date.year not in covered_years:
-                download_and_extract(
-                    str(args.webpage_url),
-                    file_link,
-                    args.username,
-                    args.password,
-                    str(args.download_dir),
-                )
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        for link in links:
+            file_link = link.get("href")
+            if is_date_file(link.get("href")):
+                date = extract_date(file_link)
+                if date.year not in covered_years:
+                    executor.submit(
+                        download_and_extract,
+                        str(args.webpage_url),
+                        file_link,
+                        args.username,
+                        args.password,
+                        str(args.download_dir),
+                    )
