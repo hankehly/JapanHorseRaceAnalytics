@@ -707,7 +707,7 @@ models:
       - name: 距離適性２
       - name: 枠確定馬体重
         description: データ無:スペース
-      - name: 枠確定馬体重増減
+      - name: 枠確定馬体重増減gn
         description: 符号+数字２桁,データ無:スペース
       - name: 取消フラグ
         description: 1:取消

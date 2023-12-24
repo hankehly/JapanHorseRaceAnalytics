@@ -43,19 +43,26 @@ final as (
         cast(nullif("人気指数", '') as integer) as "人気指数",
         cast(nullif("調教指数", '') as numeric) as "調教指数",
         cast(nullif("厩舎指数", '') as numeric) as "厩舎指数",
+
         -- replacing 2 nulls with most common value
         coalesce(nullif("調教矢印コード", ''), '3') as "調教矢印コード",
+
         -- replacing 2 nulls with most common value
         coalesce(nullif("厩舎評価コード", ''), '3') as "厩舎評価コード",
+
         cast(nullif("騎手期待連対率", '') as numeric) as "騎手期待連対率",
         cast(nullif("激走指数", '') as integer) as "激走指数",
+
         -- A handful of records contain codes 00, 13, 16, 25, and 45, which are missing from the codes list
         -- defaulting to null for these edge cases
         case when "蹄コード" in ('00', '13', '16', '25', '45', '') then null else "蹄コード" end "蹄コード",
+
         -- 0 is not included in schema, but null is.
         nullif(nullif("重適性コード", ''), '0') as "重適性コード",
+
         -- Same story here. Codes appear in the data that aren't in the schema. Replacing with null.
         case when "クラスコード" in ('00', '19', '20', '63', '64', '65', '66', '') then null else "クラスコード" end "クラスコード",
+
         nullif("ブリンカー", '') as "ブリンカー",
         nullif("騎手名", '') as "騎手名",
         cast(nullif("負担重量", '') as integer) as "負担重量",
@@ -73,6 +80,7 @@ final as (
         nullif("他データリンク用キー_前走４レースキー", '') as "他データリンク用キー_前走４レースキー",
         nullif("他データリンク用キー_前走５レースキー", '') as "他データリンク用キー_前走５レースキー",
         nullif("枠番", '') as "枠番",
+
         -- The code 7 is included in the data pretty frequently, but not in the schema. Replacing with null.
         nullif(nullif("印コード_総合印", ''), '7') as "印コード_総合印",
         nullif(nullif("印コード_ＩＤＭ印", ''), '7') as "印コード_ＩＤＭ印",
