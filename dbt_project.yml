@@ -25,56 +25,62 @@ seeds:
     # try changing 'text' to 'varchar' and re-running with --full-refresh.
     天候コード:
       +column_types:
-        code: text
+        code: varchar
     場コード:
       +column_types:
-        code: text
+        code: varchar
     特記コード:
       +column_types:
-        コード: text
+        コード: varchar
     調教コースコード:
       +column_types:
-        コード: text
+        コード: varchar
     追い状態コード:
       +column_types:
-        コード: text
+        コード: varchar
     条件コード:
       +column_types:
-        code: text
-        group_code: text
+        code: varchar
+        group_code: varchar
     馬場状態コード:
       +column_types:
-        code: text
+        code: varchar
     調教矢印コード:
       +column_types:
-        code: text
+        code: varchar
     厩舎評価コード:
       +column_types:
-        code: text
+        code: varchar
     蹄コード:
       +column_types:
-        code: text
+        code: varchar
     重適性コード:
       +column_types:
-        code: text
+        code: varchar
     クラスコード:
       +column_types:
-        code: text
+        code: varchar
     印コード:
       +column_types:
-        code: text
+        code: varchar
     展開記号コード:
       +column_types:
-        code: text
+        code: varchar
     距離適性コード:
       +column_types:
-        code: text
+        code: varchar
     馬記号コード:
       +column_types:
-        code: text
+        code: varchar
     上昇度コード:
       +column_types:
-        code: text
+        code: varchar
     休養理由分類コード:
       +column_types:
-        code: text
+        code: varchar
+    馬体コード:
+      +column_types:
+        code: varchar
+    気配コード:
+      +column_types:
+        code: varchar

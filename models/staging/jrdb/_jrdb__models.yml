@@ -924,3 +924,135 @@ models:
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  - name: stg_jrdb__tyb
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 馬番
+        tests:
+          - not_null
+      - name: ＩＤＭ
+        tests:
+          - not_null
+      - name: 騎手指数
+        tests:
+          - not_null
+      - name: 情報指数
+        tests:
+          - not_null
+      - name: オッズ指数
+        tests:
+          - not_null
+      - name: パドック指数
+        tests:
+          - not_null
+      - name: 予備１
+      - name: 総合指数
+        tests:
+          - not_null
+      - name: 馬具変更情報
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2]
+      - name: 脚元情報
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3]
+        description: |
+          0:平行線
+          1:良化（!）
+          2:疑問（?）
+          3:悪化（X）
+      - name: 取消フラグ
+        description: 取消フラグ
+        tests:
+          - not_null
+
+      # todo: link with 騎手 master
+      - name: 騎手コード
+        tests:
+          - not_null
+
+      - name: 騎手名
+        tests:
+          - not_null
+      - name: 負担重量
+        description: 0.1Kg単位
+        tests:
+          - not_null
+      - name: 見習い区分
+        description: 1:☆(1K減),2:△(2K減),3:▲(3K減)
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3]
+      - name: 馬場状態コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('馬場状態コード')
+              field: code
+      - name: 天候コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('天候コード')
+              field: code
+
+      # there are only 14 rows of null records (from 1999)
+      - name: 単勝オッズ
+      - name: 複勝オッズ
+      - name: オッズ取得時間
+
+      - name: 馬体重
+      - name: 馬体重増減
+      - name: オッズ印
+        tests:
+          - relationships:
+              to: ref('印コード')
+              field: code
+      - name: パドック印
+        tests:
+          - relationships:
+              to: ref('印コード')
+              field: code
+      - name: 直前総合印
+        tests:
+          - relationships:
+              to: ref('印コード')
+              field: code
+      - name: 馬体コード
+        tests:
+          - relationships:
+              to: ref('馬体コード')
+              field: code
+      - name: 気配コード
+        tests:
+          - relationships:
+              to: ref('気配コード')
+              field: code
+      - name: 発走時間
