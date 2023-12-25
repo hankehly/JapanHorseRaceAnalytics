@@ -495,8 +495,16 @@ models:
         tests:
           - not_null
       - name: 脚質 # ?? values 1-9 what do they mean?
-      - name: 距離適性 # ?? same here
-      - name: 上昇度 # ?? same
+      - name: 距離適性
+        tests:
+          - relationships:
+              to: ref('距離適性コード')
+              field: code
+      - name: 上昇度
+        tests:
+          - relationships:
+              to: ref('上昇度コード')
+              field: code
       - name: ローテーション
       - name: 基準オッズ
         tests:
@@ -702,25 +710,32 @@ models:
           - relationships:
               to: ref('展開記号コード')
               field: code
-
-      # you are here
-      - name: 距離適性２
+      - name: 距離適性２ # what does this field mean given we already have 距離適性?
+        tests:
+          - relationships:
+              to: ref('距離適性コード')
+              field: code
       - name: 枠確定馬体重
-        description: データ無:スペース
-      - name: 枠確定馬体重増減gn
-        description: 符号+数字２桁,データ無:スペース
+      - name: 枠確定馬体重増減
       - name: 取消フラグ
-        description: 1:取消
+        tests:
+          - not_null
       - name: 性別コード
-        description: 1:牡,2:牝,3,セン
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3]
       - name: 馬主名
-        description: 全角２０文字
+        tests:
+          - not_null
       - name: 馬主会コード
-        description: 参考データ。"00":無所属,スペース:不明
       - name: 馬記号コード
-        description: コード表参照
+        tests:
+          - not_null
+          - relationships:
+              to: ref('馬記号コード')
+              field: code
       - name: 激走順位
-        description: レース出走馬中での順位
       - name: LS指数順位
       - name: テン指数順位
       - name: ペース指数順位
@@ -729,47 +744,183 @@ models:
       - name: 騎手期待単勝率
       - name: 騎手期待３着内率
       - name: 輸送区分
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4]
       - name: 走法
-        description: コード表参照
-      - name: 体型
-        description: コード表参照
+        description: don't use, this field is no longer updated
+      - name: 体型_全体
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_背中
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_胴
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_尻
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_トモ
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_腹袋
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_頭
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_首
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_胸
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_肩
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_前長
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_後長
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_前幅
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_後幅
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_前繋
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+      - name: 体型_後繋
+        tests:
+          - accepted_values:
+              values: [1, 2, 3]
+        # 体型_尾 and 体型_振 contain mostly nulls and shouldn't be used
+      - name: 体型_尾
+      - name: 体型_振
+      - name: 体型_予備1
+      - name: 体型_予備2
+      - name: 体型_予備3
+      - name: 体型_予備4
+      - name: 体型_予備5
+      - name: 体型_予備6
+      - name: 体型_予備7
+      - name: 体型_予備8
       - name: 体型総合１
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 体型総合２
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 体型総合３
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 馬特記１
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 馬特記２
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 馬特記３
-        description: 特記コード参照
+        tests:
+          - relationships:
+              to: ref('特記コード')
+              field: コード
       - name: 展開参考データ_馬スタート指数
       - name: 展開参考データ_馬出遅率
+
+      # このフィールドの意味/形式が分からない
       - name: 展開参考データ_参考前走
-        description: 参考となる前走（２走分格納）
+
+      # todo: relationship with 騎手 master
       - name: 展開参考データ_参考前走騎手コード
-        description: 参考となる前走の騎手
+
       - name: 万券指数
+
+      # この印は印コードとリンクする？（1-8が格納されている）
       - name: 万券印
+
+      # このフィールドは19'以降全部「0:通常」になっているので使わない方が良さそう
       - name: 降級フラグ
-        description: 1:降級, 2:２段階降級, 0:通常
+        tests:
+          - accepted_values:
+              values: [0, 1, 2]
+
       - name: 激走タイプ
-        description: 激走馬のタイプ分け。説明参照
+        tests:
+          - accepted_values:
+              values: [A1, A2, A3, A4, B1, B2]
       - name: 休養理由分類コード
-        description: コード表参照
-      - name: フラグ
-        description: 初芝初ダ初障などのフラグ。内容説明参照
+        tests:
+          - relationships:
+              to: ref('休養理由分類コード')
+              field: code
+      - name: 芝ダ障害フラグ
+        tests:
+          - accepted_values:
+              values: [0, 1, 2]
+      - name: 距離フラグ
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: クラスフラグ
+        tests:
+          - accepted_values:
+              values: [0, 1, 2, 3]
+      - name: 転厩フラグ
+        tests:
+          - accepted_values:
+              values: [0, 1, 2, 3]
+      - name: 去勢フラグ
+        tests:
+          - accepted_values:
+              values: [0, 1, 2, 3]
+      - name: 乗替フラグ
+        tests:
+          - accepted_values:
+              values: [0, 1, 9]
+
+      # just contains blank space
+      - name: 予備フラグ
+
       - name: 入厩何走目
-        description: 例）2:入厩後２走目
       - name: 入厩年月日
-        description: YYYYMMDD
       - name: 入厩何日前
-        description: レース日から遡っての入厩の日数（今走前に入厩の場合）
       - name: 放牧先
-        description: 放牧先/近走放牧先
       - name: 放牧先ランク
-        description: A-E
+        tests:
+          - accepted_values:
+              values: [A, B, C, D, E]
       - name: 厩舎ランク
-        description: 高い1-9低い 内容説明参照
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9]

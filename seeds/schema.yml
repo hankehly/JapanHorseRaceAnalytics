@@ -142,3 +142,39 @@ seeds:
       - name: description
         tests:
           - not_null
+  - name: 距離適性コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: name
+        tests:
+          - not_null
+  - name: 馬記号コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: horse_symbol_code
+        tests:
+          - not_null
+  - name: 上昇度コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: description
+        tests:
+          - not_null
+  - name: 休養理由分類コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: rest_reason
+        tests:
+          - not_null

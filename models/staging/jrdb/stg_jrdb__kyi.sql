@@ -23,8 +23,13 @@ final as (
         cast(nullif("情報指数", '') as numeric) as "情報指数",
         cast(nullif("総合指数", '') as numeric) as "総合指数",
         nullif("脚質", '') as "脚質",
-        nullif("距離適性", '') as "距離適性",
-        nullif("上昇度", '') as "上昇度",
+        
+        -- contains values 0-9, but 距離適性コード only lists 1,2,3,5,6
+        case when "距離適性" in (SELECT code FROM {{ ref('距離適性コード') }}) then "距離適性" else null end "距離適性",
+
+        -- 1-5 is expected, but there are many 0s and rarely 8s. Replacing with null.
+        case when "上昇度" in (SELECT code FROM {{ ref('上昇度コード') }}) then "上昇度" else null end "上昇度",
+
         cast(nullif("ローテーション", '') as integer) as "ローテーション",
         cast(nullif("基準オッズ", '') as numeric) as "基準オッズ",
         cast(nullif("基準人気順位", '') as integer) as "基準人気順位",
@@ -104,7 +109,7 @@ final as (
         cast(nullif("賞金情報_収得賞金", '') as integer) as "賞金情報_収得賞金",
 
         -- has 14 nulls, replacing with 0
-        coalesce(cast(nullif("賞金情報_条件クラス", '') as integer), 0) as "賞金情報_条件クラス",
+        coalesce(nullif("賞金情報_条件クラス", ''), '0') as "賞金情報_条件クラス",
 
         cast(nullif("展開予想データ_テン指数", '') as numeric) as "展開予想データ_テン指数",
         cast(nullif("展開予想データ_ペース指数", '') as numeric) as "展開予想データ_ペース指数",
@@ -123,47 +128,94 @@ final as (
         nullif("展開予想データ_後３Ｆ内外", '') as "展開予想データ_後３Ｆ内外",
         cast(nullif("展開予想データ_ゴール順位", '') as integer) as "展開予想データ_ゴール順位",
         cast(nullif("展開予想データ_ゴール差", '') as integer) as "展開予想データ_ゴール差",
-
         nullif("展開予想データ_ゴール内外", '') as "展開予想データ_ゴール内外",
         nullif("展開予想データ_展開記号", '') as "展開予想データ_展開記号",
-        nullif("距離適性２", '') as "距離適性２",
-        nullif("枠確定馬体重", '') as "枠確定馬体重",
+
+        -- what does this field even mean?
+        -- contains values (1,2,3,4,5,6,8), but 距離適性コード only lists 1,2,3,5,6
+        case when "距離適性２" in (SELECT code FROM {{ ref('距離適性コード') }}) then "距離適性２" else null end "距離適性２",
+
+        cast(nullif("枠確定馬体重", '') as integer) as "枠確定馬体重",
         nullif("枠確定馬体重増減", '') as "枠確定馬体重増減",
-        nullif("取消フラグ", '') as "取消フラグ",
+        cast(coalesce(nullif("取消フラグ", ''), '0') as boolean) as "取消フラグ",
         nullif("性別コード", '') as "性別コード",
         nullif("馬主名", '') as "馬主名",
         nullif("馬主会コード", '') as "馬主会コード",
-        nullif("馬記号コード", '') as "馬記号コード",
-        nullif("激走順位", '') as "激走順位",
-        nullif("LS指数順位", '') as "LS指数順位",
-        nullif("テン指数順位", '') as "テン指数順位",
-        nullif("ペース指数順位", '') as "ペース指数順位",
-        nullif("上がり指数順位", '') as "上がり指数順位",
-        nullif("位置指数順位", '') as "位置指数順位",
-        nullif("騎手期待単勝率", '') as "騎手期待単勝率",
-        nullif("騎手期待３着内率", '') as "騎手期待３着内率",
-        nullif("輸送区分", '') as "輸送区分",
+
+        -- There are 17 rows with nulls in them.
+        -- null is represented in the codes as 00, so replacing with that.
+        coalesce(nullif("馬記号コード", ''), '00') as "馬記号コード",
+
+        cast(nullif("激走順位", '') as integer) as "激走順位",
+        cast(nullif("LS指数順位", '') as integer) as "LS指数順位",
+        cast(nullif("テン指数順位", '') as integer) as "テン指数順位",
+        cast(nullif("ペース指数順位", '') as integer) as "ペース指数順位",
+        cast(nullif("上がり指数順位", '') as integer) as "上がり指数順位",
+        cast(nullif("位置指数順位", '') as integer) as "位置指数順位",
+        cast(nullif("騎手期待単勝率", '') as numeric) as "騎手期待単勝率",
+        cast(nullif("騎手期待３着内率", '') as numeric) as "騎手期待３着内率",
+        coalesce(nullif("輸送区分", ''), '0') as "輸送区分",
         nullif("走法", '') as "走法",
-        nullif("体型", '') as "体型",
-        nullif("体型総合１", '') as "体型総合１",
-        nullif("体型総合２", '') as "体型総合２",
-        nullif("体型総合３", '') as "体型総合３",
-        nullif("馬特記１", '') as "馬特記１",
-        nullif("馬特記２", '') as "馬特記２",
-        nullif("馬特記３", '') as "馬特記３",
-        nullif("展開参考データ_馬スタート指数", '') as "展開参考データ_馬スタート指数",
-        nullif("展開参考データ_馬出遅率", '') as "展開参考データ_馬出遅率",
+
+
+        case when substring("体型", 1, 1) in ('1', '2', '3') then substring("体型", 1, 1) else null end "体型_全体",
+        case when substring("体型", 2, 1) in ('1', '2', '3') then substring("体型", 2, 1) else null end "体型_背中",
+        case when substring("体型", 3, 1) in ('1', '2', '3') then substring("体型", 3, 1) else null end "体型_胴",
+        case when substring("体型", 4, 1) in ('1', '2', '3') then substring("体型", 4, 1) else null end "体型_尻",
+        case when substring("体型", 5, 1) in ('1', '2', '3') then substring("体型", 5, 1) else null end "体型_トモ",
+        case when substring("体型", 6, 1) in ('1', '2', '3') then substring("体型", 6, 1) else null end "体型_腹袋",
+        case when substring("体型", 7, 1) in ('1', '2', '3') then substring("体型", 7, 1) else null end "体型_頭",
+        case when substring("体型", 8, 1) in ('1', '2', '3') then substring("体型", 8, 1) else null end "体型_首",
+        case when substring("体型", 9, 1) in ('1', '2', '3') then substring("体型", 9, 1) else null end "体型_胸",
+        case when substring("体型", 10, 1) in ('1', '2', '3') then substring("体型", 10, 1) else null end "体型_肩",
+        case when substring("体型", 11, 1) in ('1', '2', '3') then substring("体型", 11, 1) else null end "体型_前長",
+        case when substring("体型", 12, 1) in ('1', '2', '3') then substring("体型", 12, 1) else null end "体型_後長",
+        case when substring("体型", 13, 1) in ('1', '2', '3') then substring("体型", 13, 1) else null end "体型_前幅",
+        case when substring("体型", 14, 1) in ('1', '2', '3') then substring("体型", 14, 1) else null end "体型_後幅",
+        case when substring("体型", 15, 1) in ('1', '2', '3') then substring("体型", 15, 1) else null end "体型_前繋",
+        case when substring("体型", 16, 1) in ('1', '2', '3') then substring("体型", 16, 1) else null end "体型_後繋",
+
+        -- don't use 体型_尾 and 体型_振 fields because they are almost always null
+        substring("体型", 17, 1) as "体型_尾",
+        substring("体型", 18, 1) as "体型_振",
+
+        substring("体型", 19, 1) as "体型_予備1",
+        substring("体型", 20, 1) as "体型_予備2",
+        substring("体型", 21, 1) as "体型_予備3",
+        substring("体型", 22, 1) as "体型_予備4",
+        substring("体型", 23, 1) as "体型_予備5",
+        substring("体型", 24, 1) as "体型_予備6",
+        substring("体型", 25, 1) as "体型_予備7",
+        substring("体型", 26, 1) as "体型_予備8",
+
+        -- このフィールドに z とか h が入っていたりする
+        case when "体型総合１" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合１" else null end "体型総合１",
+        case when "体型総合２" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合２" else null end "体型総合２",
+        case when "体型総合３" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合３" else null end "体型総合３",
+        case when "馬特記１" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記１" else null end "馬特記１",
+        case when "馬特記２" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記２" else null end "馬特記２",
+        case when "馬特記３" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記３" else null end "馬特記３",
+
+        cast(nullif("展開参考データ_馬スタート指数", '') as numeric) as "展開参考データ_馬スタート指数",
+        cast(nullif("展開参考データ_馬出遅率", '') as numeric) as "展開参考データ_馬出遅率",
         nullif("展開参考データ_参考前走", '') as "展開参考データ_参考前走",
         nullif("展開参考データ_参考前走騎手コード", '') as "展開参考データ_参考前走騎手コード",
-        nullif("万券指数", '') as "万券指数",
+        cast(nullif("万券指数", '') as integer) as "万券指数",
         nullif("万券印", '') as "万券印",
         nullif("降級フラグ", '') as "降級フラグ",
         nullif("激走タイプ", '') as "激走タイプ",
         nullif("休養理由分類コード", '') as "休養理由分類コード",
-        nullif("フラグ", '') as "フラグ",
-        nullif("入厩何走目", '') as "入厩何走目",
-        nullif("入厩年月日", '') as "入厩年月日",
-        nullif("入厩何日前", '') as "入厩何日前",
+
+        case when substring("フラグ", 1, 1) in ('0', '1', '2') then substring("フラグ", 1, 1) else null end "芝ダ障害フラグ",
+        case when substring("フラグ", 2, 1) in ('0', '1') then substring("フラグ", 2, 1) else null end "距離フラグ",
+        case when substring("フラグ", 3, 1) in ('0', '1', '2', '3') then substring("フラグ", 3, 1) else null end "クラスフラグ",
+        case when substring("フラグ", 4, 1) in ('0', '1', '2', '3') then substring("フラグ", 4, 1) else null end "転厩フラグ",
+        case when substring("フラグ", 5, 1) in ('0', '1', '2', '3') then substring("フラグ", 5, 1) else null end "去勢フラグ",
+        case when substring("フラグ", 6, 1) in ('0', '1', '9') then substring("フラグ", 6, 1) else null end "乗替フラグ",
+        substring("フラグ", 7, 10) "予備フラグ",
+        cast(nullif("入厩何走目", '') as integer) as "入厩何走目",
+        to_date(nullif("入厩年月日", ''), 'YYYYMMDD') as "入厩年月日",
+        cast(nullif("入厩何日前", '') as integer) as "入厩何日前",
         nullif("放牧先", '') as "放牧先",
         nullif("放牧先ランク", '') as "放牧先ランク",
         nullif("厩舎ランク", '') as "厩舎ランク"

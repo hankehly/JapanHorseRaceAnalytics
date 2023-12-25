@@ -20,47 +20,61 @@ models:
 seeds:
   JRDBDataParsingTools:
     +schema: seed
-    # Make sure "code" columns are parsed as strings, not integers
+    # Make sure "code" columns are parsed as strings, not integers.
+    # This workaround is really buggy. If it fails to parse a column as a string,
+    # try changing 'text' to 'varchar' and re-running with --full-refresh.
     天候コード:
       +column_types:
-        code: varchar
+        code: text
     場コード:
       +column_types:
-        code: varchar
+        code: text
     特記コード:
       +column_types:
-        コード: varchar
+        コード: text
     調教コースコード:
       +column_types:
-        コード: varchar
+        コード: text
     追い状態コード:
       +column_types:
-        コード: varchar
+        コード: text
     条件コード:
       +column_types:
-        code: varchar
-        group_code: varchar
+        code: text
+        group_code: text
     馬場状態コード:
       +column_types:
-        code: varchar
+        code: text
     調教矢印コード:
       +column_types:
-        code: varchar
+        code: text
     厩舎評価コード:
       +column_types:
-        code: varchar
+        code: text
     蹄コード:
       +column_types:
-        code: varchar
+        code: text
     重適性コード:
       +column_types:
-        code: varchar
+        code: text
     クラスコード:
       +column_types:
-        code: varchar
+        code: text
     印コード:
       +column_types:
-        code: varchar
+        code: text
     展開記号コード:
       +column_types:
-        code: varchar
+        code: text
+    距離適性コード:
+      +column_types:
+        code: text
+    馬記号コード:
+      +column_types:
+        code: text
+    上昇度コード:
+      +column_types:
+        code: text
+    休養理由分類コード:
+      +column_types:
+        code: text
