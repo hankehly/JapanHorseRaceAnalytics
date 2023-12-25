@@ -40,7 +40,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3]
+              values: ['芝', 'ダート', '障害']
       - name: レース条件_トラック情報_右左
         tests:
           - not_null
