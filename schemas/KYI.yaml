@@ -57,49 +57,58 @@
   byte_length: 5
   format: ZZ9.9
   relative: 60
-  comments: ""
+  comments: 基準オッズと騎手の連対率の関係を基に算出された指数値。
 - name: 情報指数
   repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 65
-  comments: ""
+  comments: 基準オッズ、厩舎指数、調教指数等様々な情報を基に算出された指数値。
 - name: 総合指数
   repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 85
-  comments: ""
+  comments: ＩＤＭ、騎手指数、情報指数を合計した値。
 - name: 脚質
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 90
-  comments: ""
+  comments: |
+    過去の競走実績よりその馬の脚質を判断したコード。
+    (JRDBデータコード表参照)
 - name: 距離適性
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 91
-  comments: ""
+  comments: |
+    該当馬の実績、血統、馬体から判断される距離適性をコード化。
+    (JRDBデータコード表参照)
 - name: 上昇度
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 92
-  comments: ""
+  comments: |
+    前走から（次走へ向けて）の上積みの度合い
+    JRDBデータコード表参照
 - name: ローテーション
   repeat_factor: 1
   byte_length: 3
   format: ZZ9
   relative: 93
-  comments: 間に金曜日が入っている数で決定 (初出走はスペース)
+  comments: 間に金曜日が入っている数で決定、連闘は０、初出走はスペースとなる。
 - name: 基準オッズ
   repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 96
-  comments: ""
+  comments: |
+    関西・関東の各専門情報紙(予想・評論家等)(関東約9紙150人前後・関西約8紙10
+    0人前後)の印を独自に分析し算出した単勝・複勝基準オッズ(時系列分析対応)に
+    なっています。
 - name: 基準人気順位
   repeat_factor: 1
   byte_length: 2
@@ -123,7 +132,9 @@
   byte_length: 3
   format: ZZ9
   relative: 110
-  comments: 情報・専門紙の印数（特定）
+  comments: |
+    情報・専門紙の印数（特定）
+    専門情報紙の特定の情報値。
 - name: 特定情報○
   repeat_factor: 1
   byte_length: 3
@@ -153,7 +164,9 @@
   byte_length: 3
   format: ZZ9
   relative: 125
-  comments: 情報・専門紙の印数（総合）
+  comments: |
+    情報・専門紙の印数（総合）
+    専門情報紙の情報値。
 - name: 総合情報○
   repeat_factor: 1
   byte_length: 3
@@ -183,61 +196,95 @@
   byte_length: 5
   format: ZZZZ9
   relative: 140
-  comments: 第２版で変更
+  comments: その馬の人気を指数化した値。
 - name: 調教指数
   repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 145
-  comments: ""
+  comments: |
+    関西・関東の各専門情報紙を分析し、独自のデータベースを作成、そのデータベ
+    ースをもとに下記の指数を算出しています。 各専門紙・情報紙の予想・評論家
+    等が担当の調教コースにおいてどれだけ正確に馬の状態を判断しているかを数値
+    化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
 - name: 厩舎指数
   repeat_factor: 1
   byte_length: 5
   format: ZZ9.9
   relative: 150
-  comments: ""
+  comments: |
+    調教指数同様、独自のデータベースを作成、そのデータベースをもとに下記の指
+    数を算出しています。 各専門紙・情報紙の予想・評論家等と厩舎との密接度を
+    数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
 - name: 調教矢印コード
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 155
-  comments: ""
+  comments: |
+    調教から見た馬の調子をわかりやすく５段階評価したもの。
+    (JRDBデータコード表参照)
 - name: 厩舎評価コード
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 156
-  comments: ""
+  comments: |
+    厩舎サイドの期待度をわかりやすく４段階評価したもの。
+    (JRDBデータコード表参照)
 - name: 騎手期待連対率
   repeat_factor: 1
   byte_length: 4
   format: Z9.9
   relative: 157
-  comments: ""
+  comments: |
+    騎手別に、基準オッズ範囲毎の連対成績を集計したもの。
+    騎手Ａが単勝基準オッズＢの馬に乗った場合の過去の成績を集計し、算出された連
+    対率を騎手期待連対率としています。データには、今回の基準オッズにおける騎手
+    期待連対率が入ります。
 - name: 激走指数
   repeat_factor: 1
   byte_length: 3
   format: ZZ9
   relative: 161
-  comments: ""
+  comments: |
+    過去の高配当レースを分析し得られた激走するさまざまな要素を数値化し合計した
+    もの。主な要素を以下に示します。
+    コース枠脚質、騎手、騎手乗り替り、馬具変更、距離適正、クラス、馬体、気配、
+    上昇度、激走情報指数（専門情報紙の印を激走用に分析したもの）
+    ※競馬新聞の大穴激走注目馬は、人気が低く、激走指数の高い馬です。
 - name: 蹄コード
   repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 164
-  comments: ""
+  comments: |
+    パドックでの観察により馬の蹄を分類したもの。
+    各馬の蹄の大きさを大・中・小・細の４種類に、形状を立・標準・標準立・標準ベ・
+    ベタの５種類に分類しています。「中ベタ」なら蹄の大きさは中ぐらいでベタ蹄とい
+    う意味です。
+    芝の重馬場、荒馬場では蹄の立っている馬が有利になります。但しダート戦に関して
+    はこの限りではありません。
+    (JRDBデータコード表参照)
 - name: 重適性コード
   repeat_factor: 1
   byte_length: 1
   format: "9"
   relative: 166
-  comments: ""
+  comments: |
+    過去の成績、蹄の形状等よりその馬の重馬場への適性を３段階評価したもの。
+    (JRDBデータコード表参照)
 - name: クラスコード
   repeat_factor: 1
   byte_length: 2
   format: "99"
   relative: 167
-  comments: ""
+  comments: |
+    馬の能力をクラスで分けたもの。
+    芝ＯＰＡ　・・・　芝のオープン戦で勝つ能力のある馬。
+    芝ＯＰＢ　・・・　芝のオープン戦で好戦できる能力のある馬。
+    芝ＯＰＣ　・・・　芝のオープン戦で頭打ちの馬。
+    (JRDBデータコード表参照)
 - name: ブリンカー
   repeat_factor: 1
   byte_length: 1
@@ -791,7 +838,9 @@
   byte_length: 3
   format: ZZ9
   relative: 535
-  comments: ""
+  comments: |
+    ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を
+    加え、さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
 - name: 万券印
   repeat_factor: 1
   byte_length: 1
