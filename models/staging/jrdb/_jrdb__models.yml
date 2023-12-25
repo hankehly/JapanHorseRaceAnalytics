@@ -716,7 +716,10 @@ models:
               to: ref('距離適性コード')
               field: code
       - name: 枠確定馬体重
+
+      # do null and 0 mean the same thing?
       - name: 枠確定馬体重増減
+
       - name: 取消フラグ
         tests:
           - not_null
@@ -1055,4 +1058,6 @@ models:
           - relationships:
               to: ref('気配コード')
               field: code
-      - name: 発走時間
+
+      # todo: handle invalid times like 9:90
+      # - name: 発走時間
