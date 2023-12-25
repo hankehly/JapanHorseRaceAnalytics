@@ -279,12 +279,12 @@ models:
               values: [0, 1, 2, 3, 4]
       - name: 追切指数
       - name: 仕上指数
-      - name: 調教量評価 # ?? where are these codes coming from
+      - name: 調教量評価
         description: A,B,C,Dに分類 (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - accepted_values:
               values: ["A", "B", "C", "D"]
-      - name: 仕上指数変化 # ?? where are these codes coming from
+      - name: 仕上指数変化
         tests:
           - accepted_values:
               values: [0, 1, 2, 3, 4]
