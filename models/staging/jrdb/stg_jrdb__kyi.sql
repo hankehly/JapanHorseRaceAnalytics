@@ -156,8 +156,6 @@ final as (
         cast(nullif("騎手期待３着内率", '') as numeric) as "騎手期待３着内率",
         coalesce(nullif("輸送区分", ''), '0') as "輸送区分",
         nullif("走法", '') as "走法",
-
-
         case when substring("体型", 1, 1) in ('1', '2', '3') then substring("体型", 1, 1) else null end "体型_全体",
         case when substring("体型", 2, 1) in ('1', '2', '3') then substring("体型", 2, 1) else null end "体型_背中",
         case when substring("体型", 3, 1) in ('1', '2', '3') then substring("体型", 3, 1) else null end "体型_胴",
@@ -205,7 +203,6 @@ final as (
         nullif("降級フラグ", '') as "降級フラグ",
         nullif("激走タイプ", '') as "激走タイプ",
         nullif("休養理由分類コード", '') as "休養理由分類コード",
-
         case when substring("フラグ", 1, 1) in ('0', '1', '2') then substring("フラグ", 1, 1) else null end "芝ダ障害フラグ",
         case when substring("フラグ", 2, 1) in ('0', '1') then substring("フラグ", 2, 1) else null end "距離フラグ",
         case when substring("フラグ", 3, 1) in ('0', '1', '2', '3') then substring("フラグ", 3, 1) else null end "クラスフラグ",
