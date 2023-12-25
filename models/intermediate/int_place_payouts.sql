@@ -2,7 +2,7 @@ with
   final as (
   select
     レースキー,
-    cast(left(val, 2) as integer) as 馬番,
+    left(val, 2) as 馬番,
     cast(right(val, 7) as integer) as 払戻金
   FROM
     {{ ref('stg_jrdb__hjc') }},

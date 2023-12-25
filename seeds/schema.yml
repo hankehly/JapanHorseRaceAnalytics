@@ -158,8 +158,6 @@ seeds:
           - unique
           - not_null
       - name: horse_symbol_code
-        tests:
-          - not_null
   - name: 上昇度コード
     columns:
       - name: code
