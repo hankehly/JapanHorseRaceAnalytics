@@ -12,3 +12,4 @@ models:
       - name: 馬番
       - name: 払戻金
   - name: int_horses
+    description: horse features
