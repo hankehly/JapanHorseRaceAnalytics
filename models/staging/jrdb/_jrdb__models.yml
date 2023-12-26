@@ -1609,3 +1609,45 @@ models:
           - relationships:
               to: ref('系統コード')
               field: コード
+
+  - name: stg_jrdb__oz
+    description: 基準オッズデータ
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      - name: 開催キー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 登録頭数
+        tests:
+          - not_null
+      - name: 単勝オッズ
+        tests:
+          - not_null
+      - name: 複勝オッズ
+        tests:
+          - not_null
+      - name: 連勝オッズ
+        tests:
+          - not_null
