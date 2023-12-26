@@ -1,5 +1,3 @@
-# All desciptions from JRDB schema files should go here.
-# No need to add tests.
 sources:
   - name: jrdb
     database: jrdb

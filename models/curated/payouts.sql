@@ -86,6 +86,8 @@ with
     tyb."パドック指数" as "直前_パドック指数",
     tyb."脚元情報" as "直前_脚元情報",
     (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = tyb."天候コード") as "直前_天候",
+    tyb."単勝オッズ" as "直前_単勝オッズ",
+    tyb."複勝オッズ" as "直前_複勝オッズ",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",
