@@ -63,8 +63,12 @@ with
     bac."年月日" as "年月日",
 
     -- horses
-    horses."瞬発戦好走馬" as "瞬発戦好走馬",
-    horses."消耗戦好走馬" as "消耗戦好走馬",
+    horses."瞬発戦好走馬_芝" as "瞬発戦好走馬_芝",
+    horses."消耗戦好走馬_芝" as "消耗戦好走馬_芝",
+    horses."瞬発戦好走馬_ダート" as "瞬発戦好走馬_ダート",
+    horses."消耗戦好走馬_ダート" as "消耗戦好走馬_ダート",
+    horses."瞬発戦好走馬_総合" as "瞬発戦好走馬_総合",
+    horses."消耗戦好走馬_総合" as "消耗戦好走馬_総合",
     horses."性別" as "性別",
 
     -- 前日
@@ -79,6 +83,7 @@ with
     tyb."情報指数" as "直前_情報指数",
     tyb."オッズ指数" as "直前_オッズ指数",
     tyb."パドック指数" as "直前_パドック指数",
+    tyb."脚元情報" as "直前_脚元情報",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",
@@ -112,7 +117,7 @@ with
   on
     kyi."開催キー" = kab."開催キー"
 
-  left join
+  inner join
     horses
   on
     kyi."血統登録番号" = horses."血統登録番号"

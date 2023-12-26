@@ -983,7 +983,10 @@ models:
         description: 全角１８文字 <-入れ替え
       - name: レース条件_距離
       - name: レース条件_トラック情報_芝ダ障害コード
-        description: 1:芝, 2:ダート, 3:障害
+        tests:
+          - not_null
+          - accepted_values:
+              values: [芝, ダート, 障害]
       - name: レース条件_トラック情報_右左
         description: 1:右, 2:左, 3:直, 9:他
       - name: レース条件_トラック情報_内外
