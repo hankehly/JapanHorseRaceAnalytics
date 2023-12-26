@@ -37,46 +37,62 @@ models:
         tests:
           - not_null
       - name: レース条件_トラック情報_芝ダ障害コード
+        description: 1:芝, 2:ダート, 3:障害
         tests:
           - not_null
           - accepted_values:
               values: ["芝", "ダート", "障害"]
       - name: レース条件_トラック情報_右左
+        description: 1:右, 2:左, 3:直, 9:他
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 9]
       - name: レース条件_トラック情報_内外
+        description: |
+          1:通常(内), 2:外, 3,直ダ, 9:他
+          ※障害のトラックは、以下の２通りとなります。
+            "393":障害直線ダート
+            "391":障害直線芝
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 9]
       - name: レース条件_種別
+        description: ４歳以上等、→JRDBデータコード表
         tests:
           - not_null
       - name: レース条件_条件
+        description: 900万下等、 →JRDBデータコード表
         tests:
           - not_null
       - name: レース条件_記号
+        description: ○混等、    →JRDBデータコード表
         tests:
           - not_null
           # - relationships:
           #     to: ref('特記コード')
           #     field: コード
       - name: レース条件_重量
+        description: ハンデ等、  →JRDBデータコード表
         tests:
           - not_null
       - name: レース条件_グレード
+        description: Ｇ１等      →JRDBデータコード表
       - name: レース名
+        description: レース名の通称（全角２５文字）
       - name: 回数
+        description: 第ZZ9回（全角半角混在）
       - name: 頭数
         tests:
           - not_null
       - name: コース
+        description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6]
       - name: 開催区分
+        description: 1:関東, 2:関西, 3:ローカル
         tests:
           - not_null
           - accepted_values:
@@ -86,54 +102,71 @@ models:
         tests:
           - not_null
       - name: データ区分
+        description: 1:特別登録, 2:想定確定, 3:前日
         tests:
           - not_null
       - name: １着賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: ２着賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: ３着賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: ４着賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: ５着賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: １着算入賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: ２着算入賞金
+        description: 単位（万円）
         tests:
           - not_null
       - name: 馬券発売フラグ_単勝
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_複勝
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_枠連
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_馬連
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_馬単
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_ワイド
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_３連複
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_３連単
+        description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: WIN5フラグ
+        description: 1～5
 
   - name: stg_jrdb__cha
     columns:
@@ -385,19 +418,23 @@ models:
         tests:
           - not_null
       - name: 年月日
+        description: YYYYMMDD
         tests:
           - not_null
       - name: 開催区分
+        description: 1:関東, 2:関西, 3:ローカル
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: 曜日
+        description: 日－土
         tests:
           - not_null
           - accepted_values:
               values: ["月", "火", "水", "木", "金", "土", "日"]
       - name: 場名
+        description: 競馬場名
       - name: 天候コード
         tests:
           - relationships:
@@ -410,14 +447,17 @@ models:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態内
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態中
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態外
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
@@ -432,33 +472,43 @@ models:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態内
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態中
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態外
+        description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場差
       - name: データ区分
+        description: 1:特別登録,2:想定確定,3:枠確定,4:前日
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 連続何日目
+        description: 日数
         tests:
           - not_null
       - name: 芝種類
+        description: 1:野芝, 2:洋芝, 3:混生
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 草丈
+        description: 単位cm
       - name: 転圧
+        description: 1:転圧, 0:無し
       - name: 凍結防止剤
+        description: 1:凍結防止剤散布, 0:無し
       - name: 中間降水量
+        description: 単位mm
 
   - name: stg_jrdb__kyi
     description: 競走馬ごとのデータ。IDM、各指数を格納、放牧先を追加。
@@ -1213,7 +1263,6 @@ models:
       - name: 馬番
         tests:
           - not_null
-
       - name: 競走成績キー_血統登録番号
         description: 競走馬データとのリンクに使用
       - name: 競走成績キー_年月日
@@ -1229,15 +1278,11 @@ models:
       - name: レース条件_トラック情報_右左
         description: 1:右, 2:左, 3:直, 9:他
       - name: レース条件_トラック情報_内外
-        description: '1:通常(内), 2:外, 3,直ダ, 9:他,
-
+        description: |
+          1:通常(内), 2:外, 3,直ダ, 9:他,
           ※障害のトラックは、以下の２通りとなります。
-
           "393":障害直線ダート
-
           "391":障害直線芝
-
-          '
       - name: レース条件_馬場状態
       - name: レース条件_種別
         description: ４歳以上等、→成績データの説明
@@ -1408,20 +1453,24 @@ models:
         tests:
           - not_null
       - name: 馬具変更情報
+        description: |
+          0:馬具変更なし
+          1:馬具変更（通常）
+          2:馬具変更（特注）特に効果があると思われる馬具変更。
         tests:
           - not_null
           - accepted_values:
               values: [0, 1, 2]
       - name: 脚元情報
-        tests:
-          - not_null
-          - accepted_values:
-              values: [0, 1, 2, 3]
         description: |
           0:平行線
           1:良化（!）
           2:疑問（?）
           3:悪化（X）
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3]
       - name: 取消フラグ
         description: 取消フラグ
         tests:
@@ -1460,11 +1509,15 @@ models:
 
       # there are only 14 rows of null records (from 1999)
       - name: 単勝オッズ
+        description: 単勝オッズ（データ作成時点）
       - name: 複勝オッズ
+        description: 複勝オッズの下側
       - name: オッズ取得時間
+        description: HHMM
 
       - name: 馬体重
       - name: 馬体重増減
+        description: 符号+数字２桁、データ無:スペース
       - name: オッズ印
         tests:
           - relationships:
@@ -1492,7 +1545,8 @@ models:
               field: code
 
       # todo: handle invalid times like 9:90
-      # - name: 発走時間
+      - name: 発走時間
+        description: HHMM
 
   - name: stg_jrdb__ukc
     columns:
