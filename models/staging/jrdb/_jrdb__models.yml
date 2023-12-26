@@ -461,6 +461,7 @@ models:
       - name: 中間降水量
 
   - name: stg_jrdb__kyi
+    description: 競走馬ごとのデータ。IDM、各指数を格納、放牧先を追加。
     columns:
       # derived
       - name: レースキー
