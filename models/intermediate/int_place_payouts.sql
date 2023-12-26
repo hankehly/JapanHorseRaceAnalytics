@@ -1,3 +1,4 @@
+{{ config(schema='intermediate') }}
 with
   final as (
   select

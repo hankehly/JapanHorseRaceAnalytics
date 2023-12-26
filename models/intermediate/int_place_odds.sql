@@ -16,10 +16,10 @@ with
     レースキー_日,
     レースキー_Ｒ,
     cast(idx as integer) as 馬番,
-    cast(nullif(el, '') as numeric) 単勝オッズ
+    cast(nullif(el, '') as numeric) 複勝オッズ
   from
     oz,
-    unnest(単勝オッズ) WITH ORDINALITY AS t(el, idx)
+    unnest(複勝オッズ) WITH ORDINALITY AS t(el, idx)
   where
     nullif(el, '') is not null
 )
