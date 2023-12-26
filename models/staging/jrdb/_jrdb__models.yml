@@ -943,6 +943,178 @@ models:
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+  - name: stg_jrdb__sed
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      - name: 開催キー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 馬番
+        tests:
+          - not_null
+
+      - name: 競走成績キー_血統登録番号
+        description: 競走馬データとのリンクに使用
+      - name: 競走成績キー_年月日
+        description: 競走馬データとのリンクに使用 | YYYYMMDD <-暫定版より順序
+      - name: 馬名
+        description: 全角１８文字 <-入れ替え
+      - name: レース条件_距離
+      - name: レース条件_トラック情報_芝ダ障害コード
+        description: 1:芝, 2:ダート, 3:障害
+      - name: レース条件_トラック情報_右左
+        description: 1:右, 2:左, 3:直, 9:他
+      - name: レース条件_トラック情報_内外
+        description: '1:通常(内), 2:外, 3,直ダ, 9:他,
+
+          ※障害のトラックは、以下の２通りとなります。
+
+          "393":障害直線ダート
+
+          "391":障害直線芝
+
+          '
+      - name: レース条件_馬場状態
+      - name: レース条件_種別
+        description: ４歳以上等、→成績データの説明
+      - name: レース条件_条件
+        description: 900万下等、 →成績データの説明
+      - name: レース条件_記号
+        description: ○混等、 →成績データの説明
+      - name: レース条件_重量
+        description: ハンデ等、 →成績データの説明
+      - name: レース条件_グレード
+      - name: レース条件_レース名
+        description: レース名の通称（全角２５文字）
+      - name: レース条件_頭数
+      - name: レース条件_レース名略称
+        description: 全角４文字
+
+      - name: 馬成績_着順
+        tests:
+          - not_null
+
+      - name: 馬成績_異常区分
+      - name: 馬成績_タイム
+        description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
+      - name: 馬成績_斤量
+        description: 0.1Kg単位
+      - name: 馬成績_騎手名
+        description: 全角６文字
+      - name: 馬成績_調教師名
+        description: 全角６文字
+      - name: 馬成績_確定単勝オッズ
+      - name: 馬成績_確定単勝人気順位
+      - name: ＪＲＤＢデータ_ＩＤＭ
+      - name: ＪＲＤＢデータ_素点
+      - name: ＪＲＤＢデータ_馬場差
+      - name: ＪＲＤＢデータ_ペース
+      - name: ＪＲＤＢデータ_出遅
+      - name: ＪＲＤＢデータ_位置取
+      - name: ＪＲＤＢデータ_不利
+      - name: ＪＲＤＢデータ_前不利
+        description: 前３Ｆ内での不利
+      - name: ＪＲＤＢデータ_中不利
+        description: 道中での不利
+      - name: ＪＲＤＢデータ_後不利
+        description: 後３Ｆ内での不利
+      - name: ＪＲＤＢデータ_レース
+      - name: ＪＲＤＢデータ_コース取り
+        description: 1:最内,2:内,3:中,4:外,5:大外
+      - name: ＪＲＤＢデータ_上昇度コード
+        description: 1:AA, 2:A, 3:B, 4:C, 5:?
+      - name: ＪＲＤＢデータ_クラスコード
+      - name: ＪＲＤＢデータ_馬体コード
+      - name: ＪＲＤＢデータ_気配コード
+      - name: ＪＲＤＢデータ_レースペース
+        description: H:ハイ, M:平均, S:スロー
+      - name: ＪＲＤＢデータ_馬ペース
+        description: 馬自身のペース(H:M:S)
+      - name: ＪＲＤＢデータ_テン指数
+        description: 前３Ｆタイムを指数化したもの
+      - name: ＪＲＤＢデータ_上がり指数
+        description: 後３Ｆタイムを指数化したもの
+      - name: ＪＲＤＢデータ_ペース指数
+        description: 馬のペースを指数化したもの
+      - name: ＪＲＤＢデータ_レースＰ指数
+        description: レースのペースを指数化したもの
+      - name: ＪＲＤＢデータ_1(2)着馬名
+        description: 全角６文字
+      - name: ＪＲＤＢデータ_1(2)着タイム差
+        description: 0.1秒単位
+      - name: ＪＲＤＢデータ_前３Ｆタイム
+        description: 0.1秒単位
+      - name: ＪＲＤＢデータ_後３Ｆタイム
+        description: 0.1秒単位
+      - name: ＪＲＤＢデータ_備考
+        description: 全角１２文字（地方競馬場名等）
+      - name: 確定複勝オッズ下
+        description: 最終的な複勝オッズ（下限）
+      - name: 10時単勝オッズ
+        description: 10時頃の単勝オッズ
+      - name: 10時複勝オッズ
+        description: 10時頃の複勝オッズ
+      - name: コーナー順位１
+      - name: コーナー順位２
+      - name: コーナー順位３
+      - name: コーナー順位４
+      - name: 前３Ｆ先頭差
+        description: 前３Ｆ地点での先頭とのタイム差 (0.1秒単位)
+      - name: 後３Ｆ先頭差
+        description: 後３Ｆ地点での先頭とのタイム差 (0.1秒単位)
+      - name: 騎手コード
+        description: 騎手マスタとリンク
+      - name: 調教師コード
+        description: 調教師マスタとリンク
+      - name: 馬体重
+        description: データ無:スペース
+      - name: 馬体重増減
+        description: 符号+数字２桁、データ無:スペース
+      - name: 天候コード
+        description: コード表参照
+      - name: コース
+        description: 1:A,2:A1,3:A2,4:B,5:C,6:D
+      - name: レース脚質
+        description: 脚質コード参照
+      - name: 払戻データ_単勝
+        description: 単位（円）
+      - name: 払戻データ_複勝
+        description: 単位（円）
+      - name: 本賞金
+        description: 単位（万円）
+      - name: 収得賞金
+        description: 単位（万円）
+      - name: レースペース流れ
+        description: →成績データの説明
+      - name: 馬ペース流れ
+        description: →成績データの説明
+      - name: ４角コース取り
+        description: 1:最内,2:内,3:中,4:外,5:大外
+      - name: 発走時間
+        description: HHMM
+
   - name: stg_jrdb__tyb
     columns:
       # derived
