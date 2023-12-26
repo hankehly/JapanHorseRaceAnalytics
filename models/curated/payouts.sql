@@ -63,13 +63,9 @@ with
     bac."年月日" as "年月日",
 
     -- horses
-    horses."血統登録番号" as "血統登録番号",
     horses."瞬発戦好走馬" as "瞬発戦好走馬",
     horses."消耗戦好走馬" as "消耗戦好走馬",
-
-    -- 成績
-    sed."ＪＲＤＢデータ_馬場差" as "成績_馬場差",
-    sed."馬成績_着順" as "成績_着順",
+    horses."性別" as "性別",
 
     -- 前日
     bac."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
@@ -84,7 +80,9 @@ with
     tyb."オッズ指数" as "直前_オッズ指数",
     tyb."パドック指数" as "直前_パドック指数",
 
+    coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",
+    coalesce(place_payouts."払戻金", 0) > 0 as "複勝的中",
     coalesce(place_payouts."払戻金", 0) as "複勝払戻金"
   from
     kyi
@@ -94,7 +92,9 @@ with
   on
     kyi."レースキー" = bac."レースキー"
 
-  -- todo: for future races, sed will not be available
+  -- Note: SED lags behind KYI by a few days, so the most recent races will be missing
+  -- This means you shouldn't use SED fields as-is, but rather use them to calculate
+  -- features based off of past performance
   inner join
     sed
   on

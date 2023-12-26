@@ -41,7 +41,11 @@ final as (
 
         cast(nullif("単勝オッズ", '') as numeric) as "単勝オッズ",
         cast(nullif("複勝オッズ", '') as numeric) as "複勝オッズ",
-        cast(nullif(left("オッズ取得時間", 2) || ':' || right("オッズ取得時間", 2), '') as time) as "オッズ取得時間",
+
+        -- values like "107" exist..
+        -- cast(nullif(left("オッズ取得時間", 2) || ':' || right("オッズ取得時間", 2), '') as time) as "オッズ取得時間",
+        nullif("オッズ取得時間", '') as "オッズ取得時間",
+
         cast(nullif("馬体重", '') as integer) as "馬体重",
         cast(nullif(replace(replace("馬体重増減", '+', ''), ' ', ''), '') as integer) as "馬体重増減",
         nullif("オッズ印", '') as "オッズ印",
@@ -54,7 +58,7 @@ final as (
 
         -- 0 is not a valid value for "気配コード" but there are 42 rows with it.
         -- This is a workaround to avoid the error.
-        case when "気配コード" in (select code from {{ ref('気配コード') }}) then "気配コード" else null end "気配コード"
+        case when "気配コード" in (select code from {{ ref('気配コード') }}) then "気配コード" else null end "気配コード",
 
         -- values like "09:90" exist..
         -- case
@@ -63,6 +67,7 @@ final as (
         --   else
         --     cast(nullif(left("発走時間", 2) || ':' || right("発走時間", 2), '') as time)
         -- end "発走時間"
+        nullif("発走時間", '') as "発走時間"
     from source
 )
 select * from final

@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='table', schema='intermediate') }}
 with
   -- Get the latest data for each horse (scd type 2)
   ukc_latest AS (
