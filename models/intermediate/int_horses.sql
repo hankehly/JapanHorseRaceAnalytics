@@ -110,9 +110,6 @@ with
     good_finish_any
   on
     ukc."血統登録番号" = good_finish_any."血統登録番号"
-  where
-    good_finish_any."瞬発戦好走馬" is not null
-    and good_finish_any."消耗戦好走馬" is not null
   )
 
 select * from final
