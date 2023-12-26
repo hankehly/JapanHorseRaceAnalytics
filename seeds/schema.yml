@@ -200,7 +200,7 @@ seeds:
         tests:
           - unique
           - not_null
-      - name: color
+      - name: name
         tests:
           - not_null
   - name: 系統コード
