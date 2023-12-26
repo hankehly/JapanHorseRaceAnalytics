@@ -194,3 +194,24 @@ seeds:
       - name: description
         tests:
           - not_null
+  - name: 毛色コード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: color
+        tests:
+          - not_null
+  - name: 系統コード
+    columns:
+      - name: コード
+        tests:
+          - unique
+          - not_null
+      - name: 小系統名
+        tests:
+          - not_null
+      - name: 大系統名
+        tests:
+          - not_null
