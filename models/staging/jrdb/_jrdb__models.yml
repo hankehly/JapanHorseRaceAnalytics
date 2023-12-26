@@ -509,7 +509,11 @@ models:
       - name: 総合指数
         tests:
           - not_null
-      - name: 脚質 # ?? values 1-9 what do they mean?
+      - name: 脚質
+        tests:
+          - relationships:
+              to: ref('脚質コード')
+              field: code
       - name: 距離適性
         tests:
           - relationships:

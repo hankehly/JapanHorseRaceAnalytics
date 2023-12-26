@@ -76,7 +76,7 @@ with
     kab."芝馬場差" as "前日_芝馬場差",
     kab."ダ馬場差" as "前日_ダ馬場差",
     kyi."ＩＤＭ" as "前日_ＩＤＭ",
-    kyi."脚質" as "前日_脚質",
+    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = kyi."脚質") as "前日_脚質",
 
     -- 直前
     tyb."ＩＤＭ" as "直前_ＩＤＭ",
@@ -85,6 +85,7 @@ with
     tyb."オッズ指数" as "直前_オッズ指数",
     tyb."パドック指数" as "直前_パドック指数",
     tyb."脚元情報" as "直前_脚元情報",
+    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = tyb."天候コード") as "直前_天候",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",

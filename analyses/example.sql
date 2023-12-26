@@ -27,7 +27,7 @@ with
   where
     複勝払戻金 > 0
   ),
-  
+
   hits_win as (
   select
     *

@@ -92,3 +92,6 @@ seeds:
     系統コード:
       +column_types:
         コード: text
+    脚質コード:
+      +column_types:
+        code: varchar

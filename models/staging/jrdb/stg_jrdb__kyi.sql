@@ -28,7 +28,10 @@ final as (
         cast(nullif("騎手指数", '') as numeric) as "騎手指数",
         cast(nullif("情報指数", '') as numeric) as "情報指数",
         cast(nullif("総合指数", '') as numeric) as "総合指数",
-        nullif("脚質", '') as "脚質",
+
+        -- 1-6 is expected, but there are many 0s and rarely some 8s and nulls.
+        -- Replacing undefined codes with null.
+        case when "脚質" in (SELECT code FROM {{ ref('脚質コード') }}) then "脚質" else null end "脚質",
         
         -- contains values 0-9, but 距離適性コード only lists 1,2,3,5,6
         case when "距離適性" in (SELECT code FROM {{ ref('距離適性コード') }}) then "距離適性" else null end "距離適性",
