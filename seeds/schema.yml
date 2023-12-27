@@ -224,3 +224,18 @@ seeds:
       - name: name
         tests:
           - not_null
+  - name: 馬具コード
+    columns:
+      - name: コード
+        tests:
+          - unique
+          - not_null
+      - name: 短縮
+        tests:
+          - not_null
+      - name: 内容
+        tests:
+          - not_null
+      - name: 馬具種別
+        tests:
+          - not_null

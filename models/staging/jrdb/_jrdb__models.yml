@@ -1651,3 +1651,54 @@ models:
       - name: 連勝オッズ
         tests:
           - not_null
+
+  - name: stg_jrdb__skb
+    columns:
+      # derived
+      - name: レースキー
+        tests:
+          - not_null
+      - name: 開催キー
+        tests:
+          - not_null
+      # original
+      - name: レースキー_場コード
+        tests:
+          - not_null
+          - relationships:
+              to: ref('場コード')
+              field: code
+      - name: レースキー_年
+        tests:
+          - not_null
+      - name: レースキー_回
+        tests:
+          - not_null
+      - name: レースキー_日
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        tests:
+          - not_null
+      - name: 馬番
+        tests:
+          - not_null
+      - name: 競走成績キー_血統登録番号
+      - name: 競走成績キー_年月日
+      - name: 特記コード
+      - name: 馬具コード
+      - name: 脚元コード_総合
+      - name: 脚元コード_左前
+      - name: 脚元コード_右前
+      - name: 脚元コード_左後
+      - name: 脚元コード_右後
+      - name: パドックコメント
+      - name: 脚元コメント
+      - name: 馬具(その他)コメント
+      - name: レースコメント
+      - name: 分析用データ_ハミ
+      - name: 分析用データ_バンテージ
+      - name: 分析用データ_蹄鉄
+      - name: 分析用データ_蹄状態
+      - name: 分析用データ_ソエ
+      - name: 分析用データ_骨瘤

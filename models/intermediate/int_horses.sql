@@ -58,7 +58,6 @@ with
     "血統登録番号"
   ),
 
-
   good_finish_any as (
   select
     "競走成績キー_血統登録番号" as "血統登録番号",
@@ -90,6 +89,7 @@ with
       when ukc."性別コード" = '2' then '牝'
       else 'セン'
     end "性別",
+    ukc."生年月日" as "生年月日",
     good_finish_turf."瞬発戦好走馬" as "瞬発戦好走馬_芝",
     good_finish_turf."消耗戦好走馬" as "消耗戦好走馬_芝",
     good_finish_dirt."瞬発戦好走馬" as "瞬発戦好走馬_ダート",

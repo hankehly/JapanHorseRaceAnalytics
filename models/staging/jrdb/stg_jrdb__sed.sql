@@ -25,9 +25,9 @@ final as (
 
         -- todo ------------------------------------------------------
         nullif("競走成績キー_血統登録番号", '') as "競走成績キー_血統登録番号",
-        nullif("競走成績キー_年月日", '') as "競走成績キー_年月日",
+        to_date(nullif("競走成績キー_年月日", ''), 'YYYYMMDD') as "競走成績キー_年月日",
         nullif("馬名", '') as "馬名",
-        nullif("レース条件_距離", '') as "レース条件_距離",
+        cast(nullif("レース条件_距離", '') as integer) as "レース条件_距離",
         -- 1:芝, 2:ダート, 3:障害
         case when nullif("レース条件_トラック情報_芝ダ障害コード", '') = '1' then '芝'
              when nullif("レース条件_トラック情報_芝ダ障害コード", '') = '2' then 'ダート'
@@ -91,8 +91,8 @@ final as (
         nullif("後３Ｆ先頭差", '') as "後３Ｆ先頭差",
         nullif("騎手コード", '') as "騎手コード",
         nullif("調教師コード", '') as "調教師コード",
-        nullif("馬体重", '') as "馬体重",
-        nullif("馬体重増減", '') as "馬体重増減",
+        cast(nullif("馬体重", '') as integer) as "馬体重",
+        cast(nullif(replace(replace("馬体重増減", '+', ''), ' ', ''), '') as integer) as "馬体重増減",
         nullif("天候コード", '') as "天候コード",
         nullif("コース", '') as "コース",
         nullif("レース脚質", '') as "レース脚質",

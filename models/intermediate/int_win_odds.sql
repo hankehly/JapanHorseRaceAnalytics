@@ -15,7 +15,7 @@ with
     レースキー_回,
     レースキー_日,
     レースキー_Ｒ,
-    cast(idx as integer) as 馬番,
+    lpad(cast(idx as varchar), 2, '0') as 馬番,
     cast(nullif(el, '') as numeric) 単勝オッズ
   from
     oz,

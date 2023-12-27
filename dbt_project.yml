@@ -94,4 +94,7 @@ seeds:
         コード: text
     脚質コード:
       +column_types:
-        code: varchar
+        code: text
+    馬具コード:
+      +column_types:
+        コード: text
