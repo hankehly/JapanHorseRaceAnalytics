@@ -1392,7 +1392,9 @@ models:
       - name: 本賞金
         description: 単位（万円）
       - name: 収得賞金
-        description: 単位（万円）
+        description: |
+          単位（万円）
+          https://dic.nicovideo.jp/a/%E5%8F%8E%E5%BE%97%E8%B3%9E%E9%87%91
       - name: レースペース流れ
         description: →成績データの説明
       - name: 馬ペース流れ
