@@ -2,6 +2,7 @@
 *.csv
 !seeds/*.csv
 *.txt
+!requirements.txt
 target/
 dbt_packages/
 logs/
