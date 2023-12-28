@@ -555,7 +555,7 @@ with
     }} as "調教師場所トップ3完走率",
 
     -- Compute the standard rank of the horse on his last 3 races giving us an overview of his state of form
-    coalesce(power(前走着順 - 1, 2) + power(前々走着順 - 1, 2) + power(前々々走着順 - 1, 2), 0) as "過去3走順位平方和", -- horse_std_rank
+    cast(coalesce(power(前走着順 - 1, 2) + power(前々走着順 - 1, 2) + power(前々々走着順 - 1, 2), 0) as integer) as "過去3走順位平方和", -- horse_std_rank
 
 
     -- Todo:
@@ -593,7 +593,7 @@ with
         'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - cast("複勝的中" as integer)',
         'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
-    }} as "騎手過去5走トップ3完走率",
+    }} as "騎手過去5走トップ3完走率"
 
   from
     base
