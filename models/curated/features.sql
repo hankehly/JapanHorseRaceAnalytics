@@ -133,6 +133,7 @@ with
     (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = tyb."天候コード") as "直前_天候",
     tyb."単勝オッズ" as "直前_単勝オッズ",
     tyb."複勝オッズ" as "直前_複勝オッズ",
+    (SELECT "name" FROM {{ ref('馬場状態コード') }} WHERE "code" = tyb."馬場状態コード") as "直前_馬場状態コード",
 
     lag(sed."馬成績_着順", 1) over (partition by kyi."血統登録番号" order by bac."年月日") as "前走着順",
     lag(sed."馬成績_着順", 2) over (partition by kyi."血統登録番号" order by bac."年月日") as "前々走着順",
@@ -206,58 +207,13 @@ with
     and kyi."馬番" = place_payouts."馬番"
   ),
 
-  final as (
+  -- 参考:
+  -- https://github.com/codeworks-data/mvp-horse-racing-prediction/blob/master/extract_features.py#L73
+  -- https://medium.com/codeworksparis/horse-racing-prediction-a-machine-learning-approach-part-2-e9f5eb9a92e9
+  horse_features as (
   select
-    -- 基本情報
     "レースキー",
     "馬番",
-    "枠番",
-    "場名",
-    "年月日",
-    "頭数",
-    "四半期",
-
-    -- 結果/払戻金
-    "単勝的中",
-    "単勝払戻金",
-    "複勝的中",
-    "複勝払戻金",
-    "本賞金",
-    "収得賞金",
-
-    -- 馬情報
-    "血統登録番号",
-    "瞬発戦好走馬_芝",
-    "消耗戦好走馬_芝",
-    "瞬発戦好走馬_ダート",
-    "消耗戦好走馬_ダート",
-    "瞬発戦好走馬_総合",
-    "消耗戦好走馬_総合",
-    "性別",
-
-    -- 前日
-    "トラック種別",
-    "前日_芝馬場差",
-    "前日_ダ馬場差",
-    "前日_ＩＤＭ",
-    "前日_脚質",
-    "前日_単勝オッズ",
-    "前日_複勝オッズ",
-
-    -- 直前
-    "直前_ＩＤＭ",
-    "直前_騎手指数",
-    "直前_情報指数",
-    "直前_オッズ指数",
-    "直前_パドック指数",
-    "直前_脚元情報",
-    "直前_天候",
-    "直前_単勝オッズ",
-    "直前_複勝オッズ",
-
-    -- 計算特徴料
-    -- https://github.com/codeworks-data/mvp-horse-racing-prediction/blob/master/extract_features.py#L73
-    -- https://medium.com/codeworksparis/horse-racing-prediction-a-machine-learning-approach-part-2-e9f5eb9a92e9
 
     -- whether the horse placed in the previous race
     case when lag("着順") over (partition by "血統登録番号" order by "年月日") <= 3 then true else false end as "前走トップ3", -- last_place
@@ -279,13 +235,13 @@ with
     sum(case when age("年月日", "生年月日") < '5 years' then 1 else 0 end) over (partition by "レースキー") / "頭数" as "4歳以下割合",
 
     -- how many races this horse has run until now
-    count(*) over (partition by "血統登録番号" order by "年月日") - 1 as "レース数", -- horse_runs
+    cast(count(*) over (partition by "血統登録番号" order by "年月日") - 1 as integer) as "レース数", -- horse_runs
 
     -- how many races this horse has won until now (incremented by one on the following race)
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日") - cast("単勝的中" as integer) as "1位完走", -- horse_wins
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日") - cast("単勝的中" as integer) as integer) as "1位完走", -- horse_wins
 
     -- how many races this horse has placed in until now (incremented by one on the following race)
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日") - cast("複勝的中" as integer) as "トップ3完走", -- horse_places
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日") - cast("複勝的中" as integer) as integer) as "トップ3完走", -- horse_places
 
     -- ratio_win_horse
     {{
@@ -304,13 +260,13 @@ with
     }} as "トップ3完走率",
 
     -- horse_venue_runs
-    count(*) over (partition by "血統登録番号", "場コード" order by "年月日") - 1 as "場所レース数",
+    cast(count(*) over (partition by "血統登録番号", "場コード" order by "年月日") - 1 as integer) as "場所レース数",
 
     -- horse_venue_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "場コード" order by "年月日") - cast("単勝的中" as integer) as "場所1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "場コード" order by "年月日") - cast("単勝的中" as integer) as integer) as "場所1位完走",
 
     -- horse_venue_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "場コード" order by "年月日") - cast("複勝的中" as integer) as "場所トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "場コード" order by "年月日") - cast("複勝的中" as integer) as integer) as "場所トップ3完走",
 
     -- ratio_win_horse_venue
     {{
@@ -329,13 +285,13 @@ with
     }} as "場所トップ3完走率",
 
     -- horse_surface_runs
-    count(*) over (partition by "血統登録番号", "トラック種別" order by "年月日") - 1 as "トラック種別レース数",
+    cast(count(*) over (partition by "血統登録番号", "トラック種別" order by "年月日") - 1 as integer) as "トラック種別レース数",
 
     -- horse_surface_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "トラック種別" order by "年月日") - cast("単勝的中" as integer) as "トラック種別1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "トラック種別" order by "年月日") - cast("単勝的中" as integer) as integer) as "トラック種別1位完走",
 
     -- horse_surface_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "トラック種別" order by "年月日") - cast("複勝的中" as integer) as "トラック種別トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "トラック種別" order by "年月日") - cast("複勝的中" as integer) as integer) as "トラック種別トップ3完走",
 
     -- ratio_win_horse_surface
     {{
@@ -353,15 +309,14 @@ with
       )
     }} as "トラック種別トップ3完走率",
 
-    -- レース条件_馬場状態
     -- horse_going_runs
-    count(*) over (partition by "血統登録番号", "馬場状態" order by "年月日") - 1 as "馬場状態レース数",
+    cast(count(*) over (partition by "血統登録番号", "馬場状態" order by "年月日") - 1 as integer) as "馬場状態レース数",
 
     -- horse_going_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日") - cast("単勝的中" as integer) as "馬場状態1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日") - cast("単勝的中" as integer) as integer) as "馬場状態1位完走",
 
     -- horse_going_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日") - cast("複勝的中" as integer) as "馬場状態トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日") - cast("複勝的中" as integer) as integer) as "馬場状態トップ3完走",
 
     -- ratio_win_horse_going
     {{
@@ -380,13 +335,13 @@ with
     }} as "馬場状態トップ3完走率",
 
     -- horse_distance_runs
-    count(*) over (partition by "血統登録番号", "距離" order by "年月日") - 1 as "距離レース数",
+    cast(count(*) over (partition by "血統登録番号", "距離" order by "年月日") - 1 as integer) as "距離レース数",
 
     -- horse_distance_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "距離" order by "年月日") - cast("単勝的中" as integer) as "距離1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "距離" order by "年月日") - cast("単勝的中" as integer) as integer) as "距離1位完走",
 
     -- horse_distance_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "距離" order by "年月日") - cast("複勝的中" as integer) as "距離トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "距離" order by "年月日") - cast("複勝的中" as integer) as integer) as "距離トップ3完走",
 
     -- ratio_win_horse_distance
     {{
@@ -405,13 +360,13 @@ with
     }} as "距離トップ3完走率",
 
     -- horse_quarter_runs
-    count(*) over (partition by "血統登録番号", "四半期" order by "年月日") - 1 as "四半期レース数",
+    cast(count(*) over (partition by "血統登録番号", "四半期" order by "年月日") - 1 as integer) as "四半期レース数",
 
     -- horse_quarter_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日") - cast("単勝的中" as integer) as "四半期1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日") - cast("単勝的中" as integer) as integer) as "四半期1位完走",
 
     -- horse_quarter_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日") - cast("複勝的中" as integer) as "四半期トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日") - cast("複勝的中" as integer) as integer) as "四半期トップ3完走",
 
     -- ratio_win_horse_quarter
     {{
@@ -427,16 +382,25 @@ with
         'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日") - cast("複勝的中" as integer)',
         'cast(count(*) over (partition by "血統登録番号", "四半期" order by "年月日") - 1 as numeric)'
       )
-    }} as "四半期トップ3完走率",
+    }} as "四半期トップ3完走率"
+
+    from
+      base
+  ),
+
+  owner_features as (
+  select
+    "レースキー",
+    "馬番",
 
     -- jockey_runs
-    count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - 1 as "騎手レース数",
+    cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - 1 as integer) as "騎手レース数",
 
     -- jockey_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as "騎手1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as integer) as "騎手1位完走",
 
     -- jockey_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as "騎手トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as integer) as "騎手トップ3完走",
 
     -- ratio_win_jockey
     {{
@@ -455,13 +419,13 @@ with
     }} as "騎手トップ3完走率",
 
     -- jockey_venue_runs
-    count(*) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - 1 as "騎手場所レース数",
+    cast(count(*) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - 1 as integer) as "騎手場所レース数",
 
     -- jockey_venue_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as "騎手場所1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as integer) as "騎手場所1位完走",
 
     -- jockey_venue_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as "騎手場所トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as integer) as "騎手場所トップ3完走",
 
     -- ratio_win_jockey_venue
     {{
@@ -480,13 +444,13 @@ with
     }} as "騎手場所トップ3完走率",
 
     -- jockey_distance_runs
-    count(*) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - 1 as "騎手距離レース数",
+    cast(count(*) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - 1 as integer) as "騎手距離レース数",
 
     -- jockey_distance_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as "騎手距離1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as integer) as "騎手距離1位完走",
 
     -- jockey_distance_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as "騎手距離トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード", "距離" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as integer) as "騎手距離トップ3完走",
 
     -- ratio_win_jockey_distance
     {{
@@ -505,13 +469,13 @@ with
     }} as "騎手距離トップ3完走率",
 
     -- trainer_runs
-    count(*) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - 1 as "調教師レース数",
+    cast(count(*) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - 1 as integer) as "調教師レース数",
 
     -- trainer_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as "調教師1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as integer) as "調教師1位完走",
 
     -- trainer_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as "調教師トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "調教師コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as integer) as "調教師トップ3完走",
 
     -- ratio_win_trainer
     {{
@@ -530,13 +494,13 @@ with
     }} as "調教師トップ3完走率",
 
     -- trainer_venue_runs
-    count(*) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - 1 as "調教師場所レース数",
+    cast(count(*) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - 1 as integer) as "調教師場所レース数",
 
     -- trainer_venue_wins
-    sum(case when "着順" = 1 then 1 else 0 end) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as "調教師場所1位完走",
+    cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("単勝的中" as integer) as integer) as "調教師場所1位完走",
 
     -- trainer_venue_places
-    sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as "調教師場所トップ3完走",
+    cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "調教師コード", "場コード" order by "年月日", "レースキー_Ｒ") - cast("複勝的中" as integer) as integer) as "調教師場所トップ3完走",
 
     -- ratio_win_trainer_venue
     {{
@@ -555,12 +519,18 @@ with
     }} as "調教師場所トップ3完走率",
 
     -- Compute the standard rank of the horse on his last 3 races giving us an overview of his state of form
-    cast(coalesce(power(前走着順 - 1, 2) + power(前々走着順 - 1, 2) + power(前々々走着順 - 1, 2), 0) as integer) as "過去3走順位平方和", -- horse_std_rank
+    cast(coalesce(power(前走着順 - 1, 2) + power(前々走着順 - 1, 2) + power(前々々走着順 - 1, 2), 0) as integer) as "過去3走順位平方和" -- horse_std_rank
+  from
+    base
+  ),
 
+  -- Todo:
+  -- https://teddykoker.com/2019/12/beating-the-odds-machine-learning-for-horse-racing/
+  teddykoker_blog_features as (
+  select
+    "レースキー",
+    "馬番",
 
-    -- Todo:
-    -- https://teddykoker.com/2019/12/beating-the-odds-machine-learning-for-horse-racing/
-    
     -- Horse Win Percent: Horse’s win percent over the past 5 races.
     -- horse_win_percent_past_5_races
     {{
@@ -594,9 +564,247 @@ with
         'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
     }} as "騎手過去5走トップ3完走率"
+  from
+    base
+  ),
+
+  prize_features as (
+  select
+    base."レースキー",
+    base."馬番",
+
+    -- prize_horse_cumulative
+    sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金" as "本賞金累計",
+
+    -- avg_prize_wins_horse
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金"',
+        'horse_features."1位完走"'
+      )
+    }} as "1位完走平均賞金",
+
+    -- avg_prize_runs_horse
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金"',
+        'horse_features."レース数"'
+      )
+    }} as "レース数平均賞金",
+
+    -- prize_trainer_cumulative
+    sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金" as "調教師本賞金累計",
+
+    -- avg_prize_wins_trainer
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金"',
+        'owner_features."調教師1位完走"'
+      )
+    }} as "調教師1位完走平均賞金",
+
+    -- avg_prize_runs_trainer
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金"',
+        'owner_features."調教師レース数"'
+      )
+    }} as "調教師レース数平均賞金",
+
+    -- prize_jockey_cumulative
+    sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金" as "騎手本賞金累計",
+
+    -- avg_prize_wins_jockey
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金"',
+        'owner_features."騎手1位完走"'
+      )
+    }} as "騎手1位完走平均賞金",
+
+    -- avg_prize_runs_jockey
+    {{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金"',
+        'owner_features."騎手レース数"'
+      )
+    }} as "騎手レース数平均賞金"
+  from
+    base
+  inner join
+    horse_features
+  on
+    base."レースキー" = horse_features."レースキー"
+    and base."馬番" = horse_features."馬番"
+  inner join
+    owner_features
+  on
+    base."レースキー" = owner_features."レースキー"
+    and base."馬番" = owner_features."馬番"
+  ),
+
+  final as (
+  select
+    -- 基本情報
+    base."レースキー",
+    base."馬番",
+    "枠番",
+    "場名",
+    "年月日",
+    "頭数",
+    "四半期",
+
+    -- 結果/払戻金
+    "単勝的中",
+    "単勝払戻金",
+    "複勝的中",
+    "複勝払戻金",
+    "本賞金",
+    "収得賞金",
+
+    -- 馬情報
+    "血統登録番号",
+    "瞬発戦好走馬_芝",
+    "消耗戦好走馬_芝",
+    "瞬発戦好走馬_ダート",
+    "消耗戦好走馬_ダート",
+    "瞬発戦好走馬_総合",
+    "消耗戦好走馬_総合",
+    "性別",
+
+    -- 馬場
+    "馬場状態",
+
+    -- 前日
+    "トラック種別",
+    "前日_芝馬場差",
+    "前日_ダ馬場差",
+    "前日_ＩＤＭ",
+    "前日_脚質",
+    "前日_単勝オッズ",
+    "前日_複勝オッズ",
+
+    -- 直前
+    "直前_ＩＤＭ",
+    "直前_騎手指数",
+    "直前_情報指数",
+    "直前_オッズ指数",
+    "直前_パドック指数",
+    "直前_脚元情報",
+    "直前_天候",
+    "直前_単勝オッズ",
+    "直前_複勝オッズ",
+    "直前_馬場状態",
+
+    horse_features."前走トップ3",
+    horse_features."前走枠番",
+    horse_features."入厩何日前", -- horse_rest_time
+    horse_features."入厩15日未満", -- horse_rest_lest14
+    horse_features."入厩35日以上", -- horse_rest_over35
+    horse_features."馬体重", -- declared_weight
+    horse_features."馬体重増減", -- diff_declared_weight
+    horse_features."距離", -- distance
+    horse_features."前走距離差", -- diff_distance
+    horse_features."馬具コード", -- horse_gear
+    horse_features."年齢",
+    horse_features."4歳以下",
+    horse_features."4歳以下頭数",
+    horse_features."4歳以下割合",
+    horse_features."レース数", -- horse_runs
+    horse_features."1位完走", -- horse_wins
+    horse_features."トップ3完走", -- horse_places
+    horse_features."1位完走率",
+    horse_features."トップ3完走率",
+    horse_features."場所レース数", -- horse_venue_runs
+    horse_features."場所1位完走", -- horse_venue_wins
+    horse_features."場所トップ3完走", -- horse_venue_places
+    horse_features."場所1位完走率", -- ratio_win_horse_venue
+    horse_features."場所トップ3完走率", -- ratio_place_horse_venue
+    horse_features."トラック種別レース数", -- horse_surface_runs
+    horse_features."トラック種別1位完走", -- horse_surface_wins
+    horse_features."トラック種別トップ3完走", -- horse_surface_places
+    horse_features."トラック種別1位完走率", -- ratio_win_horse_surface
+    horse_features."トラック種別トップ3完走率", -- ratio_place_horse_surface
+    horse_features."馬場状態レース数", -- horse_going_runs
+    horse_features."馬場状態1位完走", -- horse_going_wins
+    horse_features."馬場状態トップ3完走", -- horse_going_places
+    horse_features."馬場状態1位完走率", -- ratio_win_horse_going
+    horse_features."馬場状態トップ3完走率", -- ratio_place_horse_going
+    horse_features."距離レース数", -- horse_distance_runs
+    horse_features."距離1位完走", -- horse_distance_wins
+    horse_features."距離トップ3完走", -- horse_distance_places
+    horse_features."距離1位完走率", -- ratio_win_horse_distance
+    horse_features."距離トップ3完走率", -- ratio_place_horse_distance
+    horse_features."四半期レース数", -- horse_quarter_runs
+    horse_features."四半期1位完走", -- horse_quarter_wins
+    horse_features."四半期トップ3完走", -- horse_quarter_places
+    horse_features."四半期1位完走率", -- ratio_win_horse_quarter
+    horse_features."四半期トップ3完走率", -- ratio_place_horse_quarter
+
+    owner_features."騎手レース数", -- jockey_runs
+    owner_features."騎手1位完走", -- jockey_wins
+    owner_features."騎手トップ3完走", -- jockey_places
+    owner_features."騎手1位完走率", -- ratio_win_jockey
+    owner_features."騎手トップ3完走率", -- ratio_place_jockey
+    owner_features."騎手場所レース数", -- jockey_venue_runs
+    owner_features."騎手場所1位完走", -- jockey_venue_wins
+    owner_features."騎手場所トップ3完走", -- jockey_venue_places
+    owner_features."騎手場所1位完走率", -- ratio_win_jockey_venue
+    owner_features."騎手場所トップ3完走率", -- ratio_place_jockey_venue
+    owner_features."騎手距離レース数", -- jockey_distance_runs
+    owner_features."騎手距離1位完走", -- jockey_distance_wins
+    owner_features."騎手距離トップ3完走", -- jockey_distance_places
+    owner_features."騎手距離1位完走率", -- ratio_win_jockey_distance
+    owner_features."騎手距離トップ3完走率", -- ratio_place_jockey_distance
+    owner_features."調教師レース数", -- trainer_runs
+    owner_features."調教師1位完走", -- trainer_wins
+    owner_features."調教師トップ3完走", -- trainer_places
+    owner_features."調教師1位完走率", -- ratio_win_trainer
+    owner_features."調教師トップ3完走率", -- ratio_place_trainer
+    owner_features."調教師場所レース数", -- trainer_venue_runs
+    owner_features."調教師場所1位完走", -- trainer_venue_wins
+    owner_features."調教師場所トップ3完走", -- trainer_venue_places
+    owner_features."調教師場所1位完走率", -- ratio_win_trainer_venue
+    owner_features."調教師場所トップ3完走率", -- ratio_place_trainer_venue
+    owner_features."過去3走順位平方和", -- horse_std_rank
+
+    prize_features."本賞金累計", -- prize_horse_cumulative
+    prize_features."1位完走平均賞金", -- avg_prize_wins_horse
+    prize_features."レース数平均賞金", -- avg_prize_runs_horse
+    prize_features."調教師本賞金累計", -- prize_trainer_cumulative
+    prize_features."調教師1位完走平均賞金", -- avg_prize_wins_trainer
+    prize_features."調教師レース数平均賞金", -- avg_prize_runs_trainer
+    prize_features."騎手本賞金累計", -- prize_jockey_cumulative
+    prize_features."騎手1位完走平均賞金", -- avg_prize_wins_jockey
+    prize_features."騎手レース数平均賞金", -- avg_prize_runs_jockey
+
+    tkb_features."過去5走勝率", -- horse_win_percent_past_5_races
+    tkb_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
+    tkb_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
+    tkb_features."騎手過去5走トップ3完走率" -- jockey_place_percent_past_5_races
 
   from
     base
+  inner join
+    horse_features
+  on
+    base."レースキー" = horse_features."レースキー"
+    and base."馬番" = horse_features."馬番"
+  inner join
+    owner_features
+  on
+    base."レースキー" = owner_features."レースキー"
+    and base."馬番" = owner_features."馬番"
+  inner join
+    prize_features
+  on
+    base."レースキー" = prize_features."レースキー"
+    and base."馬番" = prize_features."馬番"
+  inner join
+    teddykoker_blog_features tkb_features
+  on
+    base."レースキー" = tkb_features."レースキー"
+    and base."馬番" = tkb_features."馬番"
   )
 
 select * from final
