@@ -53,17 +53,17 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 
 
 
-| Dataset | Verified range | Has duplicates? |
-| ------- | -------------- | --------------- |
-| bac     | ~2023/12/17    | [x]             |
-| cha     | ~2023/12/17    | [ ]             |
-| cyb     | ~2023/12/17    | [x]             |
-| hjc     | ~2023/12/17    | [ ]             |
-| kab     | ~2023/12/17    | [ ]             |
-| kyi     | ~2023/12/17    | [ ]             |
-| oz      | ~2023/12/17    | [ ]             |
-| sed     | ~2023/12/17    | [x]             |
-| skb     | ~2023/12/17    | [ ]             |
-| tyb     | ~2023/12/17    | [x]             |
-| ukc     | ~2023/12/17    | [ ]             |
+| Dataset | Verified range | Has duplicates? | Notes                                                  |
+| ------- | -------------- | --------------- | ------------------------------------------------------ |
+| bac     | ~2023/12/17    | [x]             |                                                        |
+| cha     | ~2023/12/17    | [ ]             |                                                        |
+| cyb     | ~2023/12/17    | [x]             |                                                        |
+| hjc     | ~2023/12/17    | [ ]             |                                                        |
+| kab     | ~2023/12/17    | [ ]             |                                                        |
+| kyi     | ~2023/12/17    | [ ]             |                                                        |
+| oz      | ~2023/12/17    | [ ]             |                                                        |
+| sed     | ~2023/12/17    | [x]             |                                                        |
+| skb     | ~2023/12/17    | [ ]             |                                                        |
+| tyb     | ~2023/12/17    | [x]             |                                                        |
+| ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
