@@ -1603,6 +1603,14 @@ models:
 
   - name: stg_jrdb__ukc
     columns:
+      - name: ukc_sk
+        tests:
+          - unique
+          - not_null
+      - name: ukc_bk
+        tests:
+          - unique
+          - not_null
       - name: 血統登録番号
         tests:
           - not_null

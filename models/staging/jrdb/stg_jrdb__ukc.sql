@@ -8,6 +8,10 @@ with source as (
 final as (
     select
         ukc_sk,
+        concat(
+          nullif("血統登録番号", ''),
+          nullif("データ年月日", '')
+        ) as ukc_bk,
         nullif("血統登録番号", '') as "血統登録番号",
         nullif("馬名", '') as "馬名",
         -- 1:牡,2:牝,3,セン
