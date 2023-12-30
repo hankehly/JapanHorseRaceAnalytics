@@ -1,20 +1,20 @@
 models:
+  - name: int_horses
+    +schema: intermediate
+    description: horse features
+  - name: int_place_odds
+    +schema: intermediate
   - name: int_place_payouts
     +schema: intermediate
     columns:
       - name: レースキー
       - name: 馬番
       - name: 払戻金
+  - name: int_win_odds
+    +schema: intermediate
   - name: int_win_payouts
     +schema: intermediate
     columns:
       - name: レースキー
       - name: 馬番
       - name: 払戻金
-  - name: int_horses
-    +schema: intermediate
-    description: horse features
-  - name: int_place_odds
-    +schema: intermediate
-  - name: int_win_odds
-    +schema: intermediate

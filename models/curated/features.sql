@@ -842,75 +842,74 @@ with
     horse_features."四半期1位完走", -- horse_quarter_wins
     horse_features."四半期トップ3完走", -- horse_quarter_places
     horse_features."四半期1位完走率", -- ratio_win_horse_quarter
-    horse_features."四半期トップ3完走率" -- ratio_place_horse_quarter
+    horse_features."四半期トップ3完走率", -- ratio_place_horse_quarter
 
-    -- owner_features."騎手レース数", -- jockey_runs
-    -- owner_features."騎手1位完走", -- jockey_wins
-    -- owner_features."騎手トップ3完走", -- jockey_places
-    -- owner_features."騎手1位完走率", -- ratio_win_jockey
-    -- owner_features."騎手トップ3完走率", -- ratio_place_jockey
-    -- owner_features."騎手場所レース数", -- jockey_venue_runs
-    -- owner_features."騎手場所1位完走", -- jockey_venue_wins
-    -- owner_features."騎手場所トップ3完走", -- jockey_venue_places
-    -- owner_features."騎手場所1位完走率", -- ratio_win_jockey_venue
-    -- owner_features."騎手場所トップ3完走率", -- ratio_place_jockey_venue
-    -- owner_features."騎手距離レース数", -- jockey_distance_runs
-    -- owner_features."騎手距離1位完走", -- jockey_distance_wins
-    -- owner_features."騎手距離トップ3完走", -- jockey_distance_places
-    -- owner_features."騎手距離1位完走率", -- ratio_win_jockey_distance
-    -- owner_features."騎手距離トップ3完走率", -- ratio_place_jockey_distance
-    -- owner_features."調教師レース数", -- trainer_runs
-    -- owner_features."調教師1位完走", -- trainer_wins
-    -- owner_features."調教師トップ3完走", -- trainer_places
-    -- owner_features."調教師1位完走率", -- ratio_win_trainer
-    -- owner_features."調教師トップ3完走率", -- ratio_place_trainer
-    -- owner_features."調教師場所レース数", -- trainer_venue_runs
-    -- owner_features."調教師場所1位完走", -- trainer_venue_wins
-    -- owner_features."調教師場所トップ3完走", -- trainer_venue_places
-    -- owner_features."調教師場所1位完走率", -- ratio_win_trainer_venue
-    -- owner_features."調教師場所トップ3完走率", -- ratio_place_trainer_venue
-    -- owner_features."過去3走順位平方和" -- horse_std_rank
+    owner_features."騎手レース数", -- jockey_runs
+    owner_features."騎手1位完走", -- jockey_wins
+    owner_features."騎手トップ3完走", -- jockey_places
+    owner_features."騎手1位完走率", -- ratio_win_jockey
+    owner_features."騎手トップ3完走率", -- ratio_place_jockey
+    owner_features."騎手場所レース数", -- jockey_venue_runs
+    owner_features."騎手場所1位完走", -- jockey_venue_wins
+    owner_features."騎手場所トップ3完走", -- jockey_venue_places
+    owner_features."騎手場所1位完走率", -- ratio_win_jockey_venue
+    owner_features."騎手場所トップ3完走率", -- ratio_place_jockey_venue
+    owner_features."騎手距離レース数", -- jockey_distance_runs
+    owner_features."騎手距離1位完走", -- jockey_distance_wins
+    owner_features."騎手距離トップ3完走", -- jockey_distance_places
+    owner_features."騎手距離1位完走率", -- ratio_win_jockey_distance
+    owner_features."騎手距離トップ3完走率", -- ratio_place_jockey_distance
+    owner_features."調教師レース数", -- trainer_runs
+    owner_features."調教師1位完走", -- trainer_wins
+    owner_features."調教師トップ3完走", -- trainer_places
+    owner_features."調教師1位完走率", -- ratio_win_trainer
+    owner_features."調教師トップ3完走率", -- ratio_place_trainer
+    owner_features."調教師場所レース数", -- trainer_venue_runs
+    owner_features."調教師場所1位完走", -- trainer_venue_wins
+    owner_features."調教師場所トップ3完走", -- trainer_venue_places
+    owner_features."調教師場所1位完走率", -- ratio_win_trainer_venue
+    owner_features."調教師場所トップ3完走率", -- ratio_place_trainer_venue
+    owner_features."過去3走順位平方和", -- horse_std_rank
 
-    -- problem
-    -- prize_features."本賞金累計", -- prize_horse_cumulative
-    -- prize_features."1位完走平均賞金", -- avg_prize_wins_horse
-    -- prize_features."レース数平均賞金", -- avg_prize_runs_horse
-    -- prize_features."調教師本賞金累計", -- prize_trainer_cumulative
-    -- prize_features."調教師1位完走平均賞金", -- avg_prize_wins_trainer
-    -- prize_features."調教師レース数平均賞金", -- avg_prize_runs_trainer
-    -- prize_features."騎手本賞金累計", -- prize_jockey_cumulative
-    -- prize_features."騎手1位完走平均賞金", -- avg_prize_wins_jockey
-    -- prize_features."騎手レース数平均賞金" -- avg_prize_runs_jockey
+    prize_features."本賞金累計", -- prize_horse_cumulative
+    prize_features."1位完走平均賞金", -- avg_prize_wins_horse
+    prize_features."レース数平均賞金", -- avg_prize_runs_horse
+    prize_features."調教師本賞金累計", -- prize_trainer_cumulative
+    prize_features."調教師1位完走平均賞金", -- avg_prize_wins_trainer
+    prize_features."調教師レース数平均賞金", -- avg_prize_runs_trainer
+    prize_features."騎手本賞金累計", -- prize_jockey_cumulative
+    prize_features."騎手1位完走平均賞金", -- avg_prize_wins_jockey
+    prize_features."騎手レース数平均賞金", -- avg_prize_runs_jockey
 
-    -- combined_features."馬騎手レース数", -- runs_horse_jockey
-    -- combined_features."馬騎手1位完走", -- wins_horse_jockey
-    -- combined_features."馬騎手1位完走率", -- ratio_win_horse_jockey
-    -- combined_features."馬騎手トップ3完走", -- places_horse_jockey
-    -- combined_features."馬騎手トップ3完走率", -- ratio_place_horse_jockey
-    -- combined_features."馬騎手初二走", -- first_second_jockey
-    -- combined_features."馬騎手同騎手", -- same_last_jockey
-    -- combined_features."馬騎手場所レース数", -- runs_horse_jockey_venue
-    -- combined_features."馬騎手場所1位完走", -- wins_horse_jockey_venue
-    -- combined_features."馬騎手場所1位完走率", -- ratio_win_horse_jockey_venue
-    -- combined_features."馬騎手場所トップ3完走", -- places_horse_jockey_venue
-    -- combined_features."馬騎手場所トップ3完走率", -- ratio_place_horse_jockey_venue
-    -- combined_features."馬調教師レース数", -- runs_horse_trainer
-    -- combined_features."馬調教師1位完走", -- wins_horse_trainer
-    -- combined_features."馬調教師1位完走率", -- ratio_win_horse_trainer
-    -- combined_features."馬調教師トップ3完走", -- places_horse_trainer
-    -- combined_features."馬調教師トップ3完走率", -- ratio_place_horse_trainer
-    -- combined_features."馬調教師初二走", -- first_second_trainer
-    -- combined_features."馬調教師同調教師", -- same_last_trainer
-    -- combined_features."馬調教師場所レース数", -- runs_horse_trainer_venue
-    -- combined_features."馬調教師場所1位完走", -- wins_horse_trainer_venue
-    -- combined_features."馬調教師場所1位完走率", -- ratio_win_horse_trainer_venue
-    -- combined_features."馬調教師場所トップ3完走", -- places_horse_trainer_venue
-    -- combined_features."馬調教師場所トップ3完走率" -- ratio_place_horse_trainer_venue
+    combined_features."馬騎手レース数", -- runs_horse_jockey
+    combined_features."馬騎手1位完走", -- wins_horse_jockey
+    combined_features."馬騎手1位完走率", -- ratio_win_horse_jockey
+    combined_features."馬騎手トップ3完走", -- places_horse_jockey
+    combined_features."馬騎手トップ3完走率", -- ratio_place_horse_jockey
+    combined_features."馬騎手初二走", -- first_second_jockey
+    combined_features."馬騎手同騎手", -- same_last_jockey
+    combined_features."馬騎手場所レース数", -- runs_horse_jockey_venue
+    combined_features."馬騎手場所1位完走", -- wins_horse_jockey_venue
+    combined_features."馬騎手場所1位完走率", -- ratio_win_horse_jockey_venue
+    combined_features."馬騎手場所トップ3完走", -- places_horse_jockey_venue
+    combined_features."馬騎手場所トップ3完走率", -- ratio_place_horse_jockey_venue
+    combined_features."馬調教師レース数", -- runs_horse_trainer
+    combined_features."馬調教師1位完走", -- wins_horse_trainer
+    combined_features."馬調教師1位完走率", -- ratio_win_horse_trainer
+    combined_features."馬調教師トップ3完走", -- places_horse_trainer
+    combined_features."馬調教師トップ3完走率", -- ratio_place_horse_trainer
+    combined_features."馬調教師初二走", -- first_second_trainer
+    combined_features."馬調教師同調教師", -- same_last_trainer
+    combined_features."馬調教師場所レース数", -- runs_horse_trainer_venue
+    combined_features."馬調教師場所1位完走", -- wins_horse_trainer_venue
+    combined_features."馬調教師場所1位完走率", -- ratio_win_horse_trainer_venue
+    combined_features."馬調教師場所トップ3完走", -- places_horse_trainer_venue
+    combined_features."馬調教師場所トップ3完走率", -- ratio_place_horse_trainer_venue
 
-    -- tkb_features."過去5走勝率", -- horse_win_percent_past_5_races
-    -- tkb_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
-    -- tkb_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
-    -- tkb_features."騎手過去5走トップ3完走率" -- jockey_place_percent_past_5_races
+    tkb_features."過去5走勝率", -- horse_win_percent_past_5_races
+    tkb_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
+    tkb_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
+    tkb_features."騎手過去5走トップ3完走率" -- jockey_place_percent_past_5_races
 
   from
     base
@@ -919,30 +918,29 @@ with
   on
     base."レースキー" = horse_features."レースキー"
     and base."馬番" = horse_features."馬番"
-  -- inner join
-  --   owner_features
-  -- on
-  --   base."レースキー" = owner_features."レースキー"
-  --   and base."馬番" = owner_features."馬番"
-  -- inner join
-  --   prize_features
-  -- on
-  --   base."レースキー" = prize_features."レースキー"
-  --   and base."馬番" = prize_features."馬番"
-  -- inner join
-  --   combined_features
-  -- on
-  --   base."レースキー" = combined_features."レースキー"
-  --   and base."馬番" = combined_features."馬番"
-  -- inner join
-  --   teddykoker_blog_features tkb_features
-  -- on
-  --   base."レースキー" = tkb_features."レースキー"
-  --   and base."馬番" = tkb_features."馬番"
+  inner join
+    owner_features
+  on
+    base."レースキー" = owner_features."レースキー"
+    and base."馬番" = owner_features."馬番"
+  inner join
+    prize_features
+  on
+    base."レースキー" = prize_features."レースキー"
+    and base."馬番" = prize_features."馬番"
+  inner join
+    combined_features
+  on
+    base."レースキー" = combined_features."レースキー"
+    and base."馬番" = combined_features."馬番"
+  inner join
+    teddykoker_blog_features tkb_features
+  on
+    base."レースキー" = tkb_features."レースキー"
+    and base."馬番" = tkb_features."馬番"
   )
 
-select * from final
-
--- just base    = 1,220,054
--- base + horse = 1,233,184 (+13,130)  left/inner
--- base + owner = 1,233,184 (+13,130)  left/inner
+select
+  *
+from
+  final
