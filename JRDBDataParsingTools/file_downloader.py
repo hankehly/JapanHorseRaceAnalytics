@@ -9,6 +9,7 @@ import io
 import datetime
 from JRDBDataParsingTools.structured_logger import logger
 from concurrent.futures import ThreadPoolExecutor
+import datetime
 
 
 def is_year_file(filename) -> bool:
@@ -52,6 +53,8 @@ class DownloadAndExtractFilesArgs(BaseModel):
     username: constr(strip_whitespace=True, min_length=1)
     password: constr(strip_whitespace=True, min_length=1)
     download_dir: str
+    start_date: datetime.datetime = None
+    end_date: datetime.datetime = None
 
     model_config = ConfigDict(frozen=True, str_strip_whitespace=True)
 
@@ -70,6 +73,8 @@ def download_and_extract_files(
     download_dir: str,
     skip_year_files: bool = False,
     threads: int = None,
+    start_date: datetime.date = None,
+    end_date: datetime.date = None,
 ) -> None:
     """
     Download and extract all files from the JRDB website.
@@ -90,6 +95,12 @@ def download_and_extract_files(
     threads : int, optional
         The number of threads to use for downloading and extracting files.
         If None, use the number of CPUs on the system.
+        Defaults to None.
+    start_date : datetime.date, optional
+        The start date to filter files. Only files with date greater than or equal to this will be processed.
+        Defaults to None.
+    end_date : datetime.date, optional
+        The end date to filter files. Only files with date less than or equal to this will be processed.
         Defaults to None.
 
     Returns
@@ -124,6 +135,11 @@ def download_and_extract_files(
             for link in links:
                 file_link = link.get("href")
                 if is_year_file(file_link):
+                    year = extract_year(file_link)
+                    if start_date and year < start_date.year:
+                        continue
+                    if end_date and year > end_date.year:
+                        continue
                     executor.submit(
                         download_and_extract,
                         str(args.webpage_url),
@@ -132,7 +148,7 @@ def download_and_extract_files(
                         args.password,
                         str(args.download_dir),
                     )
-                    covered_years.add(extract_year(file_link))
+                    covered_years.add(year)
 
     logger.debug("Processing date files")
     with ThreadPoolExecutor(max_workers=threads) as executor:
@@ -140,6 +156,10 @@ def download_and_extract_files(
             file_link = link.get("href")
             if is_date_file(link.get("href")):
                 date = extract_date(file_link)
+                if start_date and date < start_date:
+                    continue
+                if end_date and date > end_date:
+                    continue
                 if date.year not in covered_years:
                     executor.submit(
                         download_and_extract,

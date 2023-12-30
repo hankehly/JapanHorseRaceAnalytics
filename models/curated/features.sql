@@ -21,12 +21,12 @@ with
     {{ ref('stg_jrdb__sed') }}
   ),
 
-  skb as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__skb') }}
-  ),
+  -- skb as (
+  -- select
+  --   *
+  -- from
+  --   {{ ref('stg_jrdb__skb') }}
+  -- ),
 
   tyb as (
   select
@@ -101,7 +101,7 @@ with
     sed."馬体重",
     sed."馬体重増減",
     sed."レース条件_距離" as "距離",
-    skb."馬具コード",
+    -- skb."馬具コード",
     sed."レース条件_馬場状態" as "馬場状態",
     sed."本賞金",
     sed."収得賞金",
@@ -160,11 +160,11 @@ with
     kyi."レースキー" = sed."レースキー"
     and kyi."馬番" = sed."馬番"
 
-  inner join
-    skb
-  on
-    kyi."レースキー" = skb."レースキー"
-    and kyi."馬番" = skb."馬番"
+  -- inner join
+  --   skb
+  -- on
+  --   kyi."レースキー" = skb."レースキー"
+  --   and kyi."馬番" = skb."馬番"
 
   inner join
     tyb
@@ -229,7 +229,7 @@ with
     "馬体重増減" as "馬体重増減", -- diff_declared_weight
     "距離" as "距離", -- distance
     coalesce("距離" - lag("距離") over (partition by "血統登録番号" order by "年月日"), 0) as "前走距離差", -- diff_distance
-    "馬具コード", -- horse_gear
+    -- "馬具コード", -- horse_gear
     extract(year from age("年月日", "生年月日")) + extract(month from age("年月日", "生年月日")) / 12 + extract(day from age("年月日", "生年月日")) / (12 * 30.44) AS "年齢", -- horse_age
     age("年月日", "生年月日") < '5 years' as "4歳以下",
     sum(case when age("年月日", "生年月日") < '5 years' then 1 else 0 end) over (partition by "レースキー") as "4歳以下頭数",
@@ -808,7 +808,7 @@ with
     horse_features."馬体重増減", -- diff_declared_weight
     horse_features."距離", -- distance
     horse_features."前走距離差", -- diff_distance
-    horse_features."馬具コード", -- horse_gear
+    -- horse_features."馬具コード", -- horse_gear
     horse_features."年齢", -- horse_age (years)
     horse_features."4歳以下",
     horse_features."4歳以下頭数",
