@@ -176,6 +176,7 @@ with
     kab
   on
     kyi."開催キー" = kab."開催キー"
+    and sed."競走成績キー_年月日" = kab."年月日"
 
   inner join
     horses
