@@ -8,6 +8,13 @@ final as (
             nullif("開催キー_場コード", ''),
             nullif("開催キー_年", ''),
             nullif("開催キー_回", ''),
+            nullif("開催キー_日", ''),
+            nullif("年月日", '')
+        ) as kab_bk,
+        concat(
+            nullif("開催キー_場コード", ''),
+            nullif("開催キー_年", ''),
+            nullif("開催キー_回", ''),
             nullif("開催キー_日", '')
         ) as "開催キー",
         nullif("開催キー_場コード", '') as "開催キー_場コード",
