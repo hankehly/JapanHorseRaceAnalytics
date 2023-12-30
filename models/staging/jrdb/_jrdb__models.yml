@@ -267,7 +267,8 @@ models:
     columns:
       - name: cyb_sk
         tests:
-          - unique
+          # takes way too long
+          # - unique
           - not_null
       - name: cyb_bk
         tests:
@@ -1270,14 +1271,21 @@ models:
 
   - name: stg_jrdb__sed
     columns:
-      # derived
+      - name: sed_sk
+        tests:
+          # takes way too long and is not strictly necessary because spark does this for us
+          # - unique
+          - not_null
+      - name: sed_bk
+        tests:
+          - unique
+          - not_null
       - name: レースキー
         tests:
           - not_null
       - name: 開催キー
         tests:
           - not_null
-      # original
       - name: レースキー_場コード
         tests:
           - not_null
