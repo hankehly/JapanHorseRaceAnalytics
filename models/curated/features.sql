@@ -230,7 +230,7 @@ with
     "距離" as "距離", -- distance
     coalesce("距離" - lag("距離") over (partition by "血統登録番号" order by "年月日"), 0) as "前走距離差", -- diff_distance
     "馬具コード", -- horse_gear
-    age("年月日", "生年月日") as "年齢",
+    extract(year from age("年月日", "生年月日")) + extract(month from age("年月日", "生年月日")) / 12 + extract(day from age("年月日", "生年月日")) / (12 * 30.44) AS "年齢", -- horse_age
     age("年月日", "生年月日") < '5 years' as "4歳以下",
     sum(case when age("年月日", "生年月日") < '5 years' then 1 else 0 end) over (partition by "レースキー") as "4歳以下頭数",
     coalesce(sum(case when age("年月日", "生年月日") < '5 years' then 1 else 0 end) over (partition by "レースキー") / cast("頭数" as numeric), 0) as "4歳以下割合",
@@ -809,7 +809,7 @@ with
     horse_features."距離", -- distance
     horse_features."前走距離差", -- diff_distance
     horse_features."馬具コード", -- horse_gear
-    extract(year from horse_features."年齢") + extract(month from horse_features."年齢") / 12 + extract(day from horse_features."年齢") / (12 * 30.44) AS "年齢", -- horse_age (years)
+    horse_features."年齢", -- horse_age (years)
     horse_features."4歳以下",
     horse_features."4歳以下頭数",
     horse_features."4歳以下割合",
