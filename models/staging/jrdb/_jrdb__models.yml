@@ -1450,14 +1450,21 @@ models:
 
   - name: stg_jrdb__tyb
     columns:
-      # derived
+      - name: tyb_sk
+        tests:
+          # Takes way too long. Just trust pyspark is doing this for us correctly
+          # - unique
+          - not_null
+      - name: tyb_bk
+        tests:
+          - unique
+          - not_null
       - name: レースキー
         tests:
           - not_null
       - name: 開催キー
         tests:
           - not_null
-      # original
       - name: レースキー_場コード
         tests:
           - not_null
