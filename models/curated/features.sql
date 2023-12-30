@@ -809,7 +809,7 @@ with
     horse_features."距離", -- distance
     horse_features."前走距離差", -- diff_distance
     horse_features."馬具コード", -- horse_gear
-    horse_features."年齢",
+    extract(year from horse_features."年齢") + extract(month from horse_features."年齢") / 12 + extract(day from horse_features."年齢") / (12 * 30.44) AS "年齢", -- horse_age (years)
     horse_features."4歳以下",
     horse_features."4歳以下頭数",
     horse_features."4歳以下割合",
