@@ -265,14 +265,20 @@ models:
 
   - name: stg_jrdb__cyb
     columns:
-      # derived
+      - name: cyb_sk
+        tests:
+          - unique
+          - not_null
+      - name: cyb_bk
+        tests:
+          - unique
+          - not_null
       - name: レースキー
         tests:
           - not_null
       - name: 開催キー
         tests:
           - not_null
-      # original
       - name: レースキー_場コード
         tests:
           - not_null
@@ -357,14 +363,20 @@ models:
               field: コード
   - name: stg_jrdb__hjc
     columns:
-      # derived
+      - name: hjc_sk
+        tests:
+          - unique
+          - not_null
+      - name: hjc_bk
+        tests:
+          - unique
+          - not_null
       - name: レースキー
         tests:
           - not_null
       - name: 開催キー
         tests:
           - not_null
-      # original
       - name: レースキー_場コード
         tests:
           - not_null
