@@ -10,6 +10,13 @@ final as (
             nullif("レースキー_回", ''),
             nullif("レースキー_日", ''),
             nullif("レースキー_Ｒ", '')
+        ) as oz_bk,
+        concat(
+            nullif("レースキー_場コード", ''),
+            nullif("レースキー_年", ''),
+            nullif("レースキー_回", ''),
+            nullif("レースキー_日", ''),
+            nullif("レースキー_Ｒ", '')
         ) as "レースキー",
         concat(
             nullif("レースキー_場コード", ''),
