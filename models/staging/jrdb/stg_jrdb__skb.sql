@@ -3,6 +3,7 @@ with source as (
 ),
 final as (
     select
+        skb_sk,
         concat(
             nullif("レースキー_場コード", ''),
             nullif("レースキー_年", ''),

@@ -796,52 +796,52 @@ with
     "直前_天候",
     "直前_単勝オッズ",
     "直前_複勝オッズ",
-    "直前_馬場状態",
+    "直前_馬場状態"
 
-    horse_features."前走トップ3",
-    horse_features."前走枠番",
-    horse_features."入厩何日前", -- horse_rest_time
-    horse_features."入厩15日未満", -- horse_rest_lest14
-    horse_features."入厩35日以上", -- horse_rest_over35
-    horse_features."馬体重", -- declared_weight
-    horse_features."馬体重増減", -- diff_declared_weight
-    horse_features."距離", -- distance
-    horse_features."前走距離差", -- diff_distance
-    horse_features."馬具コード", -- horse_gear
-    horse_features."年齢",
-    horse_features."4歳以下",
-    horse_features."4歳以下頭数",
-    horse_features."4歳以下割合",
-    horse_features."レース数", -- horse_runs
-    horse_features."1位完走", -- horse_wins
-    horse_features."トップ3完走", -- horse_places
-    horse_features."1位完走率",
-    horse_features."トップ3完走率",
-    horse_features."場所レース数", -- horse_venue_runs
-    horse_features."場所1位完走", -- horse_venue_wins
-    horse_features."場所トップ3完走", -- horse_venue_places
-    horse_features."場所1位完走率", -- ratio_win_horse_venue
-    horse_features."場所トップ3完走率", -- ratio_place_horse_venue
-    horse_features."トラック種別レース数", -- horse_surface_runs
-    horse_features."トラック種別1位完走", -- horse_surface_wins
-    horse_features."トラック種別トップ3完走", -- horse_surface_places
-    horse_features."トラック種別1位完走率", -- ratio_win_horse_surface
-    horse_features."トラック種別トップ3完走率", -- ratio_place_horse_surface
-    horse_features."馬場状態レース数", -- horse_going_runs
-    horse_features."馬場状態1位完走", -- horse_going_wins
-    horse_features."馬場状態トップ3完走", -- horse_going_places
-    horse_features."馬場状態1位完走率", -- ratio_win_horse_going
-    horse_features."馬場状態トップ3完走率", -- ratio_place_horse_going
-    horse_features."距離レース数", -- horse_distance_runs
-    horse_features."距離1位完走", -- horse_distance_wins
-    horse_features."距離トップ3完走", -- horse_distance_places
-    horse_features."距離1位完走率", -- ratio_win_horse_distance
-    horse_features."距離トップ3完走率", -- ratio_place_horse_distance
-    horse_features."四半期レース数", -- horse_quarter_runs
-    horse_features."四半期1位完走", -- horse_quarter_wins
-    horse_features."四半期トップ3完走", -- horse_quarter_places
-    horse_features."四半期1位完走率", -- ratio_win_horse_quarter
-    horse_features."四半期トップ3完走率" -- ratio_place_horse_quarter
+    -- horse_features."前走トップ3",
+    -- horse_features."前走枠番",
+    -- horse_features."入厩何日前", -- horse_rest_time
+    -- horse_features."入厩15日未満", -- horse_rest_lest14
+    -- horse_features."入厩35日以上", -- horse_rest_over35
+    -- horse_features."馬体重", -- declared_weight
+    -- horse_features."馬体重増減", -- diff_declared_weight
+    -- horse_features."距離", -- distance
+    -- horse_features."前走距離差", -- diff_distance
+    -- horse_features."馬具コード", -- horse_gear
+    -- horse_features."年齢",
+    -- horse_features."4歳以下",
+    -- horse_features."4歳以下頭数",
+    -- horse_features."4歳以下割合",
+    -- horse_features."レース数", -- horse_runs
+    -- horse_features."1位完走", -- horse_wins
+    -- horse_features."トップ3完走", -- horse_places
+    -- horse_features."1位完走率",
+    -- horse_features."トップ3完走率",
+    -- horse_features."場所レース数", -- horse_venue_runs
+    -- horse_features."場所1位完走", -- horse_venue_wins
+    -- horse_features."場所トップ3完走", -- horse_venue_places
+    -- horse_features."場所1位完走率", -- ratio_win_horse_venue
+    -- horse_features."場所トップ3完走率", -- ratio_place_horse_venue
+    -- horse_features."トラック種別レース数", -- horse_surface_runs
+    -- horse_features."トラック種別1位完走", -- horse_surface_wins
+    -- horse_features."トラック種別トップ3完走", -- horse_surface_places
+    -- horse_features."トラック種別1位完走率", -- ratio_win_horse_surface
+    -- horse_features."トラック種別トップ3完走率", -- ratio_place_horse_surface
+    -- horse_features."馬場状態レース数", -- horse_going_runs
+    -- horse_features."馬場状態1位完走", -- horse_going_wins
+    -- horse_features."馬場状態トップ3完走", -- horse_going_places
+    -- horse_features."馬場状態1位完走率", -- ratio_win_horse_going
+    -- horse_features."馬場状態トップ3完走率", -- ratio_place_horse_going
+    -- horse_features."距離レース数", -- horse_distance_runs
+    -- horse_features."距離1位完走", -- horse_distance_wins
+    -- horse_features."距離トップ3完走", -- horse_distance_places
+    -- horse_features."距離1位完走率", -- ratio_win_horse_distance
+    -- horse_features."距離トップ3完走率", -- ratio_place_horse_distance
+    -- horse_features."四半期レース数", -- horse_quarter_runs
+    -- horse_features."四半期1位完走", -- horse_quarter_wins
+    -- horse_features."四半期トップ3完走", -- horse_quarter_places
+    -- horse_features."四半期1位完走率", -- ratio_win_horse_quarter
+    -- horse_features."四半期トップ3完走率" -- ratio_place_horse_quarter
 
     -- owner_features."騎手レース数", -- jockey_runs
     -- owner_features."騎手1位完走", -- jockey_wins
@@ -913,16 +913,16 @@ with
 
   from
     base
-  inner join
-    horse_features
-  on
-    base."レースキー" = horse_features."レースキー"
-    and base."馬番" = horse_features."馬番"
   -- inner join
-  --   owner_features
+  --   horse_features
   -- on
-  --   base."レースキー" = owner_features."レースキー"
-  --   and base."馬番" = owner_features."馬番"
+  --   base."レースキー" = horse_features."レースキー"
+  --   and base."馬番" = horse_features."馬番"
+--   inner join
+--     owner_features
+--   on
+--     base."レースキー" = owner_features."レースキー"
+--     and base."馬番" = owner_features."馬番"
   -- inner join
   --   prize_features
   -- on

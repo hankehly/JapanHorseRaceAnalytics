@@ -3,6 +3,7 @@ with source as (
 ),
 final as (
     select
+        cyb_sk,
         concat(
             nullif("レースキー_場コード", ''),
             nullif("レースキー_年", ''),
@@ -38,7 +39,11 @@ final as (
         nullif("調教量評価", '') as "調教量評価",
         nullif("仕上指数変化", '') as "仕上指数変化",
         nullif("調教コメント", '') as "調教コメント",
-        to_date(nullif("コメント年月日", ''), 'YYYYMMDD') as "コメント年月日",
+        -- Date formats are mixed: YYYYMMDD and YYYY/MM/DD
+        case
+            when "コメント年月日" like '%/%' then to_date("コメント年月日", 'YYYY/MM/DD')
+            else to_date(nullif("コメント年月日", ''), 'YYYYMMDD')
+        end as "コメント年月日",
         nullif("調教評価", '') as "調教評価",
         cast(nullif("一週前追切指数", '') as integer) as "一週前追切指数",
         nullif("一週前追切コース", '') as "一週前追切コース"

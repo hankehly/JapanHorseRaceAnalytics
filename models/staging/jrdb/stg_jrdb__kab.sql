@@ -3,6 +3,7 @@ with source as (
 ),
 final as (
     select
+        kab_sk,
         concat(
             nullif("開催キー_場コード", ''),
             nullif("開催キー_年", ''),
