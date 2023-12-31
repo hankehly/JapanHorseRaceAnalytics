@@ -1,13 +1,27 @@
 {{ config(materialized='table', schema='intermediate') }}
 with
+  sed as (
+  select
+    *
+  from
+    {{ ref('stg_jrdb__sed') }}
+  ),
+
+  ukc as (
+  select
+    *
+  from
+    {{ ref('stg_jrdb__ukc') }}
+  ),
+
   -- Get the latest data for each horse (scd type 2)
   ukc_latest AS (
   select
     *
   from
-    {{ ref('stg_jrdb__ukc') }}
+    ukc
   where
-    (血統登録番号, データ年月日) in (select 血統登録番号, MAX(データ年月日) from {{ ref('stg_jrdb__ukc') }} group by 血統登録番号)
+    (血統登録番号, データ年月日) in (select 血統登録番号, MAX(データ年月日) from ukc group by 血統登録番号)
   ),
 
   good_finish_turf as (
@@ -26,7 +40,7 @@ with
       end
     ) > 0 "消耗戦好走馬"
   from
-    {{ ref('stg_jrdb__sed') }}
+    sed
   where
     馬成績_異常区分 = '0'
     and レース条件_トラック情報_芝ダ障害コード = '芝'
@@ -50,7 +64,7 @@ with
       end
     ) > 0 "消耗戦好走馬"
   from
-    {{ ref('stg_jrdb__sed') }}
+    sed
   where
     馬成績_異常区分 = '0'
     and レース条件_トラック情報_芝ダ障害コード = 'ダート'
@@ -74,7 +88,7 @@ with
       end
     ) > 0 "消耗戦好走馬"
   from
-    {{ ref('stg_jrdb__sed') }}
+    sed
   where
     馬成績_異常区分 = '0'
   group by
