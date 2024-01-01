@@ -110,7 +110,11 @@ with
     nullif("レース条件_レース名", '') as "レース条件_レース名",
     nullif("レース条件_頭数", '') as "レース条件_頭数",
     nullif("レース条件_レース名略称", '') as "レース条件_レース名略称",
-    cast(nullif("馬成績_着順", '') as integer) as "馬成績_着順",  -- done
+    -- This value is zero when the horse is disqualified.
+    -- 0 < 1 which can cause problems when counting number of places.
+    -- However we shouldn't just ignore disqualified races because that would
+    -- cause problems when calculating how long the horse has rested.
+    nullif(cast(nullif("馬成績_着順", '') as integer), 0) as "馬成績_着順",
     nullif("馬成績_異常区分", '') as "馬成績_異常区分",
     nullif("馬成績_タイム", '') as "馬成績_タイム",
     nullif("馬成績_斤量", '') as "馬成績_斤量",
