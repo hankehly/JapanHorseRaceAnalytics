@@ -19,7 +19,7 @@ with
     "データ年月日",
     count(*)
   from
-    {{ source('jrdb', 'ukc') }}
+    source
   group by
     "血統登録番号",
     "データ年月日"
@@ -32,7 +32,7 @@ with
     row_number() over (partition by "血統登録番号", "データ年月日" order by ukc_sk) rn,
     *
   from
-    {{ source('jrdb', 'ukc') }}
+    source
   where
     ("血統登録番号", "データ年月日") in (select "血統登録番号", "データ年月日" from duplicates)
   ),

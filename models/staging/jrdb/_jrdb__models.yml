@@ -919,10 +919,14 @@ models:
               to: ref('距離適性コード')
               field: code
       - name: 枠確定馬体重
+        description: |
+          Note: Only contains null values
 
       # do null and 0 mean the same thing?
       - name: 枠確定馬体重増減
-        description: 符号+数字２桁,データ無:スペース
+        description: |
+          符号+数字２桁,データ無:スペース
+          Note: Only contains null values
 
       - name: 取消フラグ
         description: 1:取消
@@ -1326,6 +1330,11 @@ models:
           "393":障害直線ダート
           "391":障害直線芝
       - name: レース条件_馬場状態
+        tests:
+          - not_null
+          - relationships:
+              to: ref('馬場状態コード')
+              field: code
       - name: レース条件_種別
         description: ４歳以上等、→成績データの説明
       - name: レース条件_条件
@@ -1415,18 +1424,31 @@ models:
         description: 後３Ｆ地点での先頭とのタイム差 (0.1秒単位)
       - name: 騎手コード
         description: 騎手マスタとリンク
+        tests:
+          - not_null
       - name: 調教師コード
         description: 調教師マスタとリンク
+        tests:
+          - not_null
       - name: 馬体重
         description: データ無:スペース
       - name: 馬体重増減
         description: 符号+数字２桁、データ無:スペース
       - name: 天候コード
         description: コード表参照
+        tests:
+          - not_null
+          - relationships:
+              to: ref('天候コード')
+              field: code
       - name: コース
         description: 1:A,2:A1,3:A2,4:B,5:C,6:D
       - name: レース脚質
         description: 脚質コード参照
+        tests:
+          - relationships:
+              to: ref('脚質コード')
+              field: code
       - name: 払戻データ_単勝
         description: 単位（円）
       - name: 払戻データ_複勝

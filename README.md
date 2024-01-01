@@ -67,3 +67,10 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 | tyb     | ~2023/12/17    | [x]             |                                                        |
 | ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
+
+
+### Notes
+
+* Todo: Save the `Etag`, filename and load date alongside the `jrdb_raw` data so that you can load the data using append mode incrementally. Then select the max load date and load all files with a higher load date. This will prevent duplicates from being loaded.
+* Todo: monotonic increasing id does not mean files with lower dates will have lower ids. If duplicates are in two separate files, the order in which they are processed will determine the id.
+* Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.

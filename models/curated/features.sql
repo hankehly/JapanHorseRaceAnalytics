@@ -1,4 +1,5 @@
 {{ config(materialized='table') }}
+
 with
   bac as (
   select
@@ -20,13 +21,6 @@ with
   from
     {{ ref('stg_jrdb__sed') }}
   ),
-
-  -- skb as (
-  -- select
-  --   *
-  -- from
-  --   {{ ref('stg_jrdb__skb') }}
-  -- ),
 
   tyb as (
   select
@@ -79,35 +73,41 @@ with
 
   base as (
   select
-    kyi."レースキー",
-    kyi."馬番",
+    sed."レースキー",
+    sed."馬番",
     kyi."枠番",
-    kab."場名",
-    bac."年月日",
-    kyi."レースキー_場コード" as "場コード",
+    (SELECT "name" FROM {{ ref('場コード') }} WHERE "code" = sed."レースキー_場コード") as "場名",
+    sed."競走成績キー_年月日" as "年月日",
+    sed."レースキー_場コード" as "場コード",
     sed."騎手コード",
     sed."調教師コード",
     sed."レースキー_Ｒ",
 
-    case when extract(month from bac."年月日") <= 3 then 1
-         when extract(month from bac."年月日") <= 6 then 2
-         when extract(month from bac."年月日") <= 9 then 3
-         when extract(month from bac."年月日") <= 12 then 4
+    case
+      when extract(month from sed."競走成績キー_年月日") <= 3 then 1
+      when extract(month from sed."競走成績キー_年月日") <= 6 then 2
+      when extract(month from sed."競走成績キー_年月日") <= 9 then 3
+      when extract(month from sed."競走成績キー_年月日") <= 12 then 4
     end as "四半期",
 
-    sed."馬成績_着順" as "着順",
-    kyi."血統登録番号",
+    sed."競走成績キー_血統登録番号" as "血統登録番号",
     kyi."入厩年月日",
-    sed."馬体重",
-    sed."馬体重増減",
-    sed."レース条件_距離" as "距離",
-    -- skb."馬具コード",
-    sed."レース条件_馬場状態" as "馬場状態",
-    sed."本賞金",
-    sed."収得賞金",
 
-    bac."頭数",
-    bac."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
+    -- For columns that could be NULL, prioritize SED, then KYI, then TYB
+    coalesce(sed."馬体重", tyb."馬体重") as "馬体重",
+    coalesce(sed."馬体重増減", tyb."馬体重増減") as "馬体重増減",
+    coalesce(sed."レース条件_距離", bac."レース条件_距離") as "距離",
+
+    (SELECT "name" FROM {{ ref('馬場状態コード') }} WHERE "code" = sed."レース条件_馬場状態") as "馬場状態",
+
+    sed."本賞金",
+    sed."レース条件_頭数" as "頭数",
+    sed."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
+    sed."馬成績_着順" as "着順",
+    lag(sed."馬成績_着順", 1) over (partition by sed."競走成績キー_血統登録番号" order by sed."競走成績キー_年月日") as "前走着順",
+    lag(sed."馬成績_着順", 2) over (partition by sed."競走成績キー_血統登録番号" order by sed."競走成績キー_年月日") as "前々走着順",
+    lag(sed."馬成績_着順", 3) over (partition by sed."競走成績キー_血統登録番号" order by sed."競走成績キー_年月日") as "前々々走着順",
+
     horses."生年月日",
     horses."瞬発戦好走馬_芝",
     horses."消耗戦好走馬_芝",
@@ -117,60 +117,55 @@ with
     horses."消耗戦好走馬_総合",
     horses."性別",
 
-    kab."芝馬場差" as "前日_芝馬場差",
-    kab."ダ馬場差" as "前日_ダ馬場差",
-    kyi."ＩＤＭ" as "前日_ＩＤＭ",
-    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = kyi."脚質") as "前日_脚質",
-    win_odds."単勝オッズ" as "前日_単勝オッズ",
-    place_odds."複勝オッズ" as "前日_複勝オッズ",
+    coalesce(
+      sed."ＪＲＤＢデータ_馬場差",
+      case
+        when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場差"
+        else kab."芝馬場差"
+      end,
+      0
+    ) as "馬場差",
 
-    tyb."ＩＤＭ" as "直前_ＩＤＭ",
-    tyb."騎手指数" as "直前_騎手指数",
-    tyb."情報指数" as "直前_情報指数",
-    tyb."オッズ指数" as "直前_オッズ指数",
-    tyb."パドック指数" as "直前_パドック指数",
-    tyb."脚元情報" as "直前_脚元情報",
-    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = tyb."天候コード") as "直前_天候",
-    tyb."単勝オッズ" as "直前_単勝オッズ",
-    tyb."複勝オッズ" as "直前_複勝オッズ",
-    (SELECT "name" FROM {{ ref('馬場状態コード') }} WHERE "code" = tyb."馬場状態コード") as "直前_馬場状態",
+    coalesce(sed."ＪＲＤＢデータ_ＩＤＭ", kyi."ＩＤＭ", tyb."ＩＤＭ") as "ＩＤＭ",
 
-    lag(sed."馬成績_着順", 1) over (partition by kyi."血統登録番号" order by bac."年月日") as "前走着順",
-    lag(sed."馬成績_着順", 2) over (partition by kyi."血統登録番号" order by bac."年月日") as "前々走着順",
-    lag(sed."馬成績_着順", 3) over (partition by kyi."血統登録番号" order by bac."年月日") as "前々々走着順",
+    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = sed."レース脚質") as "脚質",
+
+    coalesce(sed."馬成績_確定単勝オッズ", win_odds."単勝オッズ", tyb."単勝オッズ") as "単勝オッズ",
+    coalesce(sed."確定複勝オッズ下", place_odds."複勝オッズ", tyb."複勝オッズ") as "複勝オッズ",
+
+    -- tyb."騎手指数",
+    -- tyb."情報指数",
+    -- tyb."オッズ指数",
+    -- tyb."パドック指数",
+    -- tyb."脚元情報",
+
+    kyi."激走指数",
+
+    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = sed."天候コード") as "天候",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",
     coalesce(place_payouts."払戻金", 0) > 0 as "複勝的中",
     coalesce(place_payouts."払戻金", 0) as "複勝払戻金"
   from
-    kyi
+    sed
 
   inner join
     bac
   on
-    kyi."レースキー" = bac."レースキー"
+    sed."レースキー" = bac."レースキー"
 
-  -- Note: SED lags behind KYI by a few days, so the most recent races will be missing
-  -- This means you shouldn't use SED fields as-is, but rather use them to calculate
-  -- features based off of past performance
   inner join
-    sed
+    kyi
   on
-    kyi."レースキー" = sed."レースキー"
-    and kyi."馬番" = sed."馬番"
-
-  -- inner join
-  --   skb
-  -- on
-  --   kyi."レースキー" = skb."レースキー"
-  --   and kyi."馬番" = skb."馬番"
+    sed."レースキー" = kyi."レースキー"
+    and sed."馬番" = kyi."馬番"
 
   inner join
     tyb
   on
-    kyi."レースキー" = tyb."レースキー"
-    and kyi."馬番" = tyb."馬番"
+    sed."レースキー" = tyb."レースキー"
+    and sed."馬番" = tyb."馬番"
 
   inner join
     kab
@@ -186,26 +181,26 @@ with
   left join
     win_odds
   on
-    kyi."レースキー" = win_odds."レースキー"
-    and kyi."馬番" = win_odds."馬番"
+    sed."レースキー" = win_odds."レースキー"
+    and sed."馬番" = win_odds."馬番"
 
   left join
     place_odds
   on
-    kyi."レースキー" = place_odds."レースキー"
-    and kyi."馬番" = place_odds."馬番"
+    sed."レースキー" = place_odds."レースキー"
+    and sed."馬番" = place_odds."馬番"
 
   left join
     win_payouts
   on
-    kyi."レースキー" = win_payouts."レースキー"
-    and kyi."馬番" = win_payouts."馬番"
+    sed."レースキー" = win_payouts."レースキー"
+    and sed."馬番" = win_payouts."馬番"
 
   left join
     place_payouts
   on
-    kyi."レースキー" = place_payouts."レースキー"
-    and kyi."馬番" = place_payouts."馬番"
+    sed."レースキー" = place_payouts."レースキー"
+    and sed."馬番" = place_payouts."馬番"
   ),
 
   -- 参考:
@@ -229,7 +224,6 @@ with
     "馬体重増減" as "馬体重増減", -- diff_declared_weight
     "距離" as "距離", -- distance
     coalesce("距離" - lag("距離") over (partition by "血統登録番号" order by "年月日"), 0) as "前走距離差", -- diff_distance
-    -- "馬具コード", -- horse_gear
     extract(year from age("年月日", "生年月日")) + extract(month from age("年月日", "生年月日")) / 12 + extract(day from age("年月日", "生年月日")) / (12 * 30.44) AS "年齢", -- horse_age
     age("年月日", "生年月日") < '5 years' as "4歳以下",
     sum(case when age("年月日", "生年月日") < '5 years' then 1 else 0 end) over (partition by "レースキー") as "4歳以下頭数",
@@ -748,7 +742,6 @@ with
 
   final as (
   select
-    -- 基本情報
     base."レースキー",
     base."馬番",
     "枠番",
@@ -756,16 +749,10 @@ with
     "年月日",
     "頭数",
     "四半期",
-
-    -- 結果/払戻金
     "単勝的中",
     "単勝払戻金",
     "複勝的中",
     "複勝払戻金",
-    "本賞金",
-    "収得賞金",
-
-    -- 馬情報
     "血統登録番号",
     "瞬発戦好走馬_芝",
     "消耗戦好走馬_芝",
@@ -774,30 +761,15 @@ with
     "瞬発戦好走馬_総合",
     "消耗戦好走馬_総合",
     "性別",
-
-    -- 馬場
+    "馬場差",
     "馬場状態",
-
-    -- 前日
     "トラック種別",
-    "前日_芝馬場差",
-    "前日_ダ馬場差",
-    "前日_ＩＤＭ",
-    "前日_脚質",
-    "前日_単勝オッズ",
-    "前日_複勝オッズ",
-
-    -- 直前
-    "直前_ＩＤＭ",
-    "直前_騎手指数",
-    "直前_情報指数",
-    "直前_オッズ指数",
-    "直前_パドック指数",
-    "直前_脚元情報",
-    "直前_天候",
-    "直前_単勝オッズ",
-    "直前_複勝オッズ",
-    "直前_馬場状態",
+    "ＩＤＭ",
+    "脚質",
+    "単勝オッズ",
+    "複勝オッズ",
+    "激走指数",
+    "天候",
 
     horse_features."前走トップ3",
     horse_features."前走枠番",
@@ -808,7 +780,6 @@ with
     horse_features."馬体重増減", -- diff_declared_weight
     horse_features."距離", -- distance
     horse_features."前走距離差", -- diff_distance
-    -- horse_features."馬具コード", -- horse_gear
     horse_features."年齢", -- horse_age (years)
     horse_features."4歳以下",
     horse_features."4歳以下頭数",

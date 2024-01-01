@@ -66,7 +66,7 @@ with
     nullif("レースキー_Ｒ", '') as "レースキー_Ｒ",
     to_date(nullif("年月日", ''), 'YYYYMMDD') as "年月日",
     cast(nullif(left("発走時間", 2) || ':' || right("発走時間", 2), '') as time) as "発走時間",
-    nullif("レース条件_距離", '') as "レース条件_距離",
+    cast(nullif("レース条件_距離", '') as integer) as "レース条件_距離",
     case
       when "レース条件_トラック情報_芝ダ障害コード" = '1' then '芝'
       when "レース条件_トラック情報_芝ダ障害コード" = '2' then 'ダート'
