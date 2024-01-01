@@ -98,3 +98,6 @@ seeds:
     馬具コード:
       +column_types:
         コード: text
+    異常区分コード:
+      +column_types:
+        code: text
