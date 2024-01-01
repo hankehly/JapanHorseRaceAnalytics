@@ -8,6 +8,7 @@
 - [PostgreSQL JDBC driver](https://jdbc.postgresql.org/download/)
 - [dbt - How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
 - [競走馬データ仕様書内容の説明](http://www.jrdb.com/program/Kyi/ky_siyo_doc.txt)
+- [JRA レーシングカレンダー](https://www.jra.go.jp/keiba/calendar/)
 
 
 ![ER](./images/JRDB.drawio.png)
@@ -74,3 +75,4 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 * Todo: Save the `Etag`, filename and load date alongside the `jrdb_raw` data so that you can load the data using append mode incrementally. Then select the max load date and load all files with a higher load date. This will prevent duplicates from being loaded.
 * Todo: monotonic increasing id does not mean files with lower dates will have lower ids. If duplicates are in two separate files, the order in which they are processed will determine the id.
 * Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.
+* Todo: The cases in which 異常区分 != 0 may need to be handled differently. For example, a race probably shouldn't be counted for the horse if the 異常区分 is 除外. Other 異常区分 may need different handling as well (like falling off the horse, etc.).
