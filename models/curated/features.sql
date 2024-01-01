@@ -1,4 +1,9 @@
-{{ config(materialized='table') }}
+{{
+  config(
+    materialized='table',
+    pre_hook=before_begin("analyze"),
+  )
+}}
 
 with
   bac as (
