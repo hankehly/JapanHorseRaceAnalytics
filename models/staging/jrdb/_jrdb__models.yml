@@ -921,13 +921,13 @@ models:
               field: code
       - name: 枠確定馬体重
         description: |
-          Note: Only contains null values
+          Note: Useless. Only contains null values.
 
       # do null and 0 mean the same thing?
       - name: 枠確定馬体重増減
         description: |
           符号+数字２桁,データ無:スペース
-          Note: Only contains null values
+          Note: Useless. Only contains null values.
 
       - name: 取消フラグ
         description: 1:取消
