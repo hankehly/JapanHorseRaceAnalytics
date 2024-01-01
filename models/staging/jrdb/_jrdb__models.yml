@@ -1350,12 +1350,13 @@ models:
       - name: レース条件_頭数
       - name: レース条件_レース名略称
         description: 全角４文字
-
       - name: 馬成績_着順
+      - name: 馬成績_異常区分
         tests:
           - not_null
-
-      - name: 馬成績_異常区分
+          - relationships:
+              to: ref('異常区分コード')
+              field: code
       - name: 馬成績_タイム
         description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
       - name: 馬成績_斤量
