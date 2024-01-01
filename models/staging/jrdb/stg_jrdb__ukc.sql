@@ -1,4 +1,9 @@
-{{ config(materialized='table') }}
+{{
+  config(
+    materialized='table',
+    indexes=[{'columns': ['血統登録番号', 'データ年月日'], 'unique': True}]
+  )
+}}
 
 with
   source as (

@@ -1,2 +1,6 @@
 models:
   - name: features
+    description: |
+      Training features.
+      Note: When this model takes too long to build (>3 minutes) try running vacuum and then retrying
+      

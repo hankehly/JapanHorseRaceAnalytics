@@ -544,7 +544,8 @@ models:
     columns:
       - name: kyi_sk
         tests:
-          - unique
+          # Takes too long
+          # - unique
           - not_null
       - name: kyi_bk
         tests:

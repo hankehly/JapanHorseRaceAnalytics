@@ -92,14 +92,13 @@ with
 
     sed."競走成績キー_血統登録番号" as "血統登録番号",
     kyi."入厩年月日",
-
-    -- For columns that could be NULL, prioritize SED, then KYI, then TYB
+    -- For columns that could be NULL, prioritize SED, then TYB, then KYI
+    -- to get as close to the real value as possible
     coalesce(sed."馬体重", tyb."馬体重") as "馬体重",
     coalesce(sed."馬体重増減", tyb."馬体重増減") as "馬体重増減",
-    coalesce(sed."レース条件_距離", bac."レース条件_距離") as "距離",
 
+    sed."レース条件_距離" as "距離",
     (SELECT "name" FROM {{ ref('馬場状態コード') }} WHERE "code" = sed."レース条件_馬場状態") as "馬場状態",
-
     sed."本賞金",
     sed."レース条件_頭数" as "頭数",
     sed."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
@@ -117,8 +116,12 @@ with
     horses."消耗戦好走馬_総合",
     horses."性別",
 
+    -- Warning: SED and KAB differ significantly.
+    -- You may need to remedy this to improve model performance.
     coalesce(
       sed."ＪＲＤＢデータ_馬場差",
+      -- Eliminating BAC & KAB from here would allow you to remove them from the
+      -- model entirely
       case
         when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場差"
         else kab."芝馬場差"
@@ -126,7 +129,7 @@ with
       0
     ) as "馬場差",
 
-    coalesce(sed."ＪＲＤＢデータ_ＩＤＭ", kyi."ＩＤＭ", tyb."ＩＤＭ") as "ＩＤＭ",
+    coalesce(sed."ＪＲＤＢデータ_ＩＤＭ", tyb."ＩＤＭ", kyi."ＩＤＭ") as "ＩＤＭ",
 
     (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = sed."レース脚質") as "脚質",
 
@@ -222,7 +225,7 @@ with
     "年月日" - "入厩年月日" >= 35 as "入厩35日以上", -- horse_rest_over35
     "馬体重", -- declared_weight
     "馬体重増減" as "馬体重増減", -- diff_declared_weight
-    "距離" as "距離", -- distance
+    "距離", -- distance
     coalesce("距離" - lag("距離") over (partition by "血統登録番号" order by "年月日"), 0) as "前走距離差", -- diff_distance
     extract(year from age("年月日", "生年月日")) + extract(month from age("年月日", "生年月日")) / 12 + extract(day from age("年月日", "生年月日")) / (12 * 30.44) AS "年齢", -- horse_age
     age("年月日", "生年月日") < '5 years' as "4歳以下",

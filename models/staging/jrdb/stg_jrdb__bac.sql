@@ -1,3 +1,10 @@
+{{
+  config(
+    materialized='table',
+    indexes=[{'columns': ['レースキー'], 'unique': True}]
+  )
+}}
+
 with
   source as (
   select

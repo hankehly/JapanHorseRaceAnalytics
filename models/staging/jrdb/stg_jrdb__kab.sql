@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='table',
+    indexes=[{'columns': ['開催キー', '年月日'], 'unique': True}]
+  )
+}}
 with source as (
       select * from {{ source('jrdb', 'kab') }}
 ),

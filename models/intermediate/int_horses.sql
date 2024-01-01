@@ -1,4 +1,11 @@
-{{ config(materialized='table', schema='intermediate') }}
+{{
+  config(
+    materialized='table',
+    schema='intermediate',
+    indexes=[{'columns': ['血統登録番号'], 'unique': True}]
+  )
+}}
+
 with
   sed as (
   select

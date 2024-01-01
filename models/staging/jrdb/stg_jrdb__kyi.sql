@@ -1,3 +1,10 @@
+{{
+  config(
+    materialized='table',
+    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}]
+  )
+}}
+
 with source as (
       select * from {{ source('jrdb', 'kyi') }}
 ),

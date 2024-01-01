@@ -1,4 +1,11 @@
-{{ config(schema='intermediate') }}
+{{
+  config(
+    materialized='table',
+    schema='intermediate',
+    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}]
+  )
+}}
+
 with
   oz as (
   select
@@ -6,6 +13,7 @@ with
   from
     {{ ref('stg_jrdb__oz') }}
   ),
+
   final as (
   select
     レースキー,
@@ -23,4 +31,8 @@ with
   where
     nullif(el, '') is not null
 )
-select * from final
+
+select
+  *
+from
+  final
