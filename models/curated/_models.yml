@@ -1,6 +1,7 @@
 models:
-  - name: features
+  - name: features_train
     description: |
       Training features.
       Note: When this model takes too long to build (>3 minutes) try running vacuum and then retrying
       Currently takes about 2 minutes and 30 seconds to build.
+  - name: features_predict

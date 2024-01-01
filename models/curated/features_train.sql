@@ -600,12 +600,12 @@ with
     base."馬番",
 
     -- prize_horse_cumulative
-    coalesce(sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金", 0) as "本賞金累計",
+    coalesce(sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding), 0) as "本賞金累計",
 
     -- avg_prize_wins_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'horse_features."1位完走"'
       )
     }}, 0) as "1位完走平均賞金",
@@ -613,18 +613,18 @@ with
     -- avg_prize_runs_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "血統登録番号" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'horse_features."レース数"'
       )
     }}, 0) as "レース数平均賞金",
 
     -- prize_trainer_cumulative
-    coalesce(sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金", 0) as "調教師本賞金累計",
+    coalesce(sum("本賞金") over (partition by "調教師コード" order by "年月日" rows between unbounded preceding and 1 preceding), 0) as "調教師本賞金累計",
 
     -- avg_prize_wins_trainer
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "調教師コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'owner_features."調教師1位完走"'
       )
     }}, 0) as "調教師1位完走平均賞金",
@@ -632,18 +632,18 @@ with
     -- avg_prize_runs_trainer
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "調教師コード" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "調教師コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'owner_features."調教師レース数"'
       )
     }}, 0) as "調教師レース数平均賞金",
 
     -- prize_jockey_cumulative
-    coalesce(sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金", 0) as "騎手本賞金累計",
+    coalesce(sum("本賞金") over (partition by "騎手コード" order by "年月日" rows between unbounded preceding and 1 preceding), 0) as "騎手本賞金累計",
 
     -- avg_prize_wins_jockey
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "騎手コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'owner_features."騎手1位完走"'
       )
     }}, 0) as "騎手1位完走平均賞金",
@@ -651,7 +651,7 @@ with
     -- avg_prize_runs_jockey
     coalesce({{
       dbt_utils.safe_divide(
-        'sum("本賞金") over (partition by "騎手コード" order by "年月日") - "本賞金"',
+        'sum("本賞金") over (partition by "騎手コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'owner_features."騎手レース数"'
       )
     }}, 0) as "騎手レース数平均賞金"
