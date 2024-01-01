@@ -1,7 +1,8 @@
 {{
   config(
     materialized='table',
-    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}]
+    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}],
+    post_hook=after_commit("analyze")
   )
 }}
 
