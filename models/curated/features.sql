@@ -531,37 +531,37 @@ with
 
     -- Horse Win Percent: Horse’s win percent over the past 5 races.
     -- horse_win_percent_past_5_races
-    {{
+    coalesce({{
       dbt_utils.safe_divide(
         'sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - cast("単勝的中" as integer)',
         'cast(count(*) over (partition by "血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
-    }} as "過去5走勝率",
+    }}, 0) as "過去5走勝率",
 
     -- horse_place_percent_past_5_races
-    {{
+    coalesce({{
       dbt_utils.safe_divide(
         'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - cast("複勝的中" as integer)',
         'cast(count(*) over (partition by "血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
-    }} as "過去5走トップ3完走率",
+    }}, 0) as "過去5走トップ3完走率",
 
     -- Jockey Win Percent: Jockey’s win percent over the past 5 races.
     -- jockey_win_percent_past_5_races
-    {{
+    coalesce({{
       dbt_utils.safe_divide(
         'sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - cast("単勝的中" as integer)',
         'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
-    }} as "騎手過去5走勝率",
+    }}, 0) as "騎手過去5走勝率",
 
     -- jockey_place_percent_past_5_races
-    {{
+    coalesce({{
       dbt_utils.safe_divide(
         'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - cast("複勝的中" as integer)',
         'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
       )
-    }} as "騎手過去5走トップ3完走率"
+    }}, 0) as "騎手過去5走トップ3完走率"
   from
     base
   ),
