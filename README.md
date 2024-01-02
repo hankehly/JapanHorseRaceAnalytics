@@ -72,6 +72,10 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 
 ### Notes
 
+* Train different models for different seasons, surfaces, etc.. (the problem would be the lag data might be a different season or surface..)
+* Your model works well for summer months. Try fine-tuning another model to work better for winter months, then combine the two models.
+* Use ordinal encoding instead of categorical.
+
 * Todo: Save the `Etag`, filename and load date alongside the `jrdb_raw` data so that you can load the data using append mode incrementally. Then select the max load date and load all files with a higher load date. This will prevent duplicates from being loaded.
 * Todo: monotonic increasing id does not mean files with lower dates will have lower ids. If duplicates are in two separate files, the order in which they are processed will determine the id.
 * Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.
