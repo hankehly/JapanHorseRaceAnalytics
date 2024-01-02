@@ -127,7 +127,7 @@ seeds:
         tests:
           - unique
           - not_null
-      - name: mark
+      - name: name
         tests:
           - not_null
   - name: 展開記号コード
@@ -164,6 +164,9 @@ seeds:
         tests:
           - unique
           - not_null
+      - name: name
+        tests:
+          - not_null
       - name: description
         tests:
           - not_null
@@ -191,9 +194,10 @@ seeds:
         tests:
           - unique
           - not_null
-      - name: description
+      - name: name
         tests:
           - not_null
+      - name: description
   - name: 毛色コード
     columns:
       - name: code

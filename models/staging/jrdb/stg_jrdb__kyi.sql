@@ -111,13 +111,14 @@ final as (
         nullif("他データリンク用キー_前走５レースキー", '') as "他データリンク用キー_前走５レースキー",
         nullif("枠番", '') as "枠番",
 
-        -- The code 7 is included in the data pretty frequently, but not in the schema. Replacing with null.
-        nullif(nullif("印コード_総合印", ''), '7') as "印コード_総合印",
-        nullif(nullif("印コード_ＩＤＭ印", ''), '7') as "印コード_ＩＤＭ印",
-        nullif(nullif("印コード_情報印", ''), '7') as "印コード_情報印",
-        nullif(nullif("印コード_騎手印", ''), '7') as "印コード_騎手印",
-        nullif(nullif("印コード_厩舎印", ''), '7') as "印コード_厩舎印",
-        nullif(nullif("印コード_調教印", ''), '7') as "印コード_調教印",
+        -- The code 7 is included in the data pretty frequently, but not in the schema.
+        -- Adding 7 to schema as "undefined_value" rather than throwing away the information.
+        nullif("印コード_総合印", '') as "印コード_総合印",
+        nullif("印コード_ＩＤＭ印", '') as "印コード_ＩＤＭ印",
+        nullif("印コード_情報印", '') as "印コード_情報印",
+        nullif("印コード_騎手印", '') as "印コード_騎手印",
+        nullif("印コード_厩舎印", '') as "印コード_厩舎印",
+        nullif("印コード_調教印", '') as "印コード_調教印",
         coalesce(cast(nullif("印コード_激走印", '') as boolean), false) as "印コード_激走印",
 
         -- 4, 5, 6 appear in these columns very rarely, not in schema
