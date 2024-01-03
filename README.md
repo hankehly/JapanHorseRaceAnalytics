@@ -68,15 +68,17 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 | tyb     | ~2023/12/17    | [x]             |                                                        |
 | ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
+### Todo
 
-
-### Notes
-
+* Come up with some more selection criteria for the races you bet on. Do some digging to find which races (turf, dirt, distance, etc..) your model performs best at, during which seasons, etc.. then selectively bet on only those races.
+* Delete features which have extremely low importance.
+* Enable your model to see which horses do well/poorly [in the winter](https://keibaman.com/need/winter/). And, what constitutes winter anyway? Probably average temperature.
+* Go through the different fields and check for crazy outliers. Fix those because they will mess up the scaling.
 * Train different models for different seasons, surfaces, etc.. (the problem would be the lag data might be a different season or surface..)
 * Your model works well for summer months. Try fine-tuning another model to work better for winter months, then combine the two models.
 * Use ordinal encoding instead of categorical.
-
 * Todo: Save the `Etag`, filename and load date alongside the `jrdb_raw` data so that you can load the data using append mode incrementally. Then select the max load date and load all files with a higher load date. This will prevent duplicates from being loaded.
 * Todo: monotonic increasing id does not mean files with lower dates will have lower ids. If duplicates are in two separate files, the order in which they are processed will determine the id.
 * Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.
 * Todo: The cases in which 異常区分 != 0 may need to be handled differently. For example, a race probably shouldn't be counted for the horse if the 異常区分 is 除外. Other 異常区分 may need different handling as well (like falling off the horse, etc.).
+
