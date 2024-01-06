@@ -1,11 +1,5 @@
 {{ config(materialized='table') }}
 
---
--- The assumption with this model is that we can predict at any of the following moments:
---  1. After KYI, before TYB
---  2. After KYI, after TYB
---
-
 with
   bac as (
   select
@@ -85,43 +79,36 @@ with
     kab."場名",
     bac."年月日",
     kyi."レースキー_場コード" as "場コード",
-    -- We want to use the most recent data if available
-    -- This is the opposite of what we want to do for training data
     coalesce(tyb."騎手コード", kyi."騎手コード") as "騎手コード",
     kyi."調教師コード",
     kyi."レースキー_Ｒ",
-
     case
       when extract(month from bac."年月日") <= 3 then 1
       when extract(month from bac."年月日") <= 6 then 2
       when extract(month from bac."年月日") <= 9 then 3
       when extract(month from bac."年月日") <= 12 then 4
     end as "四半期",
-
     kyi."血統登録番号",
     kyi."入厩年月日",
-
     -- Assumption: TYB is available (~15 minutes before race)
     tyb."馬体重",
     tyb."馬体重増減",
-
     bac."レース条件_距離" as "距離",
-    (
-      SELECT
-        "name"
-      FROM
-        {{ ref('馬場状態コード') }}
-      WHERE
-        "code" = coalesce(
-          tyb."馬場状態コード",
-          case
-            -- 障害コースの場合は芝馬場状態を使用する
-            when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場状態コード"
-            else kab."芝馬場状態コード"
-          end
-        )
+    coalesce(
+      tyb."馬場状態コード",
+      case
+        -- 障害コースの場合は芝馬場状態を使用する
+        when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場状態コード"
+        else kab."芝馬場状態コード"
+      end
     ) as "馬場状態",
-
+    bac."レース条件_トラック情報_右左",
+    bac."レース条件_トラック情報_内外",
+    bac."レース条件_種別",
+    bac."レース条件_条件",
+    bac."レース条件_記号",
+    bac."レース条件_重量",
+    bac."レース条件_グレード",
     sed."本賞金",
     bac."頭数",
     bac."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
@@ -129,7 +116,6 @@ with
     lag(sed."馬成績_着順", 1) over (partition by kyi."血統登録番号" order by bac."年月日") as "前走着順",
     lag(sed."馬成績_着順", 2) over (partition by kyi."血統登録番号" order by bac."年月日") as "前々走着順",
     lag(sed."馬成績_着順", 3) over (partition by kyi."血統登録番号" order by bac."年月日") as "前々々走着順",
-
     -- Note: Horses that have never raced will not appear in the output because
     -- the horses model is inner joined on horse id.
     horses."生年月日",
@@ -140,20 +126,33 @@ with
     horses."瞬発戦好走馬_総合",
     horses."消耗戦好走馬_総合",
     horses."性別",
-
     -- 障害コースの場合は芝馬場差を使用する（一応）
     case
       when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場差"
       else kab."芝馬場差"
     end "馬場差",
-
+    kab."芝馬場状態内",
+    kab."芝馬場状態中",
+    kab."芝馬場状態外",
+    kab."直線馬場差最内",
+    kab."直線馬場差内",
+    kab."直線馬場差中",
+    kab."直線馬場差外",
+    kab."直線馬場差大外",
+    kab."ダ馬場状態内",
+    kab."ダ馬場状態中",
+    kab."ダ馬場状態外",
+    kab."芝種類",
+    kab."草丈",
+    kab."転圧",
+    kab."凍結防止剤",
+    kab."中間降水量",
     coalesce(tyb."ＩＤＭ", kyi."ＩＤＭ") as "ＩＤＭ",
-
-    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = kyi."脚質") as "脚質",
-
+    -- https://note.com/jrdbn/n/n0b3d06e39768
+    coalesce(stddev_pop(coalesce(tyb."ＩＤＭ", kyi."ＩＤＭ")) over (partition by kyi."レースキー"), 0) as "IDM標準偏差",
+    kyi."脚質",
     coalesce(tyb."単勝オッズ", win_odds."単勝オッズ") as "単勝オッズ",
     coalesce(tyb."複勝オッズ", place_odds."複勝オッズ") as "複勝オッズ",
-
     coalesce(tyb."騎手指数", kyi."騎手指数") as "騎手指数",
     coalesce(tyb."情報指数", kyi."情報指数") as "情報指数",
     tyb."オッズ指数",
@@ -166,10 +165,10 @@ with
     tyb."オッズ印",
     tyb."パドック印",
     tyb."直前総合印",
-    (SELECT "name" FROM {{ ref('馬体コード') }} WHERE "code" = tyb."馬体コード") as "馬体",
-    (SELECT "name" FROM {{ ref('気配コード') }} WHERE "code" = tyb."気配コード") as "気配",
-    (SELECT "name" FROM {{ ref('距離適性コード') }} WHERE "code" = kyi."距離適性") as "距離適性",  -- ordinal
-    (SELECT "name" FROM {{ ref('上昇度コード') }} WHERE "code" = kyi."上昇度") as "上昇度",  -- ordinal
+    tyb."馬体コード",
+    tyb."気配コード",
+    kyi."距離適性",
+    kyi."上昇度",
     kyi."ローテーション",
     kyi."基準オッズ",
     kyi."基準人気順位",
@@ -188,37 +187,36 @@ with
     kyi."人気指数",
     kyi."調教指数",
     kyi."厩舎指数",
-    (SELECT "name" FROM {{ ref('調教矢印コード') }} WHERE "code" = kyi."調教矢印コード") as "調教矢印",  -- ordinal
-    (SELECT "name" FROM {{ ref('厩舎評価コード') }} WHERE "code" = kyi."厩舎評価コード") as "厩舎評価",  -- ordinal
+    kyi."調教矢印コード",
+    kyi."厩舎評価コード",
     kyi."騎手期待連対率",
     kyi."激走指数",
-    (SELECT "name" FROM {{ ref('蹄コード') }} WHERE "code" = kyi."蹄コード") as "蹄",  -- ordinal
-    (SELECT "name" FROM {{ ref('重適性コード') }} WHERE "code" = kyi."重適性コード") as "重適性",  -- ordinal
-    (SELECT "name" FROM {{ ref('クラスコード') }} WHERE "code" = kyi."クラスコード") as "クラス",  -- ordinal
-    kyi."ブリンカー",  -- category
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_総合印") as "印コード_総合印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_ＩＤＭ印") as "印コード_ＩＤＭ印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_情報印") as "印コード_情報印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_騎手印") as "印コード_騎手印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_厩舎印") as "印コード_厩舎印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_調教印") as "印コード_調教印",
+    kyi."蹄コード",
+    kyi."重適性コード",
+    kyi."クラスコード",
+    kyi."ブリンカー",
+    kyi."印コード_総合印",
+    kyi."印コード_ＩＤＭ印",
+    kyi."印コード_情報印",
+    kyi."印コード_騎手印",
+    kyi."印コード_厩舎印",
+    kyi."印コード_調教印",
     kyi."印コード_激走印",
-
     kyi."展開予想データ_テン指数",
     kyi."展開予想データ_ペース指数",
     kyi."展開予想データ_上がり指数",
     kyi."展開予想データ_位置指数",
-    kyi."展開予想データ_ペース予想", -- ordinal category
+    kyi."展開予想データ_ペース予想",
     kyi."展開予想データ_道中順位",
     kyi."展開予想データ_道中差",
-    kyi."展開予想データ_道中内外", -- ordinal category
+    kyi."展開予想データ_道中内外",
     kyi."展開予想データ_後３Ｆ順位",
     kyi."展開予想データ_後３Ｆ差",
-    kyi."展開予想データ_後３Ｆ内外", -- ordinal category
+    kyi."展開予想データ_後３Ｆ内外",
     kyi."展開予想データ_ゴール順位",
     kyi."展開予想データ_ゴール差",
-    kyi."展開予想データ_ゴール内外", -- ordinal category
-    kyi."展開予想データ_展開記号", -- category
+    kyi."展開予想データ_ゴール内外",
+    kyi."展開予想データ_展開記号",
     kyi."激走順位",
     kyi."LS指数順位",
     kyi."テン指数順位",
@@ -227,9 +225,7 @@ with
     kyi."位置指数順位",
     kyi."騎手期待単勝率",
     kyi."騎手期待３着内率",
-    kyi."輸送区分", -- category
-
-    -- all ordinal categoricals
+    kyi."輸送区分",
     kyi."体型_全体",
     kyi."体型_背中",
     kyi."体型_胴",
@@ -252,23 +248,21 @@ with
     kyi."馬特記１",
     kyi."馬特記２",
     kyi."馬特記３",
-
     kyi."展開参考データ_馬スタート指数",
     kyi."展開参考データ_馬出遅率",
     kyi."万券指数",
     kyi."万券印",
-    kyi."激走タイプ",  -- category
-    (SELECT "rest_reason" FROM {{ ref('休養理由分類コード') }} WHERE "code" = kyi."休養理由分類コード") as "休養理由分類", -- category
-    kyi."芝ダ障害フラグ", -- category
-    kyi."距離フラグ",  -- category
-    kyi."クラスフラグ",  -- category
-    kyi."転厩フラグ",  -- category
-    kyi."去勢フラグ",  -- category
-    kyi."乗替フラグ",  -- category
-    kyi."放牧先ランク",  -- category
-    kyi."厩舎ランク",  -- category
-
-    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = coalesce(tyb."天候コード", kab."天候コード")) as "天候",
+    kyi."激走タイプ",
+    kyi."休養理由分類コード",
+    kyi."芝ダ障害フラグ",
+    kyi."距離フラグ",
+    kyi."クラスフラグ",
+    kyi."転厩フラグ",
+    kyi."去勢フラグ",
+    kyi."乗替フラグ",
+    kyi."放牧先ランク",
+    kyi."厩舎ランク",
+    coalesce(tyb."天候コード", kab."天候コード") as "天候コード",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",
@@ -921,9 +915,36 @@ with
     "消耗戦好走馬_総合",
     "性別",
     "馬場差",
+    "芝馬場状態内",
+    "芝馬場状態中",
+    "芝馬場状態外",
+    "直線馬場差最内",
+    "直線馬場差内",
+    "直線馬場差中",
+    "直線馬場差外",
+    "直線馬場差大外",
+    "ダ馬場状態内",
+    "ダ馬場状態中",
+    "ダ馬場状態外",
+    "芝種類",
+    "草丈",
+    "転圧",
+    "凍結防止剤",
+    "中間降水量",
     "馬場状態",
+    "レース条件_トラック情報_右左",
+    "レース条件_トラック情報_内外",
+    "レース条件_種別",
+    "レース条件_条件",
+    "レース条件_記号",
+    "レース条件_重量",
+    "レース条件_グレード",
     "トラック種別",
     "ＩＤＭ",
+    "IDM標準偏差",
+    -- Create a new feature that combines the IDM and IDM標準偏差 to express the horses IDM in comparison
+    -- to the standard deviation.
+    coalesce({{ dbt_utils.safe_divide('base."ＩＤＭ"', 'base."IDM標準偏差"') }}, 0) as "IDM_標準偏差比",
     "脚質",
     "単勝オッズ",
     "複勝オッズ",

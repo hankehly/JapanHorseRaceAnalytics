@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 import zipfile
 import io
 import datetime
-from JRDBDataParsingTools.structured_logger import logger
+from JRDBDataParsingTools.utilities.structured_logger import logger
 from concurrent.futures import ThreadPoolExecutor
 import datetime
 
