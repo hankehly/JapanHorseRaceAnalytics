@@ -76,7 +76,6 @@ with
     kyi."レースキー",
     kyi."馬番",
     kyi."枠番",
-    kab."場名",
     bac."年月日",
     kyi."レースキー_場コード" as "場コード",
     coalesce(tyb."騎手コード", kyi."騎手コード") as "騎手コード",
@@ -101,7 +100,7 @@ with
         when bac."レース条件_トラック情報_芝ダ障害コード" = 'ダート' then kab."ダ馬場状態コード"
         else kab."芝馬場状態コード"
       end
-    ) as "馬場状態",
+    ) as "馬場状態コード",
     bac."レース条件_トラック情報_右左",
     bac."レース条件_トラック情報_内外",
     bac."レース条件_種別",
@@ -458,27 +457,27 @@ with
     }}, 0) as "トラック種別トップ3完走率",
 
     -- horse_going_runs
-    coalesce(cast(count(*) over (partition by "血統登録番号", "馬場状態" order by "年月日") - 1 as integer), 0) as "馬場状態レース数",
+    coalesce(cast(count(*) over (partition by "血統登録番号", "馬場状態コード" order by "年月日") - 1 as integer), 0) as "馬場状態レース数",
 
     -- horse_going_wins
-    coalesce(cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日" rows between unbounded preceding and 1 preceding) as integer), 0) as "馬場状態1位完走",
+    coalesce(cast(sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態コード" order by "年月日" rows between unbounded preceding and 1 preceding) as integer), 0) as "馬場状態1位完走",
 
     -- horse_going_places
-    coalesce(cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日" rows between unbounded preceding and 1 preceding) as integer), 0) as "馬場状態トップ3完走",
+    coalesce(cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態コード" order by "年月日" rows between unbounded preceding and 1 preceding) as integer), 0) as "馬場状態トップ3完走",
 
     -- ratio_win_horse_going
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日" rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by "血統登録番号", "馬場状態" order by "年月日") - 1 as numeric)'
+        'sum(case when "着順" = 1 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by "血統登録番号", "馬場状態コード" order by "年月日") - 1 as numeric)'
       )
     }}, 0) as "馬場状態1位完走率",
 
     -- ratio_place_horse_going
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態" order by "年月日" rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by "血統登録番号", "馬場状態" order by "年月日") - 1 as numeric)'
+        'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "馬場状態コード" order by "年月日" rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by "血統登録番号", "馬場状態コード" order by "年月日") - 1 as numeric)'
       )
     }}, 0) as "馬場状態トップ3完走率",
 
@@ -933,7 +932,7 @@ with
     "転圧",
     "凍結防止剤",
     "中間降水量",
-    "馬場状態",
+    "馬場状態コード",
     "レース条件_トラック情報_右左",
     "レース条件_トラック情報_内外",
     "レース条件_種別",
@@ -962,8 +961,8 @@ with
     "オッズ印",
     "パドック印",
     "直前総合印",
-    "馬体",
-    "気配",
+    "馬体コード",
+    "気配コード",
     "距離適性",
     "上昇度",
     "ローテーション",
@@ -984,13 +983,13 @@ with
     "人気指数",
     "調教指数",
     "厩舎指数",
-    "調教矢印",
-    "厩舎評価",
+    "調教矢印コード",
+    "厩舎評価コード",
     "騎手期待連対率",
     "激走指数",
-    "蹄",
-    "重適性",
-    "クラス",
+    "蹄コード",
+    "重適性コード",
+    "クラスコード",
     "ブリンカー",
     "印コード_総合印",
     "印コード_ＩＤＭ印",
@@ -1050,7 +1049,7 @@ with
     "万券指数",
     "万券印",
     "激走タイプ",
-    "休養理由分類",
+    "休養理由分類コード",
     "芝ダ障害フラグ",
     "距離フラグ",
     "クラスフラグ",
@@ -1059,7 +1058,7 @@ with
     "乗替フラグ",
     "放牧先ランク",
     "厩舎ランク",
-    "天候",
+    "天候コード",
     "前走着順",
     "前々走着順",
     "前々々走着順",

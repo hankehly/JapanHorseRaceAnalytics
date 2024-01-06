@@ -270,3 +270,12 @@ seeds:
       - name: name
         tests:
           - not_null
+  - name: グレードコード
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: name
+        tests:
+          - not_null

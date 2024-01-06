@@ -107,3 +107,6 @@ seeds:
     重量コード:
       +column_types:
         code: text
+    グレードコード:
+      +column_types:
+        code: text
