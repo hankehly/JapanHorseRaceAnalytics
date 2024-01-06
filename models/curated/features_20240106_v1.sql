@@ -898,15 +898,17 @@ with
     base."レースキー",
     base."馬番",
     "枠番",
-    "場名",
+    "血統登録番号",
+    "場コード",
+    "騎手コード",
+    "調教師コード",
     "年月日",
     "頭数",
-    "四半期",
     "単勝的中",
     "単勝払戻金",
     "複勝的中",
     "複勝払戻金",
-    "血統登録番号",
+    "四半期",
     "瞬発戦好走馬_芝",
     "消耗戦好走馬_芝",
     "瞬発戦好走馬_ダート",
@@ -1058,13 +1060,17 @@ with
     "放牧先ランク",
     "厩舎ランク",
     "天候",
+    "前走着順",
+    "前々走着順",
+    "前々々走着順",
+
     horse_features."前走トップ3",
     horse_features."前走枠番",
     horse_features."入厩何日前", -- horse_rest_time
     horse_features."入厩15日未満", -- horse_rest_lest14
     horse_features."入厩35日以上", -- horse_rest_over35
     horse_features."馬体重", -- declared_weight
-    horse_features."馬体重増減", -- diff_declared_weight
+    horse_features."馬体重増減", -- diff_declared_weight (todo: check if this matches lag)
     horse_features."距離", -- distance
     horse_features."前走距離差", -- diff_distance
     horse_features."年齢", -- horse_age (years)
