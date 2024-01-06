@@ -68,23 +68,36 @@ models:
         description: ４歳以上等、→JRDBデータコード表
         tests:
           - not_null
+          - relationships:
+              to: ref('競走種別コード')
+              field: code
       - name: レース条件_条件
         description: 900万下等、 →JRDBデータコード表
         tests:
           - not_null
+          - relationships:
+              to: ref('条件コード')
+              field: code
       - name: レース条件_記号
         description: ○混等、    →JRDBデータコード表
         tests:
           - not_null
-          # - relationships:
-          #     to: ref('特記コード')
-          #     field: コード
+          - relationships:
+              to: ref('特記コード')
+              field: code
       - name: レース条件_重量
         description: ハンデ等、  →JRDBデータコード表
         tests:
           - not_null
+          - relationships:
+              to: ref('重量コード')
+              field: code
       - name: レース条件_グレード
         description: Ｇ１等      →JRDBデータコード表
+        tests:
+          - relationships:
+              to: ref('グレードコード')
+              field: code
       - name: レース名
         description: レース名の通称（全角２５文字）
       - name: 回数

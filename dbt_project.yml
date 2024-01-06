@@ -101,3 +101,9 @@ seeds:
     異常区分コード:
       +column_types:
         code: text
+    競走種別コード:
+      +column_types:
+        code: text
+    重量コード:
+      +column_types:
+        code: text
