@@ -5,6 +5,7 @@ hyperopt==0.2.7
 jupyterlab==4.0.9
 lightgbm==4.2.0
 pandas==2.1.4
+pyarrow
 psycopg2-binary==2.9.9
 pydantic==2.5.2
 pyspark==3.5.0
