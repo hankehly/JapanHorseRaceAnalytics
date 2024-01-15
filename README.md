@@ -9,6 +9,8 @@
 - [dbt - How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
 - [競走馬データ仕様書内容の説明](http://www.jrdb.com/program/Kyi/ky_siyo_doc.txt)
 - [JRA レーシングカレンダー](https://www.jra.go.jp/keiba/calendar/)
+- [JMAダウンロードファイル(CSVファイル)の形式](https://www.data.jma.go.jp/risk/obsdl/top/help3.html)
+- [JMA、今の天候情報例](https://tenki.jp/forecast/3/15/4510/12204/1hour.html)
 
 
 ![ER](./images/JRDB.drawio.png)
