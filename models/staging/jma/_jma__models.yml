@@ -85,9 +85,30 @@ models:
           - relationships:
               to: ref('jma_品質情報')
               field: code
-      # 小倉 is missing this information
       - name: 風速_風向
+        tests:
+          - accepted_values:
+              values:
+                - "北"
+                - "北北東"
+                - "北北西"
+                - "北東"
+                - "北西"
+                - "南"
+                - "南南東"
+                - "南南西"
+                - "南東"
+                - "南西"
+                - "東"
+                - "東北東"
+                - "東南東"
+                - "西"
+                - "西北西"
+                - "西南西"
+                - "静穏"
       - name: 風速_風向_品質情報
+        tests:
+          - not_null
       - name: 風速_均質番号
         tests:
           - not_null

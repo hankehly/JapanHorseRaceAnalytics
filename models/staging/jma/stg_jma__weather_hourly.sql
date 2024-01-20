@@ -28,7 +28,8 @@ with
     nullif("日照時間_均質番号", '') as "日照時間_均質番号",
     cast(nullif("風速", '') as numeric) as "風速",
     nullif("風速_品質情報", '') as "風速_品質情報",
-    nullif("風速_風向", '') as "風速_風向",
+    -- there are about 10-20 rows containing a trailing ')'
+    trim(trailing ')' from nullif("風速_風向", '')) as "風速_風向",
     nullif("風速_風向_品質情報", '') as "風速_風向_品質情報",
     nullif("風速_均質番号", '') as "風速_均質番号",
     cast(nullif("日射量", '') as numeric) as "日射量",
