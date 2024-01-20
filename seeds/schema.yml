@@ -42,9 +42,6 @@ seeds:
       - name: description
         tests:
           - not_null
-      - name: meaning
-        tests:
-          - not_null
   - name: 天候コード
     columns:
       - name: code

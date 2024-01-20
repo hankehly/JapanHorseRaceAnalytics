@@ -10,7 +10,7 @@ with
     weather_hourly_sk,
     nullif("download_timestamp", '')::timestamptz as "download_timestamp",
     nullif("station_name", '') as "station_name",
-    TO_TIMESTAMP(nullif("年月日時", ''), 'YYYY-MM-DD HH24:MI:SS') AT TIME ZONE 'Asia/Tokyo' "年月日時",
+    TO_TIMESTAMP(nullif("年月日時", ''), 'YYYY-MM-DD HH24:MI:SS')::timestamp without time zone "年月日時",
     cast(nullif("気温", '') as numeric) as "気温",
     nullif("気温_品質情報", '') as "気温_品質情報",
     nullif("気温_均質番号", '') as "気温_均質番号",
