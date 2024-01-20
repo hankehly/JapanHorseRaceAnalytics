@@ -25,6 +25,9 @@ seeds:
     # Make sure "code" columns are parsed as strings, not integers.
     # This workaround is really buggy. If it fails to parse a column as a string,
     # try changing 'text' to 'varchar' and re-running with --full-refresh.
+    jrdb_racetrack_jma_station_mapping:
+      +column_types:
+        jrdb_racetrack_code: text
     jma_天気記号:
       +column_types:
         code: text

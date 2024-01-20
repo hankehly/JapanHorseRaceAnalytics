@@ -1,5 +1,17 @@
 version: 2
 seeds:
+  - name: jrdb_racetrack_jma_station_mapping
+    columns:
+      - name: jrdb_racetrack_code
+        tests:
+          - unique
+          - not_null
+      - name: jrdb_racetrack_name
+        tests:
+          - not_null
+      - name: jma_station_name
+        tests:
+          - not_null
   - name: jma_品質情報
     columns:
       - name: code

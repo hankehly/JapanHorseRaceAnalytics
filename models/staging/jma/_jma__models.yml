@@ -17,18 +17,8 @@ models:
           - not_null
       - name: 気温
         description: |
-          The distribution of nulls is as follows:
-          京都: 21
-          八幡: 276
-          函館: 30
-          名古屋: 11
-          大阪: 10
-          小倉: 209664
-          府中: 90
-          新潟: 2
-          札幌: 15
-          福島: 43
-          船橋: 93
+          Good quality.
+          Nulls exist in years 1999-2000 only
       - name: 気温_品質情報
         tests:
           - not_null
@@ -39,6 +29,9 @@ models:
         tests:
           - not_null
       - name: 降水量
+        description: |
+          Good quality.
+          Nulls only exist in years 1999-2000
       - name: 降水量_品質情報
         tests:
           - not_null
@@ -79,6 +72,9 @@ models:
         tests:
           - not_null
       - name: 風速
+        description: |
+          Good quality.
+          Many nulls in years 1999-2000, only 3-7 nulls per year in years 2015-2023
       - name: 風速_品質情報
         tests:
           - not_null
@@ -86,6 +82,7 @@ models:
               to: ref('jma_品質情報')
               field: code
       - name: 風速_風向
+        description: Nulls same as 風速
         tests:
           - accepted_values:
               values:
