@@ -1,5 +1,50 @@
 version: 2
 seeds:
+  - name: jma_品質情報
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: symbol
+        tests:
+          - not_null
+      - name: description
+        tests:
+          - not_null
+  - name: jma_天気記号
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: weather_symbol
+        tests:
+          - not_null
+      - name: weather
+        tests:
+          - not_null
+      - name: visual_observation
+        tests:
+          - not_null
+      - name: mechanical_observation
+        tests:
+          - not_null
+  - name: jma_現象なし情報
+    columns:
+      - name: code
+        tests:
+          - unique
+          - not_null
+      - name: symbol
+        tests:
+          - not_null
+      - name: description
+        tests:
+          - not_null
+      - name: meaning
+        tests:
+          - not_null
   - name: 天候コード
     columns:
       - name: code

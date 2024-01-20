@@ -1,0 +1,59 @@
+sources:
+  - name: jma
+    database: jrdb
+    schema: jrdb_raw
+    description: 気象庁のデータ
+    tables:
+      - name: weather_hourly
+        columns:
+          - name: weather_hourly_sk
+          - name: 年月日時
+          - name: 気温
+          - name: 気温_品質情報
+          - name: 気温_均質番号
+          - name: 降水量
+          - name: 降水量_品質情報
+          - name: 降水量_均質番号
+          - name: 降雪
+          - name: 降雪_品質情報
+          - name: 降雪_均質番号
+          - name: 積雪
+          - name: 積雪_品質情報
+          - name: 積雪_均質番号
+          - name: 日照時間
+          - name: 日照時間_品質情報
+          - name: 日照時間_均質番号
+          - name: 風速
+          - name: 風速_品質情報
+          - name: 風速_風向
+          - name: 風速_風向_品質情報
+          - name: 風速_均質番号
+          - name: 日射量
+          - name: 日射量_品質情報
+          - name: 日射量_均質番号
+          - name: 現地気圧
+          - name: 現地気圧_品質情報
+          - name: 現地気圧_均質番号
+          - name: 海面気圧
+          - name: 海面気圧_品質情報
+          - name: 海面気圧_均質番号
+          - name: 相対湿度
+          - name: 相対湿度_品質情報
+          - name: 相対湿度_均質番号
+          - name: 蒸気圧
+          - name: 蒸気圧_品質情報
+          - name: 蒸気圧_均質番号
+          - name: 露点温度
+          - name: 露点温度_品質情報
+          - name: 露点温度_均質番号
+          - name: 天気
+          - name: 天気_品質情報
+          - name: 天気_均質番号
+          - name: 雲量
+          - name: 雲量_品質情報
+          - name: 雲量_均質番号
+          - name: 視程
+          - name: 視程_品質情報
+          - name: 視程_均質番号
+          - name: download_timestamp
+          - name: station_name

@@ -1,0 +1,138 @@
+models:
+  - name: stg_jma__weather_hourly
+    description: 気象庁の過去の気象データを格納するテーブルです。
+    columns:
+      - name: weather_hourly_sk
+        tests:
+          - unique
+          - not_null
+      - name: download_timestamp
+        tests:
+          - not_null
+      - name: station_name
+        tests:
+          - not_null
+      - name: 年月日時
+        tests:
+          - not_null
+      - name: 気温
+        description: |
+          The distribution of nulls is as follows:
+          京都: 21
+          八幡: 276
+          函館: 30
+          名古屋: 11
+          大阪: 10
+          小倉: 209664
+          府中: 90
+          新潟: 2
+          札幌: 15
+          福島: 43
+          船橋: 93
+      - name: 気温_品質情報
+        tests:
+          - not_null
+      - name: 気温_均質番号
+        tests:
+          - not_null
+      - name: 降水量
+      - name: 降水量_品質情報
+        tests:
+          - not_null
+      - name: 降水量_均質番号
+        tests:
+          - not_null
+      - name: 降雪
+      - name: 降雪_品質情報
+        tests:
+          - not_null
+      - name: 降雪_均質番号
+        tests:
+          - not_null
+      - name: 積雪
+      - name: 積雪_品質情報
+        tests:
+          - not_null
+      - name: 積雪_均質番号
+        tests:
+          - not_null
+      - name: 日照時間
+      - name: 日照時間_品質情報
+        tests:
+          - not_null
+      - name: 日照時間_均質番号
+        tests:
+          - not_null
+      - name: 風速
+      - name: 風速_品質情報
+        tests:
+          - not_null
+      # 小倉 is missing this information
+      - name: 風速_風向
+      - name: 風速_風向_品質情報
+      - name: 風速_均質番号
+        tests:
+          - not_null
+      - name: 日射量
+      - name: 日射量_品質情報
+        tests:
+          - not_null
+      - name: 日射量_均質番号
+        tests:
+          - not_null
+      - name: 現地気圧
+      - name: 現地気圧_品質情報
+        tests:
+          - not_null
+      - name: 現地気圧_均質番号
+        tests:
+          - not_null
+      - name: 海面気圧
+      - name: 海面気圧_品質情報
+        tests:
+          - not_null
+      - name: 海面気圧_均質番号
+        tests:
+          - not_null
+      - name: 相対湿度
+      - name: 相対湿度_品質情報
+        tests:
+          - not_null
+      - name: 相対湿度_均質番号
+        tests:
+          - not_null
+      - name: 蒸気圧
+      - name: 蒸気圧_品質情報
+        tests:
+          - not_null
+      - name: 蒸気圧_均質番号
+        tests:
+          - not_null
+      - name: 露点温度
+      - name: 露点温度_品質情報
+        tests:
+          - not_null
+      - name: 露点温度_均質番号
+        tests:
+          - not_null
+      - name: 天気
+      - name: 天気_品質情報
+        tests:
+          - not_null
+      - name: 天気_均質番号
+        tests:
+          - not_null
+      - name: 雲量
+      - name: 雲量_品質情報
+        tests:
+          - not_null
+      - name: 雲量_均質番号
+        tests:
+          - not_null
+      - name: 視程
+      - name: 視程_品質情報
+        tests:
+          - not_null
+      - name: 視程_均質番号
+        tests:
+          - not_null
