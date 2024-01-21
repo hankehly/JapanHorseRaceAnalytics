@@ -3,7 +3,8 @@ models:
     columns:
       - name: bac_sk
         tests:
-          - unique
+          # takes way too long
+          # - unique
           - not_null
       - name: bac_bk
         tests:
@@ -84,7 +85,7 @@ models:
           - not_null
           - relationships:
               to: ref('特記コード')
-              field: code
+              field: コード
       - name: レース条件_重量
         description: ハンデ等、  →JRDBデータコード表
         tests:

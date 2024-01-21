@@ -1,18 +1,24 @@
-{{ config(materialized='table', schema='intermediate') }}
+{{
+  config(
+    materialized='table',
+    schema='intermediate',
+    indexes=[{'columns': ['レースキー'], 'unique': True}]
+  )
+}}
 
 WITH
   bac AS (
   SELECT
     *
   FROM
-    jrdb_staging.stg_jrdb__bac
+    {{ ref('stg_jrdb__bac') }}
   ),
 
-  weather AS (
+  weather_hourly AS (
   SELECT
     *
   FROM
-    jrdb_staging.stg_jma__weather_hourly
+    {{ ref('stg_jma__weather_hourly') }}
   ),
 
   final as (
@@ -124,13 +130,13 @@ WITH
     bac.レースキー_場コード = jrdb_racetrack_jma_station_mapping.jrdb_racetrack_code
 
   LEFT JOIN 
-    weather w1
+    weather_hourly w1
   ON
     w1.年月日時 = (bac.年月日 || ' ' || LPAD((EXTRACT(HOUR FROM bac.発走時間)::int)::text, 2, '0') || ':00:00')::timestamp
     AND w1.station_name = jrdb_racetrack_jma_station_mapping.jma_station_name
 
   LEFT JOIN 
-    weather w2
+    weather_hourly w2
   ON
     w2.年月日時 = (bac.年月日 || ' ' || LPAD((EXTRACT(HOUR FROM bac.発走時間)::int + 1)::text, 2, '0') || ':00:00')::timestamp
     AND w2.station_name = jrdb_racetrack_jma_station_mapping.jma_station_name

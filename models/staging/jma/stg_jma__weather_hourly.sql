@@ -1,7 +1,14 @@
+{{
+  config(
+    materialized='table'
+  )
+}}
+
 with
   source as (
   select
-    *
+    *,
+    row_number() over (partition by "station_name", "年月日時" order by "download_timestamp" desc) as row_number
   from
     {{ source('jma', 'weather_hourly') }}
   ),
@@ -61,6 +68,8 @@ with
     nullif("視程_均質番号", '') as "視程_均質番号"
   from
     source
+  where
+    row_number = 1
 )
 
 select
