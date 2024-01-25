@@ -85,3 +85,20 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 * Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.
 * Todo: The cases in which 異常区分 != 0 may need to be handled differently. For example, a race probably shouldn't be counted for the horse if the 異常区分 is 除外. Other 異常区分 may need different handling as well (like falling off the horse, etc.).
 
+
+Metrics to track for each model:
+* Payoff rate overall
+* Payoff rate by surface
+* Payoff rate by distance (short, medium, long)
+* Payoff rate by weather
+* Payoff rate by season
+* Payoff rate by year
+* Payoff rate by month
+* Payoff rate by confidence level (if model offers confidence level)
+* accuracy
+* precision
+* recall
+* f1 score
+* roc auc
+* confusion matrix
+* feature importance
