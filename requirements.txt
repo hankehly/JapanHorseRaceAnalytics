@@ -16,6 +16,7 @@ matplotlib
 seaborn
 tensorflow
 tensorflow-metal
+mlflow
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps
