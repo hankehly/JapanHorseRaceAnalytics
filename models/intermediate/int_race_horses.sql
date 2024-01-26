@@ -181,6 +181,7 @@ with
     tyb."馬体重",
     tyb."馬体重増減",
     bac."レース条件_距離" as "距離",
+    sed."本賞金",
     coalesce(
       tyb."馬場状態コード",
       case
@@ -191,7 +192,25 @@ with
     ) as "馬場状態コード",
     bac."頭数",
     bac."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",
-    sed."馬成績_着順" as "着順"
+    sed."馬成績_着順" as "着順",
+    lag(sed."馬成績_着順", 1) over (partition by kyi."血統登録番号" order by bac."年月日") as "一走前着順",
+    lag(sed."馬成績_着順", 2) over (partition by kyi."血統登録番号" order by bac."年月日") as "二走前着順",
+    lag(sed."馬成績_着順", 3) over (partition by kyi."血統登録番号" order by bac."年月日") as "三走前着順",
+    lag(sed."馬成績_着順", 4) over (partition by kyi."血統登録番号" order by bac."年月日") as "四走前着順",
+    lag(sed."馬成績_着順", 5) over (partition by kyi."血統登録番号" order by bac."年月日") as "五走前着順",
+    lag(sed."馬成績_着順", 6) over (partition by kyi."血統登録番号" order by bac."年月日") as "六走前着順",
+    -- how many races this horse has run until now
+    coalesce(cast(count(*) over (partition by kyi."血統登録番号" order by bac."年月日") - 1 as integer), 0) as "レース数",
+    -- how many races this horse has won until now (incremented by one on the following race)
+    coalesce(
+      cast(
+        sum(
+          case
+            when sed."馬成績_着順" = 1 then 1
+            else 0
+          end
+        ) over (partition by kyi."血統登録番号" order by bac."年月日" rows between unbounded preceding and 1 preceding) as integer
+      ), 0) as "1位完走" -- horse_wins
   from
     kyi
 
@@ -236,12 +255,12 @@ with
     "馬番",
     "血統登録番号",
 
-    lag("着順", 1) over (partition by "血統登録番号" order by "年月日") as "一走前着順",
-    lag("着順", 2) over (partition by "血統登録番号" order by "年月日") as "二走前着順",
-    lag("着順", 3) over (partition by "血統登録番号" order by "年月日") as "三走前着順",
-    lag("着順", 4) over (partition by "血統登録番号" order by "年月日") as "四走前着順",
-    lag("着順", 5) over (partition by "血統登録番号" order by "年月日") as "五走前着順",
-    lag("着順", 6) over (partition by "血統登録番号" order by "年月日") as "六走前着順",
+    "一走前着順",
+    "二走前着順",
+    "三走前着順",
+    "四走前着順",
+    "五走前着順",
+    "六走前着順",
 
     -- whether the horse placed in the previous race
     -- last_place
@@ -281,19 +300,8 @@ with
         end
       ) over (partition by "レースキー") / cast("頭数" as numeric), 0) as "4歳以下割合",
 
-    -- how many races this horse has run until now
-    coalesce(cast(count(*) over (partition by "血統登録番号" order by "年月日") - 1 as integer), 0) as "レース数", -- horse_runs
-
-    -- how many races this horse has won until now (incremented by one on the following race)
-    coalesce(
-      cast(
-        sum(
-          case
-            when "着順" = 1 then 1
-            else 0
-          end
-        ) over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding) as integer
-      ), 0) as "1位完走", -- horse_wins
+    "レース数", -- horse_runs
+    "1位完走", -- horse_wins
 
     -- how many races this horse has placed in until now (incremented by one on the following race)
     coalesce(cast(sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding) as integer), 0) as "トップ3完走", -- horse_places
@@ -437,7 +445,29 @@ with
         'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "血統登録番号", "四半期" order by "年月日" rows between unbounded preceding and 1 preceding)',
         'cast(count(*) over (partition by "血統登録番号", "四半期" order by "年月日") - 1 as numeric)'
       )
-    }}, 0) as "四半期トップ3完走率"
+    }}, 0) as "四半期トップ3完走率",
+
+    -- Compute the standard rank of the horse on his last 3 races giving us an overview of his state of form
+    cast(coalesce(power("一走前着順" - 1, 2) + power("二走前着順" - 1, 2) + power("三走前着順" - 1, 2), 0) as integer) as "過去3走順位平方和", -- horse_std_rank
+
+    -- prize_horse_cumulative
+    coalesce(sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding), 0) as "本賞金累計",
+
+    -- avg_prize_wins_horse
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding)',
+        '"1位完走"'
+      )
+    }}, 0) as "1位完走平均賞金",
+
+    -- avg_prize_runs_horse
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum("本賞金") over (partition by "血統登録番号" order by "年月日" rows between unbounded preceding and 1 preceding)',
+        '"レース数"'
+      )
+    }}, 0) as "レース数平均賞金"
 
   from
     race_horses_base
@@ -496,6 +526,10 @@ with
     race_horses."四半期トップ3完走", -- horse_quarter_places
     race_horses."四半期1位完走率", -- ratio_win_horse_quarter
     race_horses."四半期トップ3完走率", -- ratio_place_horse_quarter
+    race_horses."過去3走順位平方和",
+    race_horses."本賞金累計",
+    race_horses."1位完走平均賞金",
+    race_horses."レース数平均賞金",
 
     horses."血統登録番号",
     horses."瞬発戦好走馬_芝",
