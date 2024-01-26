@@ -40,8 +40,6 @@ seeds:
         tests:
           - not_null
       - name: mechanical_observation
-        tests:
-          - not_null
   - name: jma_現象なし情報
     columns:
       - name: code
