@@ -27,7 +27,7 @@ def calculate_binary_classifier_statistics(
     ----------
     df : pd.DataFrame
         A dataframe containing the predictions and actual values.
-        Expected columns: "actual", "pred", "pred_proba_false", "pred_proba_true"
+        Expected columns: "actual", "pred", "pred_proba_true"
     group_by : str, optional
         The name of a column to group by, by default None
     probability_threshold : float, optional

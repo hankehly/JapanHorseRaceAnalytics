@@ -10,3 +10,6 @@ logs/
 .ipynb_checkpoints/
 .env
 .vscode/
+mlruns/
+data/
+*.parquet

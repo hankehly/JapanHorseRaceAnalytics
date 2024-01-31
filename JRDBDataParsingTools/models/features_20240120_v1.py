@@ -1,6 +1,6 @@
 from typing import List
 
-from JRDBDataParsingTools.models.base import Feature
+from JRDBDataParsingTools.models.base import Feature, FeatureSet
 
 
 def get_features() -> List[Feature]:
@@ -19,13 +19,6 @@ def get_features() -> List[Feature]:
         Feature(name="複勝的中", pandas_dtype="category", tags=[]),
         Feature(name="複勝払戻金", pandas_dtype="float", tags=[]),
         Feature(name="四半期", pandas_dtype="category", tags=["default", "芝", "ダート"]),
-        Feature(name="瞬発戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
-        Feature(name="消耗戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
-        Feature(name="瞬発戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
-        Feature(name="消耗戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
-        Feature(name="瞬発戦好走馬_総合", pandas_dtype="category", tags=[]),
-        Feature(name="消耗戦好走馬_総合", pandas_dtype="category", tags=[]),
-        Feature(name="性別", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="馬場差", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="芝馬場状態内", pandas_dtype="category", tags=["default", "芝"]),
         Feature(name="芝馬場状態中", pandas_dtype="category", tags=["default", "芝"]),
@@ -214,9 +207,13 @@ def get_features() -> List[Feature]:
         Feature(name="放牧先ランク", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="厩舎ランク", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="天候コード", pandas_dtype="category", tags=["default", "芝", "ダート"]),
-        Feature(name="前走着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="前々走着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="前々々走着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="性別", pandas_dtype="category", tags=["default", "芝", "ダート"]),
+        Feature(name="一走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="二走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="三走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="四走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="五走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="六走前着順", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="前走トップ3", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="前走枠番", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="入厩何日前", pandas_dtype="float", tags=["default", "芝", "ダート"]),
@@ -264,6 +261,20 @@ def get_features() -> List[Feature]:
         Feature(name="四半期トップ3完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="四半期1位完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="四半期トップ3完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="過去3走順位平方和", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="本賞金累計", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="1位完走平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="瞬発戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
+        Feature(name="消耗戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
+        Feature(name="瞬発戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
+        Feature(name="消耗戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
+        Feature(
+            name="瞬発戦好走馬_総合", pandas_dtype="category", tags=["default", "芝", "ダート"]
+        ),
+        Feature(
+            name="消耗戦好走馬_総合", pandas_dtype="category", tags=["default", "芝", "ダート"]
+        ),
         Feature(name="騎手レース数", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="騎手1位完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="騎手トップ3完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
@@ -279,6 +290,9 @@ def get_features() -> List[Feature]:
         Feature(name="騎手距離トップ3完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="騎手距離1位完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="騎手距離トップ3完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="騎手本賞金累計", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="騎手1位完走平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="騎手レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師レース数", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師1位完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師トップ3完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
@@ -291,16 +305,9 @@ def get_features() -> List[Feature]:
         Feature(
             name="調教師場所トップ3完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]
         ),
-        Feature(name="過去3走順位平方和", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="本賞金累計", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="1位完走平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師本賞金累計", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師1位完走平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="調教師レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="騎手本賞金累計", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="騎手1位完走平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="騎手レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="馬騎手レース数", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="馬騎手1位完走", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="馬騎手1位完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]),
@@ -337,34 +344,48 @@ def get_features() -> List[Feature]:
         Feature(
             name="騎手過去5走トップ3完走率", pandas_dtype="float", tags=["default", "芝", "ダート"]
         ),
+        Feature(name="temperature", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(
+            name="precipitation", pandas_dtype="float", tags=["default", "芝", "ダート"]
+        ),
+        Feature(name="snowfall", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="snow_depth", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(name="wind_speed", pandas_dtype="float", tags=["default", "芝", "ダート"]),
+        Feature(
+            name="wind_direction", pandas_dtype="category", tags=["default", "芝", "ダート"]
+        ),
+        Feature(
+            name="solar_radiation", pandas_dtype="float", tags=["default", "芝", "ダート"]
+        ),
+        Feature(
+            name="local_air_pressure",
+            pandas_dtype="float",
+            tags=["default", "芝", "ダート"],
+        ),
+        Feature(
+            name="sea_level_air_pressure",
+            pandas_dtype="float",
+            tags=["default", "芝", "ダート"],
+        ),
+        Feature(
+            name="relative_humidity", pandas_dtype="float", tags=["default", "芝", "ダート"]
+        ),
+        Feature(
+            name="vapor_pressure", pandas_dtype="float", tags=["default", "芝", "ダート"]
+        ),
+        Feature(
+            name="dew_point_temperature",
+            pandas_dtype="float",
+            tags=["default", "芝", "ダート"],
+        ),
+        Feature(name="weather", pandas_dtype="category", tags=["default", "芝", "ダート"]),
+        Feature(name="visibility", pandas_dtype="float", tags=["default", "芝", "ダート"]),
     ]
 
 
-class Features:
-    @staticmethod
-    def get_pandas_dtypes():
-        return {feature.name: feature.pandas_dtype for feature in get_features()}
-
-    @staticmethod
-    def get_feature_names_by_tag(tag: str) -> List[str]:
-        return [feature.name for feature in get_features() if tag in feature.tags]
-
-    @staticmethod
-    def get_feature_names_by_any_tags_and_dtype(
-        any_tags: List[str], dtype: str
-    ) -> List[str]:
-        """
-        Returns feature names that have any tags.
-        """
-        feature_names = []
-        for feature in get_features():
-            if dtype == feature.pandas_dtype:
-                for tag in any_tags:
-                    if tag in feature.tags:
-                        feature_names.append(feature.name)
-                        break
-        return feature_names
-
-    @staticmethod
-    def get_label() -> str:
+class _FeatureSet(FeatureSet):
+    def get_label(self) -> str:
         return "複勝的中"
+
+
+Features = _FeatureSet(get_features())

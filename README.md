@@ -95,6 +95,8 @@ Metrics to track for each model:
 * Payoff rate by year
 * Payoff rate by month
 * Payoff rate by confidence level (if model offers confidence level)
+* Payoff rate by horse age
+* Payoff rate by grade
 * accuracy
 * precision
 * recall
