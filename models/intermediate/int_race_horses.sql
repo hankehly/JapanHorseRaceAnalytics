@@ -543,8 +543,8 @@ with recursive
       )
     }}, 0) as "レース数平均賞金",
 
-    lag(race_horses_streaks."連続1着", 1, 0) over (partition by base."血統登録番号" order by "年月日") as "当日までの連続1着",
-    lag(race_horses_streaks."連続3着以内", 1, 0) over (partition by base."血統登録番号" order by "年月日") as "当日までの連続3着以内"
+    lag(race_horses_streaks."連続1着", 1, 0) over (partition by base."血統登録番号" order by "年月日") as "連続1着",
+    lag(race_horses_streaks."連続3着以内", 1, 0) over (partition by base."血統登録番号" order by "年月日") as "連続3着以内"
 
   from
     race_horses_base base
@@ -615,8 +615,8 @@ with recursive
     race_horses."本賞金累計",
     race_horses."1位完走平均賞金",
     race_horses."レース数平均賞金",
-    race_horses."当日までの連続1着",
-    race_horses."当日までの連続3着以内",
+    race_horses."連続1着",
+    race_horses."連続3着以内",
 
     horses."血統登録番号",
     horses."瞬発戦好走馬_芝",

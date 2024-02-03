@@ -637,8 +637,8 @@ with
     horse_features."消耗戦好走馬_ダート",
     horse_features."瞬発戦好走馬_総合",
     horse_features."消耗戦好走馬_総合",
-    horse_features."当日までの連続1着",
-    horse_features."当日までの連続3着以内",
+    horse_features."連続1着",
+    horse_features."連続3着以内",
 
     jockey_features."騎手レース数", -- jockey_runs
     jockey_features."騎手1位完走", -- jockey_wins
@@ -700,39 +700,40 @@ with
     combined_features."馬調教師場所トップ3完走", -- places_horse_trainer_venue
     combined_features."馬調教師場所トップ3完走率", -- ratio_place_horse_trainer_venue
 
-    tkb_features."過去5走勝率", -- horse_win_percent_past_5_races
-    tkb_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
-    tkb_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
-    tkb_features."騎手過去5走トップ3完走率", -- jockey_place_percent_past_5_races
-
     -- Relative features --
 
     -- Average IDM of Competitors: Calculate the average speed rating of all horses in a race and compare each horse's speed rating to this average.
     dbt_utils.safe_divide(
       'sum(base."ＩＤＭ") over (partition by base."レースキー") - base."ＩＤＭ"',
       'cast(base."頭数" - 1 as numeric)'
-    ) as "IDM相対",
+    ) as "競争相手平均IDM",
+
+    -- Calculate the difference between each horse's IDM and the average IDM of its competitors.
+    base."ＩＤＭ" - dbt_utils.safe_divide(
+      'sum(base."ＩＤＭ") over (partition by base."レースキー") - base."ＩＤＭ"',
+      'cast(base."頭数" - 1 as numeric)'
+    ) AS "競争相手平均IDM差",
 
     -- This calculates the average streak of competitors for each horse, excluding its own streak from the average.
     dbt_utils.safe_divide(
-      'sum(horse_features."当日までの連続1着") over (partition by base."レースキー") - horse_features."当日までの連続1着"',
+      'sum(horse_features."連続1着") over (partition by base."レースキー") - horse_features."連続1着"',
       'cast(base."頭数" - 1 as numeric)'
-    ) as avg_competitor_win_streak,
+    ) as "競争相手平均連続1着",
 
     -- Calculate the difference between each horse's streak and the average or maximum streak of its competitors.
     -- This could indicate how much stronger or weaker the horse is relative to the field.
-    horse_features."当日までの連続1着" - dbt_utils.safe_divide(
-      'sum(horse_features."当日までの連続1着") over (partition by base."レースキー") - horse_features."当日までの連続1着"',
+    horse_features."連続1着" - dbt_utils.safe_divide(
+      'sum(horse_features."連続1着") over (partition by base."レースキー") - horse_features."連続1着"',
       'cast(base."頭数" - 1 as numeric)'
-    ) AS win_streak_difference_from_avg,
+    ) AS "競争相手平均連続1着差",
 
     -- Todo
 
     -- X:
     -- competitor mean
-    -- competitor median
     -- competitor max
     -- competitor min
+    -- competitor std
     -- difference from competitor mean
 
     -- Y:
