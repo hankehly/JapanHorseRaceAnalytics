@@ -735,7 +735,10 @@ with
     -- competitor min
     -- difference from competitor mean
 
-    -- Y: (do for all horse, jockey, trainer, combined features)
+    -- Y:
+    -- do for all horse, jockey, trainer, combined features, select the ones with highest feature importance
+    -- and eliminate ones with high correlation
+
     -- IDM
     -- place_streak
     -- win_streak

@@ -14,12 +14,18 @@
 - [JRDB競馬読本Web](http://www.jrdb.com/dokuhon/menu.php)
 
 
+## Data sources
+
+### JRDB
+
 ![ER](./images/JRDB.drawio.png)
+
+#### Data update schedule
 
 ![schedule](./images/schedule.png)
 
 
-### Table grain
+#### Table grain
 
 | file |                                                                                                           | grain          | ユニークキー                             | 更新時間   | 実績/予測 |
 | ---- | --------------------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------- | ---------- | --------- |
@@ -52,10 +58,7 @@ Notes:
 | 開催キー     | 「場コード・年・回・日」の組み合わせ。レースキーの一部とリンク可能。 |
 
 
-
-Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist in the codes. Could this be because you're using the 年パック instead of individual files? Test this hypothesis. => Answer: KYI is the same 年パック as well as per-date files.
-
-
+#### Duplicates
 
 | Dataset | Verified range | Has duplicates? | Notes                                                  |
 | ------- | -------------- | --------------- | ------------------------------------------------------ |
@@ -71,6 +74,8 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 | tyb     | ~2023/12/17    | [x]             |                                                        |
 | ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
+
+## Modeling methodology
 
 ### Metrics to track for each binary classifier model
 
