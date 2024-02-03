@@ -11,6 +11,7 @@
 - [JRA レーシングカレンダー](https://www.jra.go.jp/keiba/calendar/)
 - [JMAダウンロードファイル(CSVファイル)の形式](https://www.data.jma.go.jp/risk/obsdl/top/help3.html)
 - [JMA、今の天候情報例](https://tenki.jp/forecast/3/15/4510/12204/1hour.html)
+- [JRDB競馬読本Web](http://www.jrdb.com/dokuhon/menu.php)
 
 
 ![ER](./images/JRDB.drawio.png)
@@ -72,6 +73,19 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 
 ### Todo
 
+* Handle Model Complexity & Multicollinearity:
+  * Remove Highly Correlated Features: If two features provide similar information, consider keeping only one.
+
+```
+Checking if features provide similar information, a process often aimed at identifying multicollinearity or redundancy in your dataset, can be approached through various statistical and data analysis techniques. Here are some effective methods:
+
+1. Correlation Analysis:
+Method: Calculate the Pearson correlation coefficient for continuous variables or Spearman's rank correlation for ordinal variables to measure the linear relationship between pairs of features.
+How to Use: High correlation coefficients (near -1 or 1) indicate a strong relationship, suggesting that the features might provide similar information.
+Tool: In Python, you can use pandas.DataFrame.corr for this purpose.
+```
+
+  * Principal Component Analysis (PCA): PCA can reduce dimensionality and multicollinearity by transforming the original features into a smaller set of uncorrelated components.
 * Separate training features by surface, etc.. and train a separate model for each. For lag features, you can use the same lag features for all models, but you'll need to train a separate model for each surface.
 * 月別平均回収率の傾向に比例する特徴量（天候など）がないか、確認する。その特徴量ごとにモデルを作成する。
 * Come up with some more selection criteria for the races you bet on. Do some digging to find which races (turf, dirt, distance, etc..) your model performs best at, during which seasons, etc.. then selectively bet on only those races.
@@ -86,7 +100,7 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 * Todo: The cases in which 異常区分 != 0 may need to be handled differently. For example, a race probably shouldn't be counted for the horse if the 異常区分 is 除外. Other 異常区分 may need different handling as well (like falling off the horse, etc.).
 
 
-Metrics to track for each model:
+### Metrics to track for each model:
 * Payoff rate overall
 * Payoff rate by surface
 * Payoff rate by distance (short, medium, long)
@@ -104,3 +118,10 @@ Metrics to track for each model:
 * roc auc
 * confusion matrix
 * feature importance
+
+
+### When to not bet
+
+Don't bet on races where
+* The bac.レース条件_条件 is A1,A2 (these are new horse races)
+* トラック種別 is 障害
