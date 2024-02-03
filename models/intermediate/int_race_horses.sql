@@ -379,6 +379,23 @@ with recursive
       )
     }}, 0) as "トップ3完走率",
 
+    -- Horse Win Percent: Horse’s win percent over the past 5 races.
+    -- horse_win_percent_past_5_races
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum(case when "着順" = 1 then 1 else 0 end) over (partition by base."血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base."血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - 1 as numeric)'
+      )
+    }}, 0) as "過去5走勝率",
+
+    -- horse_place_percent_past_5_races
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by base."血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base."血統登録番号" order by "年月日" rows between 5 preceding and 1 preceding) - 1 as numeric)'
+      )
+    }}, 0) as "過去5走トップ3完走率",
+
     -- horse_venue_runs
     coalesce(cast(count(*) over (partition by base."血統登録番号", "場コード" order by "年月日") - 1 as integer), 0) as "場所レース数",
 
@@ -567,6 +584,8 @@ with recursive
     race_horses."トップ3完走", -- horse_places
     race_horses."1位完走率",
     race_horses."トップ3完走率",
+    race_horses."過去5走勝率",
+    race_horses."過去5走トップ3完走率",
     race_horses."場所レース数", -- horse_venue_runs
     race_horses."場所1位完走", -- horse_venue_wins
     race_horses."場所トップ3完走", -- horse_venue_places

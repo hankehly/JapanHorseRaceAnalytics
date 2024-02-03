@@ -100,6 +100,23 @@ with
       )
     }}, 0) as "騎手トップ3完走率",
 
+    -- Jockey Win Percent: Jockey’s win percent over the past 5 races.
+    -- jockey_win_percent_past_5_races
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum(case when "着順" = 1 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
+      )
+    }}, 0) as "騎手過去5走勝率",
+
+    -- jockey_place_percent_past_5_races
+    coalesce({{
+      dbt_utils.safe_divide(
+        'sum(case when "着順" <= 3 then 1 else 0 end) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by "騎手コード" order by "年月日", "レースキー_Ｒ" rows between 5 preceding and 1 preceding) - 1 as numeric)'
+      )
+    }}, 0) as "騎手過去5走トップ3完走率",
+
     -- jockey_venue_runs
     coalesce(cast(count(*) over (partition by "騎手コード", "場コード" order by "年月日", "レースキー_Ｒ") - 1 as integer), 0) as "騎手場所レース数",
 
@@ -181,6 +198,8 @@ with
     jockey_features."騎手トップ3完走", -- jockey_places
     jockey_features."騎手1位完走率", -- ratio_win_jockey
     jockey_features."騎手トップ3完走率", -- ratio_place_jockey
+    jockey_features."騎手過去5走勝率",
+    jockey_features."騎手過去5走トップ3完走率",
     jockey_features."騎手場所レース数", -- jockey_venue_runs
     jockey_features."騎手場所1位完走", -- jockey_venue_wins
     jockey_features."騎手場所トップ3完走", -- jockey_venue_places

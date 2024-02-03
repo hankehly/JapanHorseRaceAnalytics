@@ -600,6 +600,8 @@ with
     horse_features."トップ3完走", -- horse_places
     horse_features."1位完走率",
     horse_features."トップ3完走率",
+    horse_features."過去5走勝率",
+    horse_features."過去5走トップ3完走率",
     horse_features."場所レース数", -- horse_venue_runs
     horse_features."場所1位完走", -- horse_venue_wins
     horse_features."場所トップ3完走", -- horse_venue_places
@@ -643,6 +645,8 @@ with
     jockey_features."騎手トップ3完走", -- jockey_places
     jockey_features."騎手1位完走率", -- ratio_win_jockey
     jockey_features."騎手トップ3完走率", -- ratio_place_jockey
+    jockey_features."騎手過去5走勝率",
+    jockey_features."騎手過去5走トップ3完走率",
     jockey_features."騎手場所レース数", -- jockey_venue_runs
     jockey_features."騎手場所1位完走", -- jockey_venue_wins
     jockey_features."騎手場所トップ3完走", -- jockey_venue_places
@@ -724,9 +728,14 @@ with
 
     -- Todo
 
-    -- competitor average
-    -- difference from competitor average
+    -- X:
+    -- competitor mean
+    -- competitor median
+    -- competitor max
+    -- competitor min
+    -- difference from competitor mean
 
+    -- Y: (do for all horse, jockey, trainer, combined features)
     -- IDM
     -- place_streak
     -- win_streak
@@ -802,11 +811,6 @@ with
   on
     base."レースキー" = combined_features."レースキー"
     and base."馬番" = combined_features."馬番"
-  inner join
-    {{ ref("int_teddykoker_blog") }} tkb_features
-  on
-    base."レースキー" = tkb_features."レースキー"
-    and base."馬番" = tkb_features."馬番"
   inner join
     race_weather
   on

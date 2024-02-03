@@ -694,10 +694,11 @@ with
     combined_features."馬調教師場所トップ3完走", -- places_horse_trainer_venue
     combined_features."馬調教師場所トップ3完走率", -- ratio_place_horse_trainer_venue
 
-    tkb_features."過去5走勝率", -- horse_win_percent_past_5_races
-    tkb_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
-    tkb_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
-    tkb_features."騎手過去5走トップ3完走率", -- jockey_place_percent_past_5_races
+    -- Previously tkb blog features
+    horse_features."過去5走勝率", -- horse_win_percent_past_5_races
+    horse_features."過去5走トップ3完走率", -- horse_place_percent_past_5_races
+    jockey_features."騎手過去5走勝率", -- jockey_win_percent_past_5_races
+    jockey_features."騎手過去5走トップ3完走率", -- jockey_place_percent_past_5_races
 
     race_weather.temperature,
     race_weather.precipitation,
@@ -736,11 +737,6 @@ with
   on
     base."レースキー" = combined_features."レースキー"
     and base."馬番" = combined_features."馬番"
-  inner join
-    {{ ref("int_teddykoker_blog") }} tkb_features
-  on
-    base."レースキー" = tkb_features."レースキー"
-    and base."馬番" = tkb_features."馬番"
   inner join
     race_weather
   on
