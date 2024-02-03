@@ -50,6 +50,8 @@ Notes:
 2. 1) 直前データ／直前累積データの場合 競馬開催日 各レース出走１５分前頃。仕様書では、15分前となっていますが、10分前になってしまうこともあります。（コロナ渦以降の運用体制のため）(verified, sometimes it just comes in late, but its there beforehand. Must download from bottom of race day tab in http://www.jrdb.com/member/n_index.html) 2) 直前累積データ最終版の場合 競馬開催日 全レース終了後、午後５：００頃
 
 
+#### Key descriptions
+
 | キー         | 構成                                                                 |
 | ------------ | -------------------------------------------------------------------- |
 | レースキー   | 「場コード・年・回・日・Ｒ」の組み合わせ                             |
