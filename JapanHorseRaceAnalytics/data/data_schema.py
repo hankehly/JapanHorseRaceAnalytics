@@ -1,7 +1,8 @@
-import yaml
 from typing import List
+
+import yaml
 from pydantic import BaseModel, TypeAdapter
-from pyspark.sql.types import StructType, StructField, StringType, ArrayType
+from pyspark.sql.types import ArrayType, StringType, StructField, StructType
 
 
 class FieldModel(BaseModel):

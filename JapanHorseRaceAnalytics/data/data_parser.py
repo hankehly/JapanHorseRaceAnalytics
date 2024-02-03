@@ -1,6 +1,8 @@
 from typing import List
+
 from pyspark.sql import Row
-from JRDBDataParsingTools.data_schema import FieldModel
+
+from JapanHorseRaceAnalytics.data_schema import FieldModel
 
 
 def parse_line(line, schema: List[FieldModel]):

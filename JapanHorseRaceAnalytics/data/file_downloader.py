@@ -1,15 +1,16 @@
-import requests
-from pydantic import BaseModel, HttpUrl, constr, validator, ConfigDict
-import pathlib
-from bs4 import BeautifulSoup
-import re
-from urllib.parse import urljoin
-import zipfile
+import datetime
 import io
-import datetime
-from JRDBDataParsingTools.utilities.structured_logger import logger
+import pathlib
+import re
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
-import datetime
+from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
+from pydantic import BaseModel, ConfigDict, HttpUrl, constr, validator
+
+from JapanHorseRaceAnalytics.utilities.structured_logger import logger
 
 
 def is_year_file(filename) -> bool:
