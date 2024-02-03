@@ -71,36 +71,9 @@ Todo: Especially in KYI, you're seeing a lot of rows with keys that don't exist 
 | tyb     | ~2023/12/17    | [x]             |                                                        |
 | ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
-### Todo
 
-* Handle Model Complexity & Multicollinearity:
-  * Remove Highly Correlated Features: If two features provide similar information, consider keeping only one.
+### Metrics to track for each binary classifier model
 
-```
-Checking if features provide similar information, a process often aimed at identifying multicollinearity or redundancy in your dataset, can be approached through various statistical and data analysis techniques. Here are some effective methods:
-
-1. Correlation Analysis:
-Method: Calculate the Pearson correlation coefficient for continuous variables or Spearman's rank correlation for ordinal variables to measure the linear relationship between pairs of features.
-How to Use: High correlation coefficients (near -1 or 1) indicate a strong relationship, suggesting that the features might provide similar information.
-Tool: In Python, you can use pandas.DataFrame.corr for this purpose.
-```
-
-  * Principal Component Analysis (PCA): PCA can reduce dimensionality and multicollinearity by transforming the original features into a smaller set of uncorrelated components.
-* Separate training features by surface, etc.. and train a separate model for each. For lag features, you can use the same lag features for all models, but you'll need to train a separate model for each surface.
-* 月別平均回収率の傾向に比例する特徴量（天候など）がないか、確認する。その特徴量ごとにモデルを作成する。
-* Come up with some more selection criteria for the races you bet on. Do some digging to find which races (turf, dirt, distance, etc..) your model performs best at, during which seasons, etc.. then selectively bet on only those races.
-* Delete features which have extremely low importance.
-* Enable your model to see which horses do well/poorly [in the winter](https://keibaman.com/need/winter/). And, what constitutes winter anyway? Probably average temperature.
-* Go through the different fields and check for crazy outliers. Fix those because they will mess up the scaling.
-* Your model works well for summer months. Try fine-tuning another model to work better for winter months, then combine the two models.
-* Use ordinal encoding instead of categorical.
-* Todo: Save the `Etag`, filename and load date alongside the `jrdb_raw` data so that you can load the data using append mode incrementally. Then select the max load date and load all files with a higher load date. This will prevent duplicates from being loaded.
-* Todo: monotonic increasing id does not mean files with lower dates will have lower ids. If duplicates are in two separate files, the order in which they are processed will determine the id.
-* Todo: For prediction features, each runner should have 1 possible combination of prediction features, meaning you should be able to create the features in bulk, not just race by race.
-* Todo: The cases in which 異常区分 != 0 may need to be handled differently. For example, a race probably shouldn't be counted for the horse if the 異常区分 is 除外. Other 異常区分 may need different handling as well (like falling off the horse, etc.).
-
-
-### Metrics to track for each model:
 * Payoff rate overall
 * Payoff rate by surface
 * Payoff rate by distance (short, medium, long)
@@ -122,6 +95,6 @@ Tool: In Python, you can use pandas.DataFrame.corr for this purpose.
 
 ### When to not bet
 
-Don't bet on races where
+Don't bet on races where:
 * The bac.レース条件_条件 is A1,A2 (these are new horse races)
 * トラック種別 is 障害
