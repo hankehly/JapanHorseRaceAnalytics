@@ -11,5 +11,5 @@ logs/
 .env
 .vscode/
 mlruns/
-data/
+/data/
 *.parquet
