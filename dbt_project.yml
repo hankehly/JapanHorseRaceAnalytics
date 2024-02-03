@@ -1,7 +1,7 @@
-name: "JRDBDataParsingTools"
+name: "JapanHorseRaceAnalytics"
 version: "1.0.0"
 config-version: 2
-profile: JRDBDataParsingTools
+profile: JapanHorseRaceAnalytics
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -12,7 +12,7 @@ clean-targets:
   - "target"
   - "dbt_packages"
 models:
-  JRDBDataParsingTools:
+  JapanHorseRaceAnalytics:
     staging:
       +schema: staging
     intermediate:
@@ -20,7 +20,7 @@ models:
     curated:
       +schema: curated
 seeds:
-  JRDBDataParsingTools:
+  JapanHorseRaceAnalytics:
     +schema: seed
     # Make sure "code" columns are parsed as strings, not integers.
     # This workaround is really buggy. If it fails to parse a column as a string,

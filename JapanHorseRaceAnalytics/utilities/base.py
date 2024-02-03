@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 from sqlalchemy import create_engine
 
-from JRDBDataParsingTools.utilities.structured_logger import logger
+from JapanHorseRaceAnalytics.utilities.structured_logger import logger
 
 
 def get_base_dir() -> Path:

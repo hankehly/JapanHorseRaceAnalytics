@@ -1,6 +1,6 @@
 from typing import List
 
-from JRDBDataParsingTools.models.base import Feature
+from JapanHorseRaceAnalytics.models.base import Feature
 
 
 def get_features() -> List[Feature]:
