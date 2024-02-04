@@ -1,6 +1,5 @@
 models:
   - name: int_horses
-    +schema: intermediate
     description: horse features
     columns:
       - name: 血統登録番号
@@ -9,23 +8,36 @@ models:
           - not_null
           - unique
   - name: int_place_odds
-    +schema: intermediate
   - name: int_place_payouts
-    +schema: intermediate
     columns:
       - name: レースキー
       - name: 馬番
       - name: 払戻金
   - name: int_win_odds
-    +schema: intermediate
   - name: int_win_payouts
-    +schema: intermediate
     columns:
       - name: レースキー
       - name: 馬番
       - name: 払戻金
+  - name: int_race_trainers
+    columns:
+      - name: unique_key
+        tests:
+          - not_null
+          - unique
+  - name: int_race_jockeys
+    columns:
+      - name: unique_key
+        tests:
+          - not_null
+          - unique
+  - name: int_race_horses
+    columns:
+      - name: unique_key
+        tests:
+          - not_null
+          - unique
   - name: int_race_weather
-    +schema: intermediate
     columns:
       - name: レースキー
         quote: true

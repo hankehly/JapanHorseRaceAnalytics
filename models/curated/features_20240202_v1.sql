@@ -1132,10 +1132,10 @@ with
     competitors_horse."競争相手最低連続1着",
     competitors_horse."競争相手平均連続1着",
     competitors_horse."競争相手連続1着標準偏差",
-    competitors_horse."競争相手最高連続3着以内",
-    competitors_horse."競争相手最低連続3着以内",
-    competitors_horse."競争相手平均連続3着以内",
-    competitors_horse."競争相手連続3着以内標準偏差"
+    competitors_horse."競争相手最高連続3着内",
+    competitors_horse."競争相手最低連続3着内",
+    competitors_horse."競争相手平均連続3着内",
+    competitors_horse."競争相手連続3着内標準偏差"
   from
     competitors_base
   inner join
@@ -1369,7 +1369,7 @@ with
     horse_features."瞬発戦好走馬_総合",
     horse_features."消耗戦好走馬_総合",
     horse_features."連続1着",
-    horse_features."連続3着以内",
+    horse_features."連続3着内",
 
     jockey_features."騎手レース数", -- jockey_runs
     jockey_features."騎手1位完走", -- jockey_wins
@@ -1739,10 +1739,10 @@ with
     competitors."競争相手最低連続1着",
     competitors."競争相手平均連続1着",
     competitors."競争相手連続1着標準偏差",
-    competitors."競争相手最高連続3着以内",
-    competitors."競争相手最低連続3着以内",
-    competitors."競争相手平均連続3着以内",
-    competitors."競争相手連続3着以内標準偏差",
+    competitors."競争相手最高連続3着内",
+    competitors."競争相手最低連続3着内",
+    competitors."競争相手平均連続3着内",
+    competitors."競争相手連続3着内標準偏差",
 
     race_weather.temperature,
     race_weather.precipitation,
