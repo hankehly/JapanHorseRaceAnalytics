@@ -688,8 +688,11 @@ models:
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
-      - name: 特定情報× # has nulls, not sure if safe to coalesce to 0
+      # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
+      - name: 特定情報×
         description: 専門情報紙の特定の情報値。
+        tests:
+          - not_null
       - name: 総合情報◎
         description: 情報・専門紙の印数（総合）
         tests:
@@ -706,26 +709,33 @@ models:
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
-      - name: 総合情報× # has nulls, not sure if safe to coalesce to 0
+      # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
+      - name: 総合情報×
         description: 情報・専門紙の印数（総合）
+        tests:
+          - not_null
       - name: 人気指数
         description: その馬の人気を指数化した値。
         tests:
           - not_null
-      - name: 調教指数 # 3000 records with nulls, can this be coalesced?
+      # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
+      - name: 調教指数
         description: |
           関西・関東の各専門情報紙を分析し、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
           各専門紙・情報紙の予想・評論家等が担当の調教コースにおいてどれだけ正確に馬の状態を判断しているかを数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
+        tests:
+          - not_null
       - name: 厩舎指数
         description: |
           調教指数同様、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
           各専門紙・情報紙の予想・評論家等と厩舎との密接度を数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
         tests:
           - not_null
-      - name: 調教矢印コード # only 2 nulls from 1999, replacing with most common value
+      - name: 調教矢印コード
         description: |
           調教から見た馬の調子をわかりやすく５段階評価したもの。
           (JRDBデータコード表参照)
+          Raw data contains 2 nulls from 1999, replaced with most common value.
         tests:
           - not_null
           - relationships:
@@ -1144,6 +1154,10 @@ models:
         description: |
           ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を加え、
           さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
+        tests:
+          - relationships:
+              to: ref('印コード')
+              field: code
 
       # このフィールドは19'以降全部「0:通常」になっているので使わない方が良さそう
       - name: 降級フラグ

@@ -15,7 +15,7 @@
   byte_length: 1
   format: "9"
   relative: 45
-  comments: 1:牡,2:牝,3,セン
+  comments: 1:牡,2:牝,3:セン
 - name: 毛色コード
   repeat_factor: 1
   byte_length: 2

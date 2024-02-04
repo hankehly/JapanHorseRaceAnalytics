@@ -76,6 +76,17 @@ Notes:
 | tyb     | ~2023/12/17    | [x]             |                                                        |
 | ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
 
+#### Other data notes
+
+bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも少ないので無視することにする。`runner_count_difference`に特定するためのクエリを書いておく。
+
+| レースキー   | 頭数_kyi | 頭数_bac |
+| ------------ | -------- | -------- |
+| 05041405     | 13       | 14       |
+| 08004402     | 13       | 14       |
+| 08004409     | 8        | 9        |
+| 08085302     | 15       | 14       |
+
 
 ## Modeling methodology
 
