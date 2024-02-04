@@ -110,7 +110,7 @@ with
       SELECT
         "name"
       FROM
-        {{ ref('馬場状態コード') }}
+        {{ ref('jrdb__going_codes') }}
       WHERE
         "code" = coalesce(
           tyb."馬場状態コード",

@@ -555,6 +555,306 @@ with recursive
     and race_horses_streaks."馬番" = base."馬番"
   ),
 
+  competitors as (
+  select
+    a."レースキー",
+    a."馬番",
+
+    -- "性別"
+    -- sum(case when b."性別" = '牡' then 1 else 0 end) / cast(count(*) as numeric) as "競争相手性別牡割合",
+    -- sum(case when b."性別" = '牝' then 1 else 0 end) / cast(count(*) as numeric) as "競争相手性別牝割合",
+    -- sum(case when b."性別" = 'セン' then 1 else 0 end) / cast(count(*) as numeric) as "競争相手性別セ割合",
+
+    -- "一走前着順"
+    max(b."一走前着順") as "競争相手最高一走前着順",
+    min(b."一走前着順") as "競争相手最低一走前着順",
+    avg(b."一走前着順") as "競争相手平均一走前着順",
+    stddev_pop(b."一走前着順") as "競争相手一走前着順標準偏差",
+
+    -- "二走前着順"
+    max(b."二走前着順") as "競争相手最高二走前着順",
+    min(b."二走前着順") as "競争相手最低二走前着順",
+    avg(b."二走前着順") as "競争相手平均二走前着順",
+    stddev_pop(b."二走前着順") as "競争相手二走前着順標準偏差",
+
+    -- "三走前着順"
+    max(b."三走前着順") as "競争相手最高三走前着順",
+    min(b."三走前着順") as "競争相手最低三走前着順",
+    avg(b."三走前着順") as "競争相手平均三走前着順",
+    stddev_pop(b."三走前着順") as "競争相手三走前着順標準偏差",
+
+    -- "四走前着順"
+    max(b."四走前着順") as "競争相手最高四走前着順",
+    min(b."四走前着順") as "競争相手最低四走前着順",
+    avg(b."四走前着順") as "競争相手平均四走前着順",
+    stddev_pop(b."四走前着順") as "競争相手四走前着順標準偏差",
+
+    -- "五走前着順"
+    max(b."五走前着順") as "競争相手最高五走前着順",
+    min(b."五走前着順") as "競争相手最低五走前着順",
+    avg(b."五走前着順") as "競争相手平均五走前着順",
+    stddev_pop(b."五走前着順") as "競争相手五走前着順標準偏差",
+
+    -- "六走前着順"
+    max(b."六走前着順") as "競争相手最高六走前着順",
+    min(b."六走前着順") as "競争相手最低六走前着順",
+    avg(b."六走前着順") as "競争相手平均六走前着順",
+    stddev_pop(b."六走前着順") as "競争相手六走前着順標準偏差",
+
+    -- "前走トップ3"
+    sum(case when b."前走トップ3" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手前走トップ3割合",
+
+    -- "前走枠番"
+
+    -- "入厩何日前"
+    max(b."入厩何日前") as "競争相手最高入厩何日前",
+    min(b."入厩何日前") as "競争相手最低入厩何日前",
+    avg(b."入厩何日前") as "競争相手平均入厩何日前",
+    stddev_pop(b."入厩何日前") as "競争相手入厩何日前標準偏差",
+
+    -- "入厩15日未満"
+    -- "入厩35日以上"
+
+    -- "馬体重"
+    max(b."馬体重") as "競争相手最高馬体重",
+    min(b."馬体重") as "競争相手最低馬体重",
+    avg(b."馬体重") as "競争相手平均馬体重",
+    stddev_pop(b."馬体重") as "競争相手馬体重標準偏差",
+
+    -- "馬体重増減"
+    max(b."馬体重増減") as "競争相手最高馬体重増減",
+    min(b."馬体重増減") as "競争相手最低馬体重増減",
+    avg(b."馬体重増減") as "競争相手平均馬体重増減",
+    stddev_pop(b."馬体重増減") as "競争相手馬体重増減標準偏差",
+
+    -- "距離"
+
+    -- "前走距離差"
+    max(b."前走距離差") as "競争相手最高前走距離差",
+    min(b."前走距離差") as "競争相手最低前走距離差",
+    avg(b."前走距離差") as "競争相手平均前走距離差",
+    stddev_pop(b."前走距離差") as "競争相手前走距離差標準偏差",
+
+    -- "年齢"
+    max(b."年齢") as "競争相手最高年齢",
+    min(b."年齢") as "競争相手最低年齢",
+    avg(b."年齢") as "競争相手平均年齢",
+    stddev_pop(b."年齢") as "競争相手年齢標準偏差",
+
+    -- "4歳以下"
+    -- "4歳以下頭数"
+    -- "4歳以下割合"
+
+    -- "レース数"
+    max(b."レース数") as "競争相手最高レース数",
+    min(b."レース数") as "競争相手最低レース数",
+    avg(b."レース数") as "競争相手平均レース数",
+    stddev_pop(b."レース数") as "競争相手レース数標準偏差",
+
+    -- "1位完走"
+    max(b."1位完走") as "競争相手最高1位完走",
+    min(b."1位完走") as "競争相手最低1位完走",
+    avg(b."1位完走") as "競争相手平均1位完走",
+    stddev_pop(b."1位完走") as "競争相手1位完走標準偏差",
+
+    -- "トップ3完走"
+    max(b."トップ3完走") as "競争相手最高トップ3完走",
+    min(b."トップ3完走") as "競争相手最低トップ3完走",
+    avg(b."トップ3完走") as "競争相手平均トップ3完走",
+    stddev_pop(b."トップ3完走") as "競争相手トップ3完走標準偏差",
+
+    -- "1位完走率"
+    max(b."1位完走率") as "競争相手最高1位完走率",
+    min(b."1位完走率") as "競争相手最低1位完走率",
+    avg(b."1位完走率") as "競争相手平均1位完走率",
+    stddev_pop(b."1位完走率") as "競争相手1位完走率標準偏差",
+
+    -- "トップ3完走率"
+    max(b."トップ3完走率") as "競争相手最高トップ3完走率",
+    min(b."トップ3完走率") as "競争相手最低トップ3完走率",
+    avg(b."トップ3完走率") as "競争相手平均トップ3完走率",
+    stddev_pop(b."トップ3完走率") as "競争相手トップ3完走率標準偏差",
+
+    -- "過去5走勝率"
+    max(b."過去5走勝率") as "競争相手最高過去5走勝率",
+    min(b."過去5走勝率") as "競争相手最低過去5走勝率",
+    avg(b."過去5走勝率") as "競争相手平均過去5走勝率",
+    stddev_pop(b."過去5走勝率") as "競争相手過去5走勝率標準偏差",
+
+    -- "過去5走トップ3完走率"
+    max(b."過去5走トップ3完走率") as "競争相手最高過去5走トップ3完走率",
+    min(b."過去5走トップ3完走率") as "競争相手最低過去5走トップ3完走率",
+    avg(b."過去5走トップ3完走率") as "競争相手平均過去5走トップ3完走率",
+    stddev_pop(b."過去5走トップ3完走率") as "競争相手過去5走トップ3完走率標準偏差",
+
+    -- "場所レース数"
+    max(b."場所レース数") as "競争相手最高場所レース数",
+    min(b."場所レース数") as "競争相手最低場所レース数",
+    avg(b."場所レース数") as "競争相手平均場所レース数",
+    stddev_pop(b."場所レース数") as "競争相手場所レース数標準偏差",
+
+    -- "場所1位完走"
+    max(b."場所1位完走") as "競争相手最高場所1位完走",
+    min(b."場所1位完走") as "競争相手最低場所1位完走",
+    avg(b."場所1位完走") as "競争相手平均場所1位完走",
+    stddev_pop(b."場所1位完走") as "競争相手場所1位完走標準偏差",
+
+    -- "場所トップ3完走"
+    max(b."場所トップ3完走") as "競争相手最高場所トップ3完走",
+    min(b."場所トップ3完走") as "競争相手最低場所トップ3完走",
+    avg(b."場所トップ3完走") as "競争相手平均場所トップ3完走",
+    stddev_pop(b."場所トップ3完走") as "競争相手場所トップ3完走標準偏差",
+
+    -- "場所1位完走率"
+    max(b."場所1位完走率") as "競争相手最高場所1位完走率",
+    min(b."場所1位完走率") as "競争相手最低場所1位完走率",
+    avg(b."場所1位完走率") as "競争相手平均場所1位完走率",
+    stddev_pop(b."場所1位完走率") as "競争相手場所1位完走率標準偏差",
+
+    -- "場所トップ3完走率"
+    max(b."場所トップ3完走率") as "競争相手最高場所トップ3完走率",
+    min(b."場所トップ3完走率") as "競争相手最低場所トップ3完走率",
+    avg(b."場所トップ3完走率") as "競争相手平均場所トップ3完走率",
+    stddev_pop(b."場所トップ3完走率") as "競争相手場所トップ3完走率標準偏差",
+
+    -- "トラック種別レース数"
+    max(b."トラック種別レース数") as "競争相手最高トラック種別レース数",
+    min(b."トラック種別レース数") as "競争相手最低トラック種別レース数",
+    avg(b."トラック種別レース数") as "競争相手平均トラック種別レース数",
+    stddev_pop(b."トラック種別レース数") as "競争相手トラック種別レース数標準偏差",
+
+    -- "トラック種別1位完走"
+    max(b."トラック種別1位完走") as "競争相手最高トラック種別1位完走",
+    min(b."トラック種別1位完走") as "競争相手最低トラック種別1位完走",
+    avg(b."トラック種別1位完走") as "競争相手平均トラック種別1位完走",
+    stddev_pop(b."トラック種別1位完走") as "競争相手トラック種別1位完走標準偏差",
+
+    -- "トラック種別トップ3完走"
+    max(b."トラック種別トップ3完走") as "競争相手最高トラック種別トップ3完走",
+    min(b."トラック種別トップ3完走") as "競争相手最低トラック種別トップ3完走",
+    avg(b."トラック種別トップ3完走") as "競争相手平均トラック種別トップ3完走",
+    stddev_pop(b."トラック種別トップ3完走") as "競争相手トラック種別トップ3完走標準偏差",
+
+    -- "馬場状態レース数"
+    max(b."馬場状態レース数") as "競争相手最高馬場状態レース数",
+    min(b."馬場状態レース数") as "競争相手最低馬場状態レース数",
+    avg(b."馬場状態レース数") as "競争相手平均馬場状態レース数",
+    stddev_pop(b."馬場状態レース数") as "競争相手馬場状態レース数標準偏差",
+
+    -- "馬場状態1位完走"
+    max(b."馬場状態1位完走") as "競争相手最高馬場状態1位完走",
+    min(b."馬場状態1位完走") as "競争相手最低馬場状態1位完走",
+    avg(b."馬場状態1位完走") as "競争相手平均馬場状態1位完走",
+    stddev_pop(b."馬場状態1位完走") as "競争相手馬場状態1位完走標準偏差",
+
+    -- "馬場状態トップ3完走"
+    max(b."馬場状態トップ3完走") as "競争相手最高馬場状態トップ3完走",
+    min(b."馬場状態トップ3完走") as "競争相手最低馬場状態トップ3完走",
+    avg(b."馬場状態トップ3完走") as "競争相手平均馬場状態トップ3完走",
+    stddev_pop(b."馬場状態トップ3完走") as "競争相手馬場状態トップ3完走標準偏差",
+
+    -- "距離レース数"
+    max(b."距離レース数") as "競争相手最高距離レース数",
+    min(b."距離レース数") as "競争相手最低距離レース数",
+    avg(b."距離レース数") as "競争相手平均距離レース数",
+    stddev_pop(b."距離レース数") as "競争相手距離レース数標準偏差",
+
+    -- "距離1位完走"
+    max(b."距離1位完走") as "競争相手最高距離1位完走",
+    min(b."距離1位完走") as "競争相手最低距離1位完走",
+    avg(b."距離1位完走") as "競争相手平均距離1位完走",
+    stddev_pop(b."距離1位完走") as "競争相手距離1位完走標準偏差",
+
+    -- "距離トップ3完走"
+    max(b."距離トップ3完走") as "競争相手最高距離トップ3完走",
+    min(b."距離トップ3完走") as "競争相手最低距離トップ3完走",
+    avg(b."距離トップ3完走") as "競争相手平均距離トップ3完走",
+    stddev_pop(b."距離トップ3完走") as "競争相手距離トップ3完走標準偏差",
+
+    -- "四半期レース数"
+    max(b."四半期レース数") as "競争相手最高四半期レース数",
+    min(b."四半期レース数") as "競争相手最低四半期レース数",
+    avg(b."四半期レース数") as "競争相手平均四半期レース数",
+    stddev_pop(b."四半期レース数") as "競争相手四半期レース数標準偏差",
+
+    -- "四半期1位完走"
+    max(b."四半期1位完走") as "競争相手最高四半期1位完走",
+    min(b."四半期1位完走") as "競争相手最低四半期1位完走",
+    avg(b."四半期1位完走") as "競争相手平均四半期1位完走",
+    stddev_pop(b."四半期1位完走") as "競争相手四半期1位完走標準偏差",
+
+    -- "四半期トップ3完走"
+    max(b."四半期トップ3完走") as "競争相手最高四半期トップ3完走",
+    min(b."四半期トップ3完走") as "競争相手最低四半期トップ3完走",
+    avg(b."四半期トップ3完走") as "競争相手平均四半期トップ3完走",
+    stddev_pop(b."四半期トップ3完走") as "競争相手四半期トップ3完走標準偏差",
+
+    -- "過去3走順位平方和"
+    max(b."過去3走順位平方和") as "競争相手最高過去3走順位平方和",
+    min(b."過去3走順位平方和") as "競争相手最低過去3走順位平方和",
+    avg(b."過去3走順位平方和") as "競争相手平均過去3走順位平方和",
+    stddev_pop(b."過去3走順位平方和") as "競争相手過去3走順位平方和標準偏差",
+
+    -- "本賞金累計"
+    max(b."本賞金累計") as "競争相手最高本賞金累計",
+    min(b."本賞金累計") as "競争相手最低本賞金累計",
+    avg(b."本賞金累計") as "競争相手平均本賞金累計",
+    stddev_pop(b."本賞金累計") as "競争相手本賞金累計標準偏差",
+
+    -- "1位完走平均賞金"
+    max(b."1位完走平均賞金") as "競争相手最高1位完走平均賞金",
+    min(b."1位完走平均賞金") as "競争相手最低1位完走平均賞金",
+    avg(b."1位完走平均賞金") as "競争相手平均1位完走平均賞金",
+    stddev_pop(b."1位完走平均賞金") as "競争相手1位完走平均賞金標準偏差",
+
+    -- "レース数平均賞金"
+    max(b."レース数平均賞金") as "競争相手最高レース数平均賞金",
+    min(b."レース数平均賞金") as "競争相手最低レース数平均賞金",
+    avg(b."レース数平均賞金") as "競争相手平均レース数平均賞金",
+    stddev_pop(b."レース数平均賞金") as "競争相手レース数平均賞金標準偏差",
+
+    -- "瞬発戦好走馬_芝"
+    -- sum(case when b."瞬発戦好走馬_芝" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手瞬発戦好走馬_芝割合",
+
+    -- "消耗戦好走馬_芝"
+    -- sum(case when b."消耗戦好走馬_芝" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手消耗戦好走馬_芝割合",
+
+    -- "瞬発戦好走馬_ダート"
+    -- sum(case when b."瞬発戦好走馬_ダート" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手瞬発戦好走馬_ダート割合",
+
+    -- "消耗戦好走馬_ダート"
+    -- sum(case when b."消耗戦好走馬_ダート" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手消耗戦好走馬_ダート割合",
+
+    -- "瞬発戦好走馬_総合"
+    -- sum(case when b."瞬発戦好走馬_総合" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手瞬発戦好走馬_総合割合",
+
+    -- "消耗戦好走馬_総合"
+    -- sum(case when b."消耗戦好走馬_総合" then 1 else 0 end) / cast(count(*) as numeric) as "競争相手消耗戦好走馬_総合割合",
+
+    -- "連続1着"
+    max(b."連続1着") as "競争相手最高連続1着",
+    min(b."連続1着") as "競争相手最低連続1着",
+    avg(b."連続1着") as "競争相手平均連続1着",
+    stddev_pop(b."連続1着") as "競争相手連続1着標準偏差",
+
+    -- "連続3着以内"
+    max(b."連続3着以内") as "競争相手最高連続3着以内",
+    min(b."連続3着以内") as "競争相手最低連続3着以内",
+    avg(b."連続3着以内") as "競争相手平均連続3着以内",
+    stddev_pop(b."連続3着以内") as "競争相手連続3着以内標準偏差"
+
+  from
+    race_horses a
+  inner join
+    race_horses b
+  on
+    a."レースキー" = b."レースキー"
+    and a."馬番" <> b."馬番"
+  group by
+    a."レースキー",
+    a."馬番"
+  ),
+
   final as (
   select
     race_horses."レースキー",
@@ -625,7 +925,220 @@ with recursive
     horses."消耗戦好走馬_ダート",
     horses."瞬発戦好走馬_総合",
     horses."消耗戦好走馬_総合",
-    horses."性別"
+    horses."性別",
+
+    -- competitors."競争相手性別牡割合",
+    -- competitors."競争相手性別牝割合",
+    -- competitors."競争相手性別セ割合",
+    competitors."競争相手最高一走前着順",
+    competitors."競争相手最低一走前着順",
+    competitors."競争相手平均一走前着順",
+    competitors."競争相手一走前着順標準偏差",
+    competitors."競争相手最高二走前着順",
+    competitors."競争相手最低二走前着順",
+    competitors."競争相手平均二走前着順",
+    competitors."競争相手二走前着順標準偏差",
+    competitors."競争相手最高三走前着順",
+    competitors."競争相手最低三走前着順",
+    competitors."競争相手平均三走前着順",
+    competitors."競争相手三走前着順標準偏差",
+    competitors."競争相手最高四走前着順",
+    competitors."競争相手最低四走前着順",
+    competitors."競争相手平均四走前着順",
+    competitors."競争相手四走前着順標準偏差",
+    competitors."競争相手最高五走前着順",
+    competitors."競争相手最低五走前着順",
+    competitors."競争相手平均五走前着順",
+    competitors."競争相手五走前着順標準偏差",
+    competitors."競争相手最高六走前着順",
+    competitors."競争相手最低六走前着順",
+    competitors."競争相手平均六走前着順",
+    competitors."競争相手六走前着順標準偏差",
+    competitors."競争相手前走トップ3割合",
+    competitors."競争相手最高入厩何日前",
+    competitors."競争相手最低入厩何日前",
+    competitors."競争相手平均入厩何日前",
+    competitors."競争相手入厩何日前標準偏差",
+    competitors."競争相手最高馬体重",
+    competitors."競争相手最低馬体重",
+    competitors."競争相手平均馬体重",
+    competitors."競争相手馬体重標準偏差",
+    competitors."競争相手最高馬体重増減",
+    competitors."競争相手最低馬体重増減",
+    competitors."競争相手平均馬体重増減",
+    competitors."競争相手馬体重増減標準偏差",
+    competitors."競争相手最高年齢",
+    competitors."競争相手最低年齢",
+    competitors."競争相手平均年齢",
+    competitors."競争相手年齢標準偏差",
+    competitors."競争相手最高レース数",
+    competitors."競争相手最低レース数",
+    competitors."競争相手平均レース数",
+    competitors."競争相手レース数標準偏差",
+    competitors."競争相手最高1位完走",
+    competitors."競争相手最低1位完走",
+    competitors."競争相手平均1位完走",
+    competitors."競争相手1位完走標準偏差",
+    competitors."競争相手最高トップ3完走",
+    competitors."競争相手最低トップ3完走",
+    competitors."競争相手平均トップ3完走",
+    competitors."競争相手トップ3完走標準偏差",
+    competitors."競争相手最高1位完走率",
+    competitors."競争相手最低1位完走率",
+    competitors."競争相手平均1位完走率",
+    competitors."競争相手1位完走率標準偏差",
+    competitors."競争相手最高トップ3完走率",
+    competitors."競争相手最低トップ3完走率",
+    competitors."競争相手平均トップ3完走率",
+    competitors."競争相手トップ3完走率標準偏差",
+    competitors."競争相手最高過去5走勝率",
+    competitors."競争相手最低過去5走勝率",
+    competitors."競争相手平均過去5走勝率",
+    competitors."競争相手過去5走勝率標準偏差",
+    competitors."競争相手最高過去5走トップ3完走率",
+    competitors."競争相手最低過去5走トップ3完走率",
+    competitors."競争相手平均過去5走トップ3完走率",
+    competitors."競争相手過去5走トップ3完走率標準偏差",
+    competitors."競争相手最高場所レース数",
+    competitors."競争相手最低場所レース数",
+    competitors."競争相手平均場所レース数",
+    competitors."競争相手場所レース数標準偏差",
+    competitors."競争相手最高場所1位完走",
+    competitors."競争相手最低場所1位完走",
+    competitors."競争相手平均場所1位完走",
+    competitors."競争相手場所1位完走標準偏差",
+    competitors."競争相手最高場所トップ3完走",
+    competitors."競争相手最低場所トップ3完走",
+    competitors."競争相手平均場所トップ3完走",
+    competitors."競争相手場所トップ3完走標準偏差",
+    competitors."競争相手最高場所1位完走率",
+    competitors."競争相手最低場所1位完走率",
+    competitors."競争相手平均場所1位完走率",
+    competitors."競争相手場所1位完走率標準偏差",
+    competitors."競争相手最高場所トップ3完走率",
+    competitors."競争相手最低場所トップ3完走率",
+    competitors."競争相手平均場所トップ3完走率",
+    competitors."競争相手場所トップ3完走率標準偏差",
+    competitors."競争相手最高トラック種別レース数",
+    competitors."競争相手最低トラック種別レース数",
+    competitors."競争相手平均トラック種別レース数",
+    competitors."競争相手トラック種別レース数標準偏差",
+    competitors."競争相手最高トラック種別1位完走",
+    competitors."競争相手最低トラック種別1位完走",
+    competitors."競争相手平均トラック種別1位完走",
+    competitors."競争相手トラック種別1位完走標準偏差",
+    competitors."競争相手最高トラック種別トップ3完走",
+    competitors."競争相手最低トラック種別トップ3完走",
+    competitors."競争相手平均トラック種別トップ3完走",
+    competitors."競争相手トラック種別トップ3完走標準偏差",
+    competitors."競争相手最高馬場状態レース数",
+    competitors."競争相手最低馬場状態レース数",
+    competitors."競争相手平均馬場状態レース数",
+    competitors."競争相手馬場状態レース数標準偏差",
+    competitors."競争相手最高馬場状態1位完走",
+    competitors."競争相手最低馬場状態1位完走",
+    competitors."競争相手平均馬場状態1位完走",
+    competitors."競争相手馬場状態1位完走標準偏差",
+    competitors."競争相手最高馬場状態トップ3完走",
+    competitors."競争相手最低馬場状態トップ3完走",
+    competitors."競争相手平均馬場状態トップ3完走",
+    competitors."競争相手馬場状態トップ3完走標準偏差",
+    competitors."競争相手最高距離レース数",
+    competitors."競争相手最低距離レース数",
+    competitors."競争相手平均距離レース数",
+    competitors."競争相手距離レース数標準偏差",
+    competitors."競争相手最高距離1位完走",
+    competitors."競争相手最低距離1位完走",
+    competitors."競争相手平均距離1位完走",
+    competitors."競争相手距離1位完走標準偏差",
+    competitors."競争相手最高距離トップ3完走",
+    competitors."競争相手最低距離トップ3完走",
+    competitors."競争相手平均距離トップ3完走",
+    competitors."競争相手距離トップ3完走標準偏差",
+    competitors."競争相手最高四半期レース数",
+    competitors."競争相手最低四半期レース数",
+    competitors."競争相手平均四半期レース数",
+    competitors."競争相手四半期レース数標準偏差",
+    competitors."競争相手最高四半期1位完走",
+    competitors."競争相手最低四半期1位完走",
+    competitors."競争相手平均四半期1位完走",
+    competitors."競争相手四半期1位完走標準偏差",
+    competitors."競争相手最高四半期トップ3完走",
+    competitors."競争相手最低四半期トップ3完走",
+    competitors."競争相手平均四半期トップ3完走",
+    competitors."競争相手四半期トップ3完走標準偏差",
+    competitors."競争相手最高過去3走順位平方和",
+    competitors."競争相手最低過去3走順位平方和",
+    competitors."競争相手平均過去3走順位平方和",
+    competitors."競争相手過去3走順位平方和標準偏差",
+    competitors."競争相手最高本賞金累計",
+    competitors."競争相手最低本賞金累計",
+    competitors."競争相手平均本賞金累計",
+    competitors."競争相手本賞金累計標準偏差",
+    competitors."競争相手最高1位完走平均賞金",
+    competitors."競争相手最低1位完走平均賞金",
+    competitors."競争相手平均1位完走平均賞金",
+    competitors."競争相手1位完走平均賞金標準偏差",
+    competitors."競争相手最高レース数平均賞金",
+    competitors."競争相手最低レース数平均賞金",
+    competitors."競争相手平均レース数平均賞金",
+    competitors."競争相手レース数平均賞金標準偏差",
+    -- competitors."競争相手瞬発戦好走馬_芝割合",
+    -- competitors."競争相手消耗戦好走馬_芝割合",
+    -- competitors."競争相手瞬発戦好走馬_ダート割合",
+    -- competitors."競争相手消耗戦好走馬_ダート割合",
+    -- competitors."競争相手瞬発戦好走馬_総合割合",
+    -- competitors."競争相手消耗戦好走馬_総合割合",
+    competitors."競争相手最高連続1着",
+    competitors."競争相手最低連続1着",
+    competitors."競争相手平均連続1着",
+    competitors."競争相手連続1着標準偏差",
+    competitors."競争相手最高連続3着以内",
+    competitors."競争相手最低連続3着以内",
+    competitors."競争相手平均連続3着以内",
+    competitors."競争相手連続3着以内標準偏差",
+
+    race_horses."一走前着順" - competitors."競争相手平均一走前着順" as "競争相手平均一走前着順差",
+    race_horses."二走前着順" - competitors."競争相手平均二走前着順" as "競争相手平均二走前着順差",
+    race_horses."三走前着順" - competitors."競争相手平均三走前着順" as "競争相手平均三走前着順差",
+    race_horses."四走前着順" - competitors."競争相手平均四走前着順" as "競争相手平均四走前着順差",
+    race_horses."五走前着順" - competitors."競争相手平均五走前着順" as "競争相手平均五走前着順差",
+    race_horses."六走前着順" - competitors."競争相手平均六走前着順" as "競争相手平均六走前着順差",
+    race_horses."入厩何日前" - competitors."競争相手平均入厩何日前" as "競争相手平均入厩何日前差",
+    race_horses."馬体重" - competitors."競争相手平均馬体重" as "競争相手平均馬体重差",
+    race_horses."馬体重増減" - competitors."競争相手平均馬体重増減" as "競争相手平均馬体重増減差",
+    race_horses."前走距離差" - competitors."競争相手平均前走距離差" as "競争相手平均前走距離差差",
+    race_horses."年齢" - competitors."競争相手平均年齢" as "競争相手平均年齢差",
+    race_horses."レース数" - competitors."競争相手平均レース数" as "競争相手平均レース数差",
+    race_horses."1位完走" - competitors."競争相手平均1位完走" as "競争相手平均1位完走差",
+    race_horses."トップ3完走" - competitors."競争相手平均トップ3完走" as "競争相手平均トップ3完走差",
+    race_horses."1位完走率" - competitors."競争相手平均1位完走率" as "競争相手平均1位完走率差",
+    race_horses."トップ3完走率" - competitors."競争相手平均トップ3完走率" as "競争相手平均トップ3完走率差",
+    race_horses."過去5走勝率" - competitors."競争相手平均過去5走勝率" as "競争相手平均過去5走勝率差",
+    race_horses."過去5走トップ3完走率" - competitors."競争相手平均過去5走トップ3完走率" as "競争相手平均過去5走トップ3完走率差",
+    race_horses."場所レース数" - competitors."競争相手平均場所レース数" as "競争相手平均場所レース数差",
+    race_horses."場所1位完走" - competitors."競争相手平均場所1位完走" as "競争相手平均場所1位完走差",
+    race_horses."場所トップ3完走" - competitors."競争相手平均場所トップ3完走" as "競争相手平均場所トップ3完走差",
+    race_horses."場所1位完走率" - competitors."競争相手平均場所1位完走率" as "競争相手平均場所1位完走率差",
+    race_horses."場所トップ3完走率" - competitors."競争相手平均場所トップ3完走率" as "競争相手平均場所トップ3完走率差",
+    race_horses."トラック種別レース数" - competitors."競争相手平均トラック種別レース数" as "競争相手平均トラック種別レース数差",
+    race_horses."トラック種別1位完走" - competitors."競争相手平均トラック種別1位完走" as "競争相手平均トラック種別1位完走差",
+    race_horses."トラック種別トップ3完走" - competitors."競争相手平均トラック種別トップ3完走" as "競争相手平均トラック種別トップ3完走差",
+    race_horses."馬場状態レース数" - competitors."競争相手平均馬場状態レース数" as "競争相手平均馬場状態レース数差",
+    race_horses."馬場状態1位完走" - competitors."競争相手平均馬場状態1位完走" as "競争相手平均馬場状態1位完走差",
+    race_horses."馬場状態トップ3完走" - competitors."競争相手平均馬場状態トップ3完走" as "競争相手平均馬場状態トップ3完走差",
+    race_horses."距離レース数" - competitors."競争相手平均距離レース数" as "競争相手平均距離レース数差",
+    race_horses."距離1位完走" - competitors."競争相手平均距離1位完走" as "競争相手平均距離1位完走差",
+    race_horses."距離トップ3完走" - competitors."競争相手平均距離トップ3完走" as "競争相手平均距離トップ3完走差",
+    race_horses."四半期レース数" - competitors."競争相手平均四半期レース数" as "競争相手平均四半期レース数差",
+    race_horses."四半期1位完走" - competitors."競争相手平均四半期1位完走" as "競争相手平均四半期1位完走差",
+    race_horses."四半期トップ3完走" - competitors."競争相手平均四半期トップ3完走" as "競争相手平均四半期トップ3完走差",
+    race_horses."過去3走順位平方和" - competitors."競争相手平均過去3走順位平方和" as "競争相手平均過去3走順位平方和差",
+    race_horses."本賞金累計" - competitors."競争相手平均本賞金累計" as "競争相手平均本賞金累計差",
+    race_horses."1位完走平均賞金" - competitors."競争相手平均1位完走平均賞金" as "競争相手平均1位完走平均賞金差",
+    race_horses."レース数平均賞金" - competitors."競争相手平均レース数平均賞金" as "競争相手平均レース数平均賞金差",
+    race_horses."連続1着" - competitors."競争相手平均連続1着" as "競争相手平均連続1着差",
+    race_horses."連続3着以内" - competitors."競争相手平均連続3着以内" as "競争相手平均連続3着以内差"
 
   from
     race_horses
@@ -635,6 +1148,11 @@ with recursive
     horses
   on
     race_horses."血統登録番号" = horses."血統登録番号"
+  inner join
+    competitors
+  on
+    race_horses."レースキー" = competitors."レースキー"
+    and race_horses."馬番" = competitors."馬番"
   )
 
 select

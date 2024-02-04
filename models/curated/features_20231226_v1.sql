@@ -76,7 +76,7 @@ with
     sed."レースキー",
     sed."馬番",
     kyi."枠番",
-    (SELECT "name" FROM {{ ref('場コード') }} WHERE "code" = sed."レースキー_場コード") as "場名",
+    (SELECT "name" FROM {{ ref('jrdb__racetrack_codes') }} WHERE "code" = sed."レースキー_場コード") as "場名",
     sed."競走成績キー_年月日" as "年月日",
     sed."レースキー_場コード" as "場コード",
     sed."騎手コード",
@@ -98,7 +98,7 @@ with
     coalesce(sed."馬体重増減", tyb."馬体重増減") as "馬体重増減",
 
     sed."レース条件_距離" as "距離",
-    (SELECT "name" FROM {{ ref('馬場状態コード') }} WHERE "code" = sed."レース条件_馬場状態") as "馬場状態",
+    (SELECT "name" FROM {{ ref('jrdb__going_codes') }} WHERE "code" = sed."レース条件_馬場状態") as "馬場状態",
     sed."本賞金",
     sed."レース条件_頭数" as "頭数",
     sed."レース条件_トラック情報_芝ダ障害コード" as "トラック種別",

@@ -16,3 +16,11 @@ JapanHorseRaceAnalytics:
       database: jrdb
       host: localhost
       port: 5432
+
+    local_spark:
+      type: spark
+      method: thrift
+      schema: jhra
+      host: localhost
+      port: 10000
+      threads: 4

@@ -20,7 +20,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -208,7 +208,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -298,7 +298,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -396,7 +396,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -451,7 +451,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: 開催キー_年
         tests:
@@ -575,7 +575,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -977,7 +977,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('馬記号コード')
+              to: ref('jrdb__horse_symbol_codes')
               field: code
       - name: 激走順位
         description: レース出走馬中での順位
@@ -1321,7 +1321,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -1362,7 +1362,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('馬場状態コード')
+              to: ref('jrdb__going_codes')
               field: code
       - name: レース条件_種別
         description: ４歳以上等、→成績データの説明
@@ -1519,7 +1519,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -1601,7 +1601,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('馬場状態コード')
+              to: ref('jrdb__going_codes')
               field: code
       - name: 天候コード
         tests:
@@ -1654,73 +1654,96 @@ models:
   - name: stg_jrdb__ukc
     columns:
       - name: ukc_sk
+        # https://docs.getdbt.com/reference/resource-properties/quote
+        quote: true
         tests:
           # Takes too long
           # - unique
           - not_null
       - name: ukc_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: 血統登録番号
+        quote: true
         tests:
           - not_null
       - name: 馬名
+        quote: true
         tests:
           - not_null
       - name: 性別コード
+        quote: true
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: 毛色コード
+        quote: true
         tests:
           - not_null
           - relationships:
-              to: ref('毛色コード')
+              to: ref('jrdb__hair_color_codes')
               field: code
       - name: 馬記号コード
+        quote: true
         tests:
           - not_null
           - relationships:
-              to: ref('馬記号コード')
+              to: ref('jrdb__horse_symbol_codes')
               field: code
       - name: 血統情報_父馬名
+        quote: true
         tests:
           - not_null
       - name: 血統情報_母馬名
+        quote: true
         # tests:
         #   - not_null
       - name: 血統情報_母父馬名
+        quote: true
         tests:
           - not_null
       - name: 生年月日
+        quote: true
         description: YYYYMMDD
       - name: 父馬生年
+        quote: true
       - name: 母馬生年
+        quote: true
       - name: 母父馬生年
+        quote: true
       - name: 馬主名
+        quote: true
       - name: 馬主会コード
-        tests:
-          - relationships:
-              to: ref('馬コード')
-              field: code
+        quote: true
+        # tests:
+        #   - relationships:
+        #       to: ref('jrdb__racetrack_codes')
+        #       field: code
       - name: 生産者名
+        quote: true
       - name: 産地名
+        quote: true
       - name: 登録抹消フラグ
+        quote: true
       - name: データ年月日
+        quote: true
         tests:
           - not_null
       - name: 父系統コード
+        quote: true
         tests:
           - relationships:
-              to: ref('系統コード')
-              field: コード
+              to: ref('jrdb__lineage_codes')
+              field: code
       - name: 母父系統コード
+        quote: true
         tests:
           - relationships:
-              to: ref('系統コード')
-              field: コード
+              to: ref('jrdb__lineage_codes')
+              field: code
 
   - name: stg_jrdb__oz
     description: 基準オッズデータ
@@ -1743,7 +1766,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:
@@ -1791,7 +1814,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('場コード')
+              to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
         tests:

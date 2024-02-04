@@ -20,6 +20,9 @@ models:
     curated:
       +schema: curated
 seeds:
+  # Globally quote all seed columns
+  # https://docs.getdbt.com/reference/resource-configs/quote_columns
+  +quote_columns: true
   JapanHorseRaceAnalytics:
     +schema: seed
     # Make sure "code" columns are parsed as strings, not integers.
@@ -103,7 +106,7 @@ seeds:
         code: text
     系統コード:
       +column_types:
-        コード: text
+        code: text
     脚質コード:
       +column_types:
         code: text

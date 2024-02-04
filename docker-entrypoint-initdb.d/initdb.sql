@@ -4,3 +4,5 @@ CREATE SCHEMA IF NOT EXISTS jrdb_intermediate AUTHORIZATION admin;
 CREATE SCHEMA IF NOT EXISTS jrdb_curated AUTHORIZATION admin;
 -- MLFlow DB
 CREATE DATABASE mlflow OWNER admin;
+-- Hive Metastore DB
+CREATE DATABASE metastore_db OWNER admin;

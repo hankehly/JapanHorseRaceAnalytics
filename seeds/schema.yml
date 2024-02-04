@@ -261,14 +261,14 @@ seeds:
           - not_null
   - name: 系統コード
     columns:
-      - name: コード
+      - name: code
         tests:
           - unique
           - not_null
-      - name: 小系統名
+      - name: sublineage_name
         tests:
           - not_null
-      - name: 大系統名
+      - name: lineage_name
         tests:
           - not_null
   - name: 脚質コード

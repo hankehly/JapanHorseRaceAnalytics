@@ -13,6 +13,37 @@
 - [JMA、今の天候情報例](https://tenki.jp/forecast/3/15/4510/12204/1hour.html)
 - [JRDB競馬読本Web](http://www.jrdb.com/dokuhon/menu.php)
 
+## Setting up hive metastore
+
+Install hadoop
+
+```
+brew install hadoop
+```
+
+Download newest postgresql jdbc driver.
+
+[Download hive](https://dlcdn.apache.org/hive/hive-3.1.3/).
+
+Replace (hive-folder)/lib/postgresql-9.4.1208.jre7 with the newest postgresql jdbc driver.
+
+Start postgres (init script will create metastore database)
+
+```
+docker compose up
+```
+
+Run schematool on metastore_db in postgres.
+
+```
+./apache-hive-3.1.3-bin/bin/schematool -dbType postgres -initSchema -url 'jdbc:postgresql://127.0.0.1:5432/metastore_db' -passWord admin -userName admin -driver org.postgresql.Driver -verbose
+```
+
+Start hive
+
+```
+make start_spark_server
+```
 
 ## Data sources
 
@@ -116,3 +147,12 @@ bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも
 Don't bet on races where:
 * The bac.レース条件_条件 is A1,A2 (these are new horse races)
 * トラック種別 is 障害
+
+
+
+jrdb_raw
+jrdb_staging
+jma_raw
+jma_staging
+jhra_intermediate
+jhra_curated

@@ -1,7 +1,6 @@
 sources:
   - name: jma
-    database: jrdb
-    schema: jrdb_raw
+    schema: jma_raw
     description: 気象庁のデータ
     tables:
       - name: weather_hourly
