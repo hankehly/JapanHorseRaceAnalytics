@@ -4,6 +4,7 @@ models:
     description: horse features
     columns:
       - name: 血統登録番号
+        quote: true
         tests:
           - not_null
           - unique
@@ -27,6 +28,7 @@ models:
     +schema: intermediate
     columns:
       - name: レースキー
+        quote: true
         tests:
           - not_null
           - unique
