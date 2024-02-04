@@ -1,6 +1,6 @@
 JapanHorseRaceAnalytics:
   # default target
-  target: local
+  target: local_spark
 
   outputs:
     local:

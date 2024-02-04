@@ -47,13 +47,13 @@ final as (
 
         -- 1-6 is expected, but there are many 0s and rarely some 8s and nulls.
         -- Replacing undefined codes with null.
-        case when "脚質" in (SELECT code FROM {{ ref('脚質コード') }}) then "脚質" else null end "脚質",
+        case when "脚質" in (SELECT code FROM {{ ref('jrdb__run_style_codes') }}) then "脚質" else null end "脚質",
         
         -- contains values 0-9, but 距離適性コード only lists 1,2,3,5,6
-        case when "距離適性" in (SELECT code FROM {{ ref('距離適性コード') }}) then "距離適性" else null end "距離適性",
+        case when "距離適性" in (SELECT code FROM {{ ref('jrdb__distance_aptitude_codes') }}) then "距離適性" else null end "距離適性",
 
         -- 1-5 is expected, but there are many 0s and rarely 8s. Replacing with null.
-        case when "上昇度" in (SELECT code FROM {{ ref('上昇度コード') }}) then "上昇度" else null end "上昇度",
+        case when "上昇度" in (SELECT code FROM {{ ref('jrdb__improvement_codes') }}) then "上昇度" else null end "上昇度",
 
         cast(nullif("ローテーション", '') as integer) as "ローテーション",
         cast(nullif("基準オッズ", '') as numeric) as "基準オッズ",
@@ -159,7 +159,7 @@ final as (
 
         -- what does this field even mean?
         -- contains values (1,2,3,4,5,6,8), but 距離適性コード only lists 1,2,3,5,6
-        case when "距離適性２" in (SELECT code FROM {{ ref('距離適性コード') }}) then "距離適性２" else null end "距離適性２",
+        case when "距離適性２" in (SELECT code FROM {{ ref('jrdb__distance_aptitude_codes') }}) then "距離適性２" else null end "距離適性２",
 
         cast(nullif("枠確定馬体重", '') as integer) as "枠確定馬体重",
         nullif("枠確定馬体重増減", '') as "枠確定馬体重増減",
@@ -213,12 +213,12 @@ final as (
         substring("体型", 26, 1) as "体型_予備8",
 
         -- このフィールドに z とか h が入っていたりする
-        case when "体型総合１" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合１" else null end "体型総合１",
-        case when "体型総合２" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合２" else null end "体型総合２",
-        case when "体型総合３" in (SELECT コード FROM {{ ref('特記コード') }}) then "体型総合３" else null end "体型総合３",
-        case when "馬特記１" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記１" else null end "馬特記１",
-        case when "馬特記２" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記２" else null end "馬特記２",
-        case when "馬特記３" in (SELECT コード FROM {{ ref('特記コード') }}) then "馬特記３" else null end "馬特記３",
+        case when "体型総合１" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "体型総合１" else null end "体型総合１",
+        case when "体型総合２" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "体型総合２" else null end "体型総合２",
+        case when "体型総合３" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "体型総合３" else null end "体型総合３",
+        case when "馬特記１" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "馬特記１" else null end "馬特記１",
+        case when "馬特記２" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "馬特記２" else null end "馬特記２",
+        case when "馬特記３" in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then "馬特記３" else null end "馬特記３",
 
         cast(nullif("展開参考データ_馬スタート指数", '') as numeric) as "展開参考データ_馬スタート指数",
         cast(nullif("展開参考データ_馬出遅率", '') as numeric) as "展開参考データ_馬出遅率",

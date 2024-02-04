@@ -27,101 +27,101 @@ seeds:
     +schema: seed
     # Make sure "code" columns are parsed as strings, not integers.
     # This workaround is really buggy. If it fails to parse a column as a string,
-    # try changing 'text' to 'varchar' and re-running with --full-refresh.
+    # try changing 'string' to 'varchar' and re-running with --full-refresh.
     jrdb_racetrack_jma_station_mapping:
       +column_types:
-        jrdb_racetrack_code: text
-    jma_天気記号:
+        jrdb_racetrack_code: string
+    jma__weather_symbols:
       +column_types:
-        code: text
-    jma_品質情報:
+        code: string
+    jma__quality_codes:
       +column_types:
-        code: text
-    jma_現象なし情報:
+        code: string
+    jma__phenomenon_codes:
       +column_types:
-        code: text
-    天候コード:
+        code: string
+    jrdb__weather_codes:
       +column_types:
-        code: text
-    場コード:
+        code: string
+    jrdb__racetrack_codes:
       +column_types:
-        code: text
-    特記コード:
+        code: string
+    jrdb__special_mention_codes:
       +column_types:
-        コード: text
-    調教コースコード:
+        code: string
+    jrdb__training_course_codes:
       +column_types:
-        コード: text
-    追い状態コード:
+        code: string
+    jrdb__workout_status_codes:
       +column_types:
-        コード: text
-    条件コード:
+        code: string
+    jrdb__race_condition_codes:
       +column_types:
-        code: text
-        group_code: text
-    馬場状態コード:
+        code: string
+        group_code: string
+    jrdb__going_codes:
       +column_types:
-        code: text
-    調教矢印コード:
+        code: string
+    jrdb__trainer_evaluation_codes:
       +column_types:
-        code: text
-    厩舎評価コード:
+        code: string
+    jrdb__stable_evaluation_codes:
       +column_types:
-        code: text
-    蹄コード:
+        code: string
+    jrdb__paddock_observed_hoof_codes:
       +column_types:
-        code: text
-    重適性コード:
+        code: string
+    jrdb__heavy_ground_aptitude_codes:
       +column_types:
-        code: text
-    クラスコード:
+        code: string
+    jrdb__class_codes:
       +column_types:
-        code: text
-    印コード:
+        code: string
+    jrdb__symbol_codes:
       +column_types:
-        code: text
-    展開記号コード:
+        code: string
+    jrdb__race_development_codes:
       +column_types:
-        code: text
-    距離適性コード:
+        code: string
+    jrdb__distance_aptitude_codes:
       +column_types:
-        code: text
-    馬記号コード:
+        code: string
+    jrdb__horse_symbol_codes:
       +column_types:
-        code: text
-    上昇度コード:
+        code: string
+    jrdb__improvement_codes:
       +column_types:
-        code: text
-    休養理由分類コード:
+        code: string
+    jrdb__rest_reason_codes:
       +column_types:
-        code: text
-    馬体コード:
+        code: string
+    jrdb__horse_form_codes:
       +column_types:
-        code: text
-    気配コード:
+        code: string
+    jrdb__demeanor_codes:
       +column_types:
-        code: text
-    毛色コード:
+        code: string
+    jrdb__hair_color_codes:
       +column_types:
-        code: text
-    系統コード:
+        code: string
+    jrdb__lineage_codes:
       +column_types:
-        code: text
-    脚質コード:
+        code: string
+    jrdb__run_style_codes:
       +column_types:
-        code: text
-    馬具コード:
+        code: string
+    jrdb__horse_gear_codes:
       +column_types:
-        コード: text
-    異常区分コード:
+        code: string
+    jrdb__anomaly_codes:
       +column_types:
-        code: text
-    競走種別コード:
+        code: string
+    jrdb__race_category_codes:
       +column_types:
-        code: text
-    重量コード:
+        code: string
+    jrdb__weight_condition_codes:
       +column_types:
-        code: text
-    グレードコード:
+        code: string
+    jrdb__grade_codes:
       +column_types:
-        code: text
+        code: string

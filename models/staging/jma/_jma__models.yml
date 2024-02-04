@@ -23,7 +23,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 気温_均質番号
         tests:
@@ -36,7 +36,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 降水量_均質番号
         tests:
@@ -46,7 +46,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 降雪_均質番号
         tests:
@@ -56,7 +56,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 積雪_均質番号
         tests:
@@ -66,7 +66,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 日照時間_均質番号
         tests:
@@ -79,7 +79,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 風速_風向
         description: Nulls same as 風速
@@ -110,14 +110,14 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 日射量
       - name: 日射量_品質情報
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 日射量_均質番号
         tests:
@@ -127,7 +127,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 現地気圧_均質番号
         tests:
@@ -137,7 +137,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 海面気圧_均質番号
         tests:
@@ -147,7 +147,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 相対湿度_均質番号
         tests:
@@ -157,7 +157,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 蒸気圧_均質番号
         tests:
@@ -167,7 +167,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 露点温度_均質番号
         tests:
@@ -181,7 +181,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 天気_均質番号
         tests:
@@ -191,7 +191,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 雲量_均質番号
         tests:
@@ -201,7 +201,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('jma_品質情報')
+              to: ref('jma__quality_codes')
               field: code
       - name: 視程_均質番号
         tests:

@@ -70,34 +70,34 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('競走種別コード')
+              to: ref('jrdb__race_category_codes')
               field: code
       - name: レース条件_条件
         description: 900万下等、 →JRDBデータコード表
         tests:
           - not_null
           - relationships:
-              to: ref('条件コード')
+              to: ref('jrdb__race_condition_codes')
               field: code
       - name: レース条件_記号
         description: ○混等、    →JRDBデータコード表
         tests:
           - not_null
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: レース条件_重量
         description: ハンデ等、  →JRDBデータコード表
         tests:
           - not_null
           - relationships:
-              to: ref('重量コード')
+              to: ref('jrdb__weight_condition_codes')
               field: code
       - name: レース条件_グレード
         description: Ｇ１等      →JRDBデータコード表
         tests:
           - relationships:
-              to: ref('グレードコード')
+              to: ref('jrdb__grade_codes')
               field: code
       - name: レース名
         description: レース名の通称（全角２５文字）
@@ -237,8 +237,8 @@ models:
       - name: 調教コースコード # there's only 1 null value in the whole dataset..
         tests:
           - relationships:
-              to: ref('調教コースコード')
-              field: コード
+              to: ref('jrdb__training_course_codes')
+              field: code
       - name: 追切種類
         tests:
           - accepted_values:
@@ -246,8 +246,8 @@ models:
       - name: 追い状態
         tests:
           - relationships:
-              to: ref('追い状態コード')
-              field: コード
+              to: ref('jrdb__workout_status_codes')
+              field: code
       - name: 乗り役
         tests:
           - accepted_values:
@@ -274,7 +274,7 @@ models:
       - name: 併せ馬相手データ_クラス
         tests:
           - relationships:
-              to: ref('条件コード')
+              to: ref('jrdb__race_condition_codes')
               field: code
 
   - name: stg_jrdb__cyb
@@ -374,8 +374,8 @@ models:
         description: 一週前追切の調教の追切コース (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - relationships:
-              to: ref('調教コースコード')
-              field: コード
+              to: ref('jrdb__training_course_codes')
+              field: code
   - name: stg_jrdb__hjc
     columns:
       - name: hjc_sk
@@ -483,7 +483,7 @@ models:
       - name: 天候コード
         tests:
           - relationships:
-              to: ref('天候コード')
+              to: ref('jrdb__weather_codes')
               field: code
       - name: 芝馬場状態コード
         tests:
@@ -638,19 +638,19 @@ models:
         description: 過去の競走実績よりその馬の脚質を判断したコード。
         tests:
           - relationships:
-              to: ref('脚質コード')
+              to: ref('jrdb__run_style_codes')
               field: code
       - name: 距離適性
         description: 該当馬の実績、血統、馬体から判断される距離適性をコード化。
         tests:
           - relationships:
-              to: ref('距離適性コード')
+              to: ref('jrdb__distance_aptitude_codes')
               field: code
       - name: 上昇度
         description: 前走から（次走へ向けて）の上積みの度合い
         tests:
           - relationships:
-              to: ref('上昇度コード')
+              to: ref('jrdb__improvement_codes')
               field: code
       - name: ローテーション
         description: 間に金曜日が入っている数で決定、連闘は０、初出走はスペースとなる。
@@ -739,7 +739,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('調教矢印コード')
+              to: ref('jrdb__trainer_evaluation_codes')
               field: code
       - name: 厩舎評価コード
         description: |
@@ -748,7 +748,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('厩舎評価コード')
+              to: ref('jrdb__stable_evaluation_codes')
               field: code
       - name: 騎手期待連対率
         description: |
@@ -773,7 +773,7 @@ models:
           (JRDBデータコード表参照)
         tests:
           - relationships:
-              to: ref('蹄コード')
+              to: ref('jrdb__paddock_observed_hoof_codes')
               field: code
       - name: 重適性コード # fixed 正→性 naming mistake
         description: |
@@ -781,7 +781,7 @@ models:
           (JRDBデータコード表参照)
         tests:
           - relationships:
-              to: ref('重適性コード')
+              to: ref('jrdb__heavy_ground_aptitude_codes')
               field: code
       - name: クラスコード
         description: |
@@ -792,7 +792,7 @@ models:
           (JRDBデータコード表参照)
         tests:
           - relationships:
-              to: ref('クラスコード')
+              to: ref('jrdb__class_codes')
               field: code
       - name: ブリンカー
         description: 1:初装着,2:再装着,3:ブリンカ
@@ -836,32 +836,32 @@ models:
       - name: 印コード_総合印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_ＩＤＭ印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_情報印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_騎手印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_厩舎印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_調教印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_激走印
         description: 1:激走馬
@@ -899,7 +899,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('条件コード')
+              to: ref('jrdb__race_condition_codes')
               field: group_code
       - name: 展開予想データ_テン指数
         description: 予想テン指数
@@ -936,12 +936,12 @@ models:
       - name: 展開予想データ_展開記号
         tests:
           - relationships:
-              to: ref('展開記号コード')
+              to: ref('jrdb__race_development_codes')
               field: code
       - name: 距離適性２ # what does this field mean given we already have 距離適性?
         tests:
           - relationships:
-              to: ref('距離適性コード')
+              to: ref('jrdb__distance_aptitude_codes')
               field: code
       - name: 枠確定馬体重
         description: |
@@ -1106,33 +1106,33 @@ models:
       - name: 体型総合１
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 体型総合２
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 体型総合３
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 馬特記１
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 馬特記２
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 馬特記３
         tests:
           - relationships:
-              to: ref('特記コード')
-              field: コード
+              to: ref('jrdb__special_mention_codes')
+              field: code
       - name: 展開参考データ_馬スタート指数
       - name: 展開参考データ_馬出遅率
 
@@ -1156,7 +1156,7 @@ models:
           さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
 
       # このフィールドは19'以降全部「0:通常」になっているので使わない方が良さそう
@@ -1195,7 +1195,7 @@ models:
       - name: 休養理由分類コード
         tests:
           - relationships:
-              to: ref('休養理由分類コード')
+              to: ref('jrdb__rest_reason_codes')
               field: code
       - name: 芝ダ障害フラグ
         description: |
@@ -1383,7 +1383,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('異常区分コード')
+              to: ref('jrdb__anomaly_codes')
               field: code
       - name: 馬成績_タイム
         description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
@@ -1469,7 +1469,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('天候コード')
+              to: ref('jrdb__weather_codes')
               field: code
       - name: コース
         description: 1:A,2:A1,3:A2,4:B,5:C,6:D
@@ -1477,7 +1477,7 @@ models:
         description: 脚質コード参照
         tests:
           - relationships:
-              to: ref('脚質コード')
+              to: ref('jrdb__run_style_codes')
               field: code
       - name: 払戻データ_単勝
         description: 単位（円）
@@ -1607,7 +1607,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('天候コード')
+              to: ref('jrdb__weather_codes')
               field: code
 
       # there are only 14 rows of null records (from 1999)
@@ -1624,27 +1624,27 @@ models:
       - name: オッズ印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: パドック印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 直前総合印
         tests:
           - relationships:
-              to: ref('印コード')
+              to: ref('jrdb__symbol_codes')
               field: code
       - name: 馬体コード
         tests:
           - relationships:
-              to: ref('馬体コード')
+              to: ref('jrdb__horse_form_codes')
               field: code
       - name: 気配コード
         tests:
           - relationships:
-              to: ref('気配コード')
+              to: ref('jrdb__demeanor_codes')
               field: code
 
       # todo: handle invalid times like 9:90

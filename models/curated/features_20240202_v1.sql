@@ -141,7 +141,7 @@ with
     coalesce(tyb."ＩＤＭ", kyi."ＩＤＭ") as "ＩＤＭ",
     -- https://note.com/jrdbn/n/n0b3d06e39768
     coalesce(stddev_pop(coalesce(tyb."ＩＤＭ", kyi."ＩＤＭ")) over (partition by kyi."レースキー"), 0) as "IDM標準偏差",
-    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = kyi."脚質") as "脚質",
+    (SELECT "name" FROM {{ ref('jrdb__run_style_codes') }} WHERE "code" = kyi."脚質") as "脚質",
     coalesce(tyb."単勝オッズ", win_odds."単勝オッズ") as "単勝オッズ",
     coalesce(tyb."複勝オッズ", place_odds."複勝オッズ") as "複勝オッズ",
     coalesce(tyb."騎手指数", kyi."騎手指数") as "騎手指数",
@@ -156,7 +156,7 @@ with
     tyb."オッズ印",
     tyb."パドック印",
     tyb."直前総合印",
-    (SELECT "name" FROM {{ ref("馬体コード") }} WHERE "code" = tyb."馬体コード") as "馬体",
+    (SELECT "name" FROM {{ ref("jrdb__horse_form_codes") }} WHERE "code" = tyb."馬体コード") as "馬体",
     tyb."気配コード",
     kyi."距離適性",
     kyi."上昇度",

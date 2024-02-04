@@ -131,7 +131,7 @@ with
 
     coalesce(sed."ＪＲＤＢデータ_ＩＤＭ", tyb."ＩＤＭ", kyi."ＩＤＭ") as "ＩＤＭ",
 
-    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = sed."レース脚質") as "脚質",
+    (SELECT "name" FROM {{ ref('jrdb__run_style_codes') }} WHERE "code" = sed."レース脚質") as "脚質",
 
     coalesce(sed."馬成績_確定単勝オッズ", win_odds."単勝オッズ", tyb."単勝オッズ") as "単勝オッズ",
     coalesce(sed."確定複勝オッズ下", place_odds."複勝オッズ", tyb."複勝オッズ") as "複勝オッズ",
@@ -144,7 +144,7 @@ with
 
     kyi."激走指数",
 
-    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = sed."天候コード") as "天候",
+    (SELECT "weather_condition" FROM {{ ref('jrdb__weather_codes') }} WHERE "code" = sed."天候コード") as "天候",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",

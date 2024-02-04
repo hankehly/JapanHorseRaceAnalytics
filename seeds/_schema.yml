@@ -12,7 +12,7 @@ seeds:
       - name: jma_station_name
         tests:
           - not_null
-  - name: jma_品質情報
+  - name: jma__quality_codes # 品質情報
     columns:
       - name: code
         tests:
@@ -24,7 +24,7 @@ seeds:
       - name: description
         tests:
           - not_null
-  - name: jma_天気記号
+  - name: jma__weather_symbols
     columns:
       - name: code
         tests:
@@ -40,7 +40,7 @@ seeds:
         tests:
           - not_null
       - name: mechanical_observation
-  - name: jma_現象なし情報
+  - name: jma__phenomenon_codes # 現象なし情報
     columns:
       - name: code
         tests:
@@ -52,7 +52,7 @@ seeds:
       - name: description
         tests:
           - not_null
-  - name: 天候コード
+  - name: jrdb__weather_codes # 天候コード
     columns:
       - name: code
         tests:
@@ -61,7 +61,7 @@ seeds:
       - name: weather_condition
         tests:
           - not_null
-  - name: 場コード
+  - name: jrdb__racetrack_codes # 場コード
     columns:
       - name: code
         tests:
@@ -70,40 +70,40 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 特記コード
+  - name: jrdb__special_mention_codes # 特記コード
     columns:
-      - name: コード
+      - name: code
         tests:
           - unique
           - not_null
-      - name: 短縮
+      - name: name
         tests:
           - not_null
-      - name: 内容
+      - name: description
         tests:
           - not_null
-  - name: 調教コースコード
+  - name: jrdb__training_course_codes # 調教コースコード
     columns:
-      - name: コード
+      - name: code
         tests:
           - unique
           - not_null
-      - name: 調教コース
+      - name: training_course_name
         tests:
           - not_null
-      - name: 調教コース短縮
+      - name: training_course_name_short
         tests:
           - not_null
-  - name: 追い状態コード
+  - name: jrdb__workout_status_codes # 追い状態コード
     columns:
-      - name: コード
+      - name: code
         tests:
           - unique
           - not_null
-      - name: 追い状態名
+      - name: name
         tests:
           - not_null
-  - name: 条件コード
+  - name: jrdb__race_condition_codes # 条件コード
     columns:
       - name: code
         tests:
@@ -119,7 +119,7 @@ seeds:
         tests:
           - not_null
       - name: old_code_name
-  - name: 馬場状態コード
+  - name: jrdb__going_codes # 馬場状態コード
     columns:
       - name: code
         tests:
@@ -128,7 +128,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 調教矢印コード
+  - name: jrdb__trainer_evaluation_codes # 調教矢印コード
     columns:
       - name: code
         tests:
@@ -137,7 +137,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 厩舎評価コード
+  - name: jrdb__stable_evaluation_codes # 厩舎評価コード
     columns:
       - name: code
         tests:
@@ -146,7 +146,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 蹄コード
+  - name: jrdb__paddock_observed_hoof_codes # 蹄コード
     columns:
       - name: code
         tests:
@@ -155,7 +155,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 重適性コード
+  - name: jrdb__heavy_ground_aptitude_codes # 重適性コード
     columns:
       - name: code
         tests:
@@ -164,7 +164,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: クラスコード
+  - name: jrdb__class_codes # クラスコード
     columns:
       - name: code
         tests:
@@ -173,7 +173,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 印コード
+  - name: jrdb__symbol_codes # 印コード
     columns:
       - name: code
         tests:
@@ -182,7 +182,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 展開記号コード
+  - name: jrdb__race_development_codes # 展開記号コード
     columns:
       - name: code
         tests:
@@ -194,7 +194,7 @@ seeds:
       - name: description
         tests:
           - not_null
-  - name: 距離適性コード
+  - name: jrdb__distance_aptitude_codes # 距離適性コード
     columns:
       - name: code
         tests:
@@ -203,14 +203,14 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 馬記号コード
+  - name: jrdb__horse_symbol_codes # 馬記号コード
     columns:
       - name: code
         tests:
           - unique
           - not_null
       - name: horse_symbol_code
-  - name: 上昇度コード
+  - name: jrdb__improvement_codes # 上昇度コード
     columns:
       - name: code
         tests:
@@ -222,7 +222,7 @@ seeds:
       - name: description
         tests:
           - not_null
-  - name: 休養理由分類コード
+  - name: jrdb__rest_reason_codes # 休養理由分類コード
     columns:
       - name: code
         tests:
@@ -231,7 +231,7 @@ seeds:
       - name: rest_reason
         tests:
           - not_null
-  - name: 馬体コード
+  - name: jrdb__horse_form_codes # 馬体コード
     columns:
       - name: code
         tests:
@@ -240,7 +240,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 気配コード
+  - name: jrdb__demeanor_codes # 気配コード
     columns:
       - name: code
         tests:
@@ -250,7 +250,7 @@ seeds:
         tests:
           - not_null
       - name: description
-  - name: 毛色コード
+  - name: jrdb__hair_color_codes # 毛色コード
     columns:
       - name: code
         tests:
@@ -259,7 +259,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 系統コード
+  - name: jrdb__lineage_codes # 系統コード
     columns:
       - name: code
         tests:
@@ -271,7 +271,7 @@ seeds:
       - name: lineage_name
         tests:
           - not_null
-  - name: 脚質コード
+  - name: jrdb__run_style_codes # 脚質コード
     columns:
       - name: code
         tests:
@@ -280,22 +280,22 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 馬具コード
+  - name: jrdb__horse_gear_codes # 馬具コード
     columns:
-      - name: コード
+      - name: code
         tests:
           - unique
           - not_null
-      - name: 短縮
+      - name: name_short
         tests:
           - not_null
-      - name: 内容
+      - name: name
         tests:
           - not_null
-      - name: 馬具種別
+      - name: category
         tests:
           - not_null
-  - name: 異常区分コード
+  - name: jrdb__anomaly_codes # 異常区分コード
     columns:
       - name: code
         tests:
@@ -304,7 +304,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 競走種別コード
+  - name: jrdb__race_category_codes # 競走種別コード
     columns:
       - name: code
         tests:
@@ -313,7 +313,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: 重量コード
+  - name: jrdb__weight_condition_codes # 重量コード
     columns:
       - name: code
         tests:
@@ -322,7 +322,7 @@ seeds:
       - name: name
         tests:
           - not_null
-  - name: グレードコード
+  - name: jrdb__grade_codes # グレードコード
     columns:
       - name: code
         tests:

@@ -177,7 +177,7 @@ with
     -- https://note.com/jrdbn/n/n0b3d06e39768
     coalesce(stddev_pop(coalesce(tyb."ＩＤＭ", kyi."ＩＤＭ")) over (partition by kyi."レースキー"), 0) as "IDM標準偏差",
 
-    (SELECT "name" FROM {{ ref('脚質コード') }} WHERE "code" = kyi."脚質") as "脚質",
+    (SELECT "name" FROM {{ ref('jrdb__run_style_codes') }} WHERE "code" = kyi."脚質") as "脚質",
 
     coalesce(tyb."単勝オッズ", win_odds."単勝オッズ") as "単勝オッズ",
     coalesce(tyb."複勝オッズ", place_odds."複勝オッズ") as "複勝オッズ",
@@ -194,10 +194,10 @@ with
     tyb."オッズ印",
     tyb."パドック印",
     tyb."直前総合印",
-    (SELECT "name" FROM {{ ref('馬体コード') }} WHERE "code" = tyb."馬体コード") as "馬体",
-    (SELECT "name" FROM {{ ref('気配コード') }} WHERE "code" = tyb."気配コード") as "気配",
-    (SELECT "name" FROM {{ ref('距離適性コード') }} WHERE "code" = kyi."距離適性") as "距離適性",  -- ordinal
-    (SELECT "name" FROM {{ ref('上昇度コード') }} WHERE "code" = kyi."上昇度") as "上昇度",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__horse_form_codes') }} WHERE "code" = tyb."馬体コード") as "馬体",
+    (SELECT "name" FROM {{ ref('jrdb__demeanor_codes') }} WHERE "code" = tyb."気配コード") as "気配",
+    (SELECT "name" FROM {{ ref('jrdb__distance_aptitude_codes') }} WHERE "code" = kyi."距離適性") as "距離適性",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__improvement_codes') }} WHERE "code" = kyi."上昇度") as "上昇度",  -- ordinal
     kyi."ローテーション",
     kyi."基準オッズ",
     kyi."基準人気順位",
@@ -216,20 +216,20 @@ with
     kyi."人気指数",
     kyi."調教指数",
     kyi."厩舎指数",
-    (SELECT "name" FROM {{ ref('調教矢印コード') }} WHERE "code" = kyi."調教矢印コード") as "調教矢印",  -- ordinal
-    (SELECT "name" FROM {{ ref('厩舎評価コード') }} WHERE "code" = kyi."厩舎評価コード") as "厩舎評価",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__trainer_evaluation_codes') }} WHERE "code" = kyi."調教矢印コード") as "調教矢印",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__stable_evaluation_codes') }} WHERE "code" = kyi."厩舎評価コード") as "厩舎評価",  -- ordinal
     kyi."騎手期待連対率",
     kyi."激走指数",
-    (SELECT "name" FROM {{ ref('蹄コード') }} WHERE "code" = kyi."蹄コード") as "蹄",  -- ordinal
-    (SELECT "name" FROM {{ ref('重適性コード') }} WHERE "code" = kyi."重適性コード") as "重適性",  -- ordinal
-    (SELECT "name" FROM {{ ref('クラスコード') }} WHERE "code" = kyi."クラスコード") as "クラス",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__paddock_observed_hoof_codes') }} WHERE "code" = kyi."蹄コード") as "蹄",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__heavy_ground_aptitude_codes') }} WHERE "code" = kyi."重適性コード") as "重適性",  -- ordinal
+    (SELECT "name" FROM {{ ref('jrdb__class_codes') }} WHERE "code" = kyi."クラスコード") as "クラス",  -- ordinal
     kyi."ブリンカー",  -- category
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_総合印") as "印コード_総合印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_ＩＤＭ印") as "印コード_ＩＤＭ印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_情報印") as "印コード_情報印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_騎手印") as "印コード_騎手印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_厩舎印") as "印コード_厩舎印",
-    (SELECT "name" FROM {{ ref('印コード') }} WHERE "code" = kyi."印コード_調教印") as "印コード_調教印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_総合印") as "印コード_総合印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_ＩＤＭ印") as "印コード_ＩＤＭ印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_情報印") as "印コード_情報印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_騎手印") as "印コード_騎手印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_厩舎印") as "印コード_厩舎印",
+    (SELECT "name" FROM {{ ref('jrdb__symbol_codes') }} WHERE "code" = kyi."印コード_調教印") as "印コード_調教印",
     kyi."印コード_激走印",
 
     kyi."展開予想データ_テン指数",
@@ -286,7 +286,7 @@ with
     kyi."万券指数",
     kyi."万券印",
     kyi."激走タイプ",  -- category
-    (SELECT "rest_reason" FROM {{ ref('休養理由分類コード') }} WHERE "code" = kyi."休養理由分類コード") as "休養理由分類", -- category
+    (SELECT "rest_reason" FROM {{ ref('jrdb__rest_reason_codes') }} WHERE "code" = kyi."休養理由分類コード") as "休養理由分類", -- category
     kyi."芝ダ障害フラグ", -- category
     kyi."距離フラグ",  -- category
     kyi."クラスフラグ",  -- category
@@ -296,7 +296,7 @@ with
     kyi."放牧先ランク",  -- category
     kyi."厩舎ランク",  -- category
 
-    (SELECT "weather_condition" FROM {{ ref('天候コード') }} WHERE "code" = coalesce(tyb."天候コード", kab."天候コード")) as "天候",
+    (SELECT "weather_condition" FROM {{ ref('jrdb__weather_codes') }} WHERE "code" = coalesce(tyb."天候コード", kab."天候コード")) as "天候",
 
     coalesce(win_payouts."払戻金", 0) > 0 as "単勝的中",
     coalesce(win_payouts."払戻金", 0) as "単勝払戻金",

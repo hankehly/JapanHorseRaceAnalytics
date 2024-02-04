@@ -117,11 +117,11 @@ with
 
     -- 0 is not a valid value for "馬体コード" but there are 42 rows with it.
     -- This is a workaround to avoid the error.
-    case when "馬体コード" in (select code from {{ ref('馬体コード') }}) then "馬体コード" else null end "馬体コード",
+    case when "馬体コード" in (select code from {{ ref('jrdb__horse_form_codes') }}) then "馬体コード" else null end "馬体コード",
 
     -- 0 is not a valid value for "気配コード" but there are 42 rows with it.
     -- This is a workaround to avoid the error.
-    case when "気配コード" in (select code from {{ ref('気配コード') }}) then "気配コード" else null end "気配コード",
+    case when "気配コード" in (select code from {{ ref('jrdb__demeanor_codes') }}) then "気配コード" else null end "気配コード",
 
     -- values like "09:90" exist..
     -- case

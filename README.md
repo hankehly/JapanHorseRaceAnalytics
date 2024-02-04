@@ -147,12 +147,3 @@ bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも
 Don't bet on races where:
 * The bac.レース条件_条件 is A1,A2 (these are new horse races)
 * トラック種別 is 障害
-
-
-
-jrdb_raw
-jrdb_staging
-jma_raw
-jma_staging
-jhra_intermediate
-jhra_curated
