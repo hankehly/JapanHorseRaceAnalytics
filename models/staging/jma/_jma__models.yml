@@ -3,85 +3,107 @@ models:
     description: 気象庁の過去の気象データを格納するテーブルです。
     columns:
       - name: weather_hourly_sk
+        quote: true
         tests:
           - unique
           - not_null
       - name: download_timestamp
+        quote: true
         tests:
           - not_null
       - name: station_name
+        quote: true
         tests:
           - not_null
       - name: 年月日時
+        quote: true
         tests:
           - not_null
       - name: 気温
+        quote: true
         description: |
           Good quality.
           Nulls exist in years 1999-2000 only
       - name: 気温_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 気温_均質番号
+        quote: true
         tests:
           - not_null
       - name: 降水量
+        quote: true
         description: |
           Good quality.
           Nulls only exist in years 1999-2000
       - name: 降水量_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 降水量_均質番号
+        quote: true
         tests:
           - not_null
       - name: 降雪
+        quote: true
       - name: 降雪_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 降雪_均質番号
+        quote: true
         tests:
           - not_null
       - name: 積雪
+        quote: true
       - name: 積雪_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 積雪_均質番号
+        quote: true
         tests:
           - not_null
       - name: 日照時間
+        quote: true
       - name: 日照時間_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 日照時間_均質番号
+        quote: true
         tests:
           - not_null
       - name: 風速
+        quote: true
         description: |
           Good quality.
           Many nulls in years 1999-2000, only 3-7 nulls per year in years 2015-2023
       - name: 風速_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 風速_風向
+        quote: true
         description: Nulls same as 風速
         tests:
           - accepted_values:
@@ -104,105 +126,134 @@ models:
                 - "西南西"
                 - "静穏"
       - name: 風速_風向_品質情報
+        quote: true
         tests:
           - not_null
       - name: 風速_均質番号
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 日射量
+        quote: true
       - name: 日射量_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 日射量_均質番号
+        quote: true
         tests:
           - not_null
       - name: 現地気圧
+        quote: true
       - name: 現地気圧_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 現地気圧_均質番号
+        quote: true
         tests:
           - not_null
       - name: 海面気圧
+        quote: true
       - name: 海面気圧_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 海面気圧_均質番号
+        quote: true
         tests:
           - not_null
       - name: 相対湿度
+        quote: true
       - name: 相対湿度_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 相対湿度_均質番号
+        quote: true
         tests:
           - not_null
       - name: 蒸気圧
+        quote: true
       - name: 蒸気圧_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 蒸気圧_均質番号
+        quote: true
         tests:
           - not_null
       - name: 露点温度
+        quote: true
       - name: 露点温度_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 露点温度_均質番号
+        quote: true
         tests:
           - not_null
       - name: 天気
+        quote: true
         tests:
           - relationships:
               to: ref('jma__weather_symbols')
               field: code
       - name: 天気_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 天気_均質番号
+        quote: true
         tests:
           - not_null
       - name: 雲量
+        quote: true
       - name: 雲量_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 雲量_均質番号
+        quote: true
         tests:
           - not_null
       - name: 視程
+        quote: true
       - name: 視程_品質情報
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jma__quality_codes')
               field: code
       - name: 視程_均質番号
+        quote: true
         tests:
           - not_null

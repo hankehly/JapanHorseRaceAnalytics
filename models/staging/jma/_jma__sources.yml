@@ -1,9 +1,9 @@
 sources:
   - name: jma
-    schema: jma_raw
+    schema: jhra_raw
     description: 気象庁のデータ
     tables:
-      - name: weather_hourly
+      - name: raw_jma__weather_hourly
         columns:
           - name: weather_hourly_sk
           - name: 年月日時
