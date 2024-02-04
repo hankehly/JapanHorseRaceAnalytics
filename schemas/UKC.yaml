@@ -51,7 +51,7 @@
   byte_length: 8
   format: "9"
   relative: 158
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 父馬生年
   repeat_factor: 1
   byte_length: 4
@@ -105,7 +105,7 @@
   byte_length: 8
   format: "9"
   relative: 269
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 父系統コード
   repeat_factor: 1
   byte_length: 4

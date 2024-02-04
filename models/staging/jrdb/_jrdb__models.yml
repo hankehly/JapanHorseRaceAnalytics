@@ -2,60 +2,79 @@ models:
   - name: stg_jrdb__bac
     columns:
       - name: bac_sk
+        quote: true
         tests:
           # takes way too long
           # - unique
           - not_null
       - name: bac_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 年月日
+        quote: true
         tests:
           - not_null
       - name: 発走時間
+        quote: true
+        tests:
+          - not_null
+      - name: 発走日時
+        quote: true
         tests:
           - not_null
       - name: レース条件_距離
+        quote: true
         tests:
           - not_null
       - name: レース条件_トラック情報_芝ダ障害コード
+        quote: true
         description: 1:芝, 2:ダート, 3:障害
         tests:
           - not_null
           - accepted_values:
               values: ["芝", "ダート", "障害"]
       - name: レース条件_トラック情報_右左
+        quote: true
         description: 1:右, 2:左, 3:直, 9:他
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 9]
       - name: レース条件_トラック情報_内外
+        quote: true
         description: |
           1:通常(内), 2:外, 3,直ダ, 9:他
           ※障害のトラックは、以下の２通りとなります。
@@ -66,6 +85,7 @@ models:
           - accepted_values:
               values: [1, 2, 3, 9]
       - name: レース条件_種別
+        quote: true
         description: ４歳以上等、→JRDBデータコード表
         tests:
           - not_null
@@ -73,6 +93,7 @@ models:
               to: ref('jrdb__race_category_codes')
               field: code
       - name: レース条件_条件
+        quote: true
         description: 900万下等、 →JRDBデータコード表
         tests:
           - not_null
@@ -80,6 +101,7 @@ models:
               to: ref('jrdb__race_condition_codes')
               field: code
       - name: レース条件_記号
+        quote: true
         description: ○混等、    →JRDBデータコード表
         tests:
           - not_null
@@ -87,6 +109,7 @@ models:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: レース条件_重量
+        quote: true
         description: ハンデ等、  →JRDBデータコード表
         tests:
           - not_null
@@ -94,184 +117,238 @@ models:
               to: ref('jrdb__weight_condition_codes')
               field: code
       - name: レース条件_グレード
+        quote: true
         description: Ｇ１等      →JRDBデータコード表
         tests:
           - relationships:
               to: ref('jrdb__grade_codes')
               field: code
       - name: レース名
+        quote: true
         description: レース名の通称（全角２５文字）
       - name: 回数
+        quote: true
         description: 第ZZ9回（全角半角混在）
       - name: 頭数
+        quote: true
         tests:
           - not_null
       - name: コース
+        quote: true
         description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6]
       - name: 開催区分
+        quote: true
         description: 1:関東, 2:関西, 3:ローカル
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: レース名短縮
+        quote: true
       - name: レース名９文字
+        quote: true
         tests:
           - not_null
       - name: データ区分
+        quote: true
         description: 1:特別登録, 2:想定確定, 3:前日
         tests:
           - not_null
       - name: １着賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: ２着賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: ３着賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: ４着賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: ５着賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: １着算入賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: ２着算入賞金
+        quote: true
         description: 単位（万円）
         tests:
           - not_null
       - name: 馬券発売フラグ_単勝
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_複勝
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_枠連
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_馬連
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_馬単
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_ワイド
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_３連複
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: 馬券発売フラグ_３連単
+        quote: true
         description: 1:発売, 0:発売無し
         tests:
           - not_null
       - name: WIN5フラグ
+        quote: true
         description: 1～5
 
   - name: stg_jrdb__cha
     columns:
       - name: cha_sk
+        quote: true
         tests:
           - unique
           - not_null
       - name: cha_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: 曜日
+        quote: true
         tests:
           - not_null
       - name: 調教年月日
+        quote: true
         tests:
           - not_null
       - name: 回数
+        quote: true
         tests:
           - not_null
       - name: 調教コースコード # there's only 1 null value in the whole dataset..
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__training_course_codes')
               field: code
       - name: 追切種類
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 追い状態
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__workout_status_codes')
               field: code
       - name: 乗り役
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5]
       - name: 調教Ｆ
+        quote: true
         tests:
           - not_null
       - name: 時計分析データ_テンＦ
+        quote: true
       - name: 時計分析データ_中間Ｆ
+        quote: true
       - name: 時計分析データ_終いＦ
+        quote: true
       - name: 時計分析データ_テンＦ指数
+        quote: true
       - name: 時計分析データ_中間Ｆ指数
+        quote: true
       - name: 時計分析データ_終いＦ指数
+        quote: true
       - name: 時計分析データ_追切指数
+        quote: true
       - name: 併せ馬相手データ_併せ結果
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 併せ馬相手データ_追切種類
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 併せ馬相手データ_年齢
+        quote: true
       - name: 併せ馬相手データ_クラス
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__race_condition_codes')
@@ -280,97 +357,127 @@ models:
   - name: stg_jrdb__cyb
     columns:
       - name: cyb_sk
+        quote: true
         tests:
           # takes way too long
           # - unique
           - not_null
       - name: cyb_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: 調教タイプ # ??
+        quote: true
       - name: 調教コース種別 # ??
+        quote: true
         tests:
           - not_null
           - accepted_values:
               values: [0, 1, 2, 3, 4, 5]
       - name: 調教コース種類_坂
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_Ｗ
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_ダ
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_芝
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_プ
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_障
+        quote: true
         tests:
           - not_null
       - name: 調教コース種類_ポ
+        quote: true
         tests:
           - not_null
       - name: 調教距離
+        quote: true
         tests:
           - not_null
           - accepted_values:
               values: [0, 1, 2, 3, 4]
       - name: 調教重点
+        quote: true
         tests:
           - not_null
           - accepted_values:
               values: [0, 1, 2, 3, 4]
       - name: 追切指数
+        quote: true
       - name: 仕上指数
+        quote: true
       - name: 調教量評価
+        quote: true
         description: A,B,C,Dに分類 (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - accepted_values:
               values: ["A", "B", "C", "D"]
       - name: 仕上指数変化
+        quote: true
         tests:
           - accepted_values:
               values: [0, 1, 2, 3, 4]
       - name: 調教コメント
+        quote: true
       - name: コメント年月日
+        quote: true
       - name: 調教評価
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 一週前追切指数
+        quote: true
       - name: 一週前追切コース
+        quote: true
         description: 一週前追切の調教の追切コース (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - relationships:
@@ -379,226 +486,291 @@ models:
   - name: stg_jrdb__hjc
     columns:
       - name: hjc_sk
+        quote: true
         tests:
           - unique
           - not_null
       - name: hjc_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 単勝払戻
+        quote: true
         tests:
           - not_null
       - name: 複勝払戻
+        quote: true
         tests:
           - not_null
       - name: 枠連払戻
+        quote: true
         tests:
           - not_null
       - name: 馬連払戻
+        quote: true
         tests:
           - not_null
       - name: ワイド払戻
+        quote: true
         tests:
           - not_null
       - name: 馬単払戻
+        quote: true
         tests:
           - not_null
       - name: ３連複払戻
+        quote: true
         tests:
           - not_null
       - name: ３連単払戻
+        quote: true
         tests:
           - not_null
+
   - name: stg_jrdb__kab
     columns:
       - name: kab_sk
+        quote: true
         tests:
           - unique
           - not_null
       - name: kab_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: 開催キー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: 開催キー_年
+        quote: true
         tests:
           - not_null
       - name: 開催キー_回
+        quote: true
         tests:
           - not_null
       - name: 開催キー_日
+        quote: true
         tests:
           - not_null
       - name: 年月日
-        description: YYYYMMDD
+        quote: true
+        description: yyyyMMdd
         tests:
           - not_null
       - name: 開催区分
+        quote: true
         description: 1:関東, 2:関西, 3:ローカル
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: 曜日
+        quote: true
         description: 日－土
         tests:
           - not_null
           - accepted_values:
               values: ["月", "火", "水", "木", "金", "土", "日"]
       - name: 場名
+        quote: true
         description: 競馬場名
       - name: 天候コード
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__weather_codes')
               field: code
       - name: 芝馬場状態コード
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態内
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態中
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場状態外
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 芝馬場差
+        quote: true
       - name: 直線馬場差最内
+        quote: true
       - name: 直線馬場差内
+        quote: true
       - name: 直線馬場差中
+        quote: true
       - name: 直線馬場差外
+        quote: true
       - name: 直線馬場差大外
+        quote: true
       - name: ダ馬場状態コード
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態内
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態中
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場状態外
+        quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: ダ馬場差
+        quote: true
       - name: データ区分
+        quote: true
         description: 1:特別登録,2:想定確定,3:枠確定,4:前日
         tests:
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: 連続何日目
+        quote: true
         description: 日数
         tests:
           - not_null
       - name: 芝種類
+        quote: true
         description: 1:野芝, 2:洋芝, 3:混生
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 草丈
+        quote: true
         description: 単位cm
       - name: 転圧
+        quote: true
         description: 1:転圧, 0:無し
       - name: 凍結防止剤
+        quote: true
         description: 1:凍結防止剤散布, 0:無し
       - name: 中間降水量
+        quote: true
         description: 単位mm
 
   - name: stg_jrdb__kyi
     description: 競走馬ごとのデータ。IDM、各指数を格納、放牧先を追加。
     columns:
       - name: kyi_sk
+        quote: true
         tests:
           # Takes too long
           # - unique
           - not_null
       - name: kyi_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: 血統登録番号
+        quote: true
         tests:
           - not_null
       - name: 馬名
+        quote: true
         tests:
           - not_null
       - name: ＩＤＭ
+        quote: true
         description: |
           □ＩＤＭ（インデックスメモリー）
           IDMとは、スピード指値に記憶（レース内容、馬場状態、当日の馬のコンディショ
@@ -623,115 +795,140 @@ models:
         tests:
           - not_null
       - name: 騎手指数
+        quote: true
         description: 基準オッズと騎手の連対率の関係を基に算出された指数値。
         tests:
           - not_null
       - name: 情報指数
+        quote: true
         description: 基準オッズ、厩舎指数、調教指数等様々な情報を基に算出された指数値。
         tests:
           - not_null
       - name: 総合指数
+        quote: true
         description: ＩＤＭ、騎手指数、情報指数を合計した値。
         tests:
           - not_null
       - name: 脚質
+        quote: true
         description: 過去の競走実績よりその馬の脚質を判断したコード。
         tests:
           - relationships:
               to: ref('jrdb__run_style_codes')
               field: code
       - name: 距離適性
+        quote: true
         description: 該当馬の実績、血統、馬体から判断される距離適性をコード化。
         tests:
           - relationships:
               to: ref('jrdb__distance_aptitude_codes')
               field: code
       - name: 上昇度
+        quote: true
         description: 前走から（次走へ向けて）の上積みの度合い
         tests:
           - relationships:
               to: ref('jrdb__improvement_codes')
               field: code
       - name: ローテーション
+        quote: true
         description: 間に金曜日が入っている数で決定、連闘は０、初出走はスペースとなる。
       - name: 基準オッズ
+        quote: true
         description: |
           関西・関東の各専門情報紙(予想・評論家等)(関東約9紙150人前後・関西約8紙100人前後)
           の印を独自に分析し算出した単勝基準オッズ(時系列分析対応)になっています。
         tests:
           - not_null
       - name: 基準人気順位
+        quote: true
         tests:
           - not_null
       - name: 基準複勝オッズ
+        quote: true
         description: |
           関西・関東の各専門情報紙(予想・評論家等)(関東約9紙150人前後・関西約8紙100人前後)
           の印を独自に分析し算出した複勝基準オッズ(時系列分析対応)になっています。
         tests:
           - not_null
       - name: 基準複勝人気順位
+        quote: true
         tests:
           - not_null
       - name: 特定情報◎
+        quote: true
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
       - name: 特定情報○
+        quote: true
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
       - name: 特定情報▲
+        quote: true
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
       - name: 特定情報△
+        quote: true
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
       # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
       - name: 特定情報×
+        quote: true
         description: 専門情報紙の特定の情報値。
         tests:
           - not_null
       - name: 総合情報◎
+        quote: true
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
       - name: 総合情報○
+        quote: true
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
       - name: 総合情報▲
+        quote: true
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
       - name: 総合情報△
+        quote: true
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
       # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
       - name: 総合情報×
+        quote: true
         description: 情報・専門紙の印数（総合）
         tests:
           - not_null
       - name: 人気指数
+        quote: true
         description: その馬の人気を指数化した値。
         tests:
           - not_null
       # https://github.com/hankehly/JapanHorseRaceAnalytics/issues/22
       - name: 調教指数
+        quote: true
         description: |
           関西・関東の各専門情報紙を分析し、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
           各専門紙・情報紙の予想・評論家等が担当の調教コースにおいてどれだけ正確に馬の状態を判断しているかを数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
         tests:
           - not_null
       - name: 厩舎指数
+        quote: true
         description: |
           調教指数同様、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
           各専門紙・情報紙の予想・評論家等と厩舎との密接度を数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
         tests:
           - not_null
       - name: 調教矢印コード
+        quote: true
         description: |
           調教から見た馬の調子をわかりやすく５段階評価したもの。
           (JRDBデータコード表参照)
@@ -742,6 +939,7 @@ models:
               to: ref('jrdb__trainer_evaluation_codes')
               field: code
       - name: 厩舎評価コード
+        quote: true
         description: |
           厩舎サイドの期待度をわかりやすく４段階評価したもの。
           (JRDBデータコード表参照)
@@ -751,6 +949,7 @@ models:
               to: ref('jrdb__stable_evaluation_codes')
               field: code
       - name: 騎手期待連対率
+        quote: true
         description: |
           騎手別に、基準オッズ範囲毎の連対成績を集計したもの。
           騎手Ａが単勝基準オッズＢの馬に乗った場合の過去の成績を集計し、算出された連対率を騎手期待連対率としています。
@@ -758,6 +957,7 @@ models:
         tests:
           - not_null
       - name: 激走指数
+        quote: true
         description: |
           過去の高配当レースを分析し得られた激走するさまざまな要素を数値化し合計したもの。主な要素を以下に示します。
           コース枠脚質、騎手、騎手乗り替り、馬具変更、距離適正、クラス、馬体、気配、上昇度、激走情報指数（専門情報紙の印を激走用に分析したもの）
@@ -765,6 +965,7 @@ models:
         tests:
           - not_null
       - name: 蹄コード
+        quote: true
         description: |
           パドックでの観察により馬の蹄を分類したもの。
           各馬の蹄の大きさを大・中・小・細の４種類に、形状を立・標準・標準立・標準ベ・ベタの５種類に分類しています。
@@ -776,6 +977,7 @@ models:
               to: ref('jrdb__paddock_observed_hoof_codes')
               field: code
       - name: 重適性コード # fixed 正→性 naming mistake
+        quote: true
         description: |
           過去の成績、蹄の形状等よりその馬の重馬場への適性を３段階評価したもの。
           (JRDBデータコード表参照)
@@ -784,6 +986,7 @@ models:
               to: ref('jrdb__heavy_ground_aptitude_codes')
               field: code
       - name: クラスコード
+        quote: true
         description: |
           馬の能力をクラスで分けたもの。
           芝ＯＰＡ　・・・　芝のオープン戦で勝つ能力のある馬。
@@ -795,84 +998,110 @@ models:
               to: ref('jrdb__class_codes')
               field: code
       - name: ブリンカー
+        quote: true
         description: 1:初装着,2:再装着,3:ブリンカ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 騎手名
+        quote: true
         tests:
           - not_null
       - name: 負担重量
+        quote: true
         description: 0.1Kg単位
         tests:
           - not_null
       - name: 見習い区分
+        quote: true
         description: 1:☆(1K減),2:△(2K減),3:▲(3K減),4:★(4K減),9:◇(2K減)
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 9]
       - name: 調教師名
+        quote: true
         tests:
           - not_null
       - name: 調教師所属 # only like 6 null rows
+        quote: true
 
       # Todo: these should relate to SED/SKB 競走成績キー
       - name: 他データリンク用キー_前走１競走成績キー
+        quote: true
       - name: 他データリンク用キー_前走２競走成績キー
+        quote: true
       - name: 他データリンク用キー_前走３競走成績キー
+        quote: true
       - name: 他データリンク用キー_前走４競走成績キー
+        quote: true
       - name: 他データリンク用キー_前走５競走成績キー
+        quote: true
 
       # Todo: these should relate SED also?
       - name: 他データリンク用キー_前走１レースキー
+        quote: true
       - name: 他データリンク用キー_前走２レースキー
+        quote: true
       - name: 他データリンク用キー_前走３レースキー
+        quote: true
       - name: 他データリンク用キー_前走４レースキー
+        quote: true
       - name: 他データリンク用キー_前走５レースキー
+        quote: true
 
       - name: 枠番
+        quote: true
         tests:
           - not_null
       - name: 印コード_総合印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_ＩＤＭ印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_情報印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_騎手印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_厩舎印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_調教印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 印コード_激走印
+        quote: true
         description: 1:激走馬
         tests:
           - not_null
       - name: 芝適性コード
+        quote: true
         description: 1:◎, 2:○, 3:△
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: ダ適性コード
+        quote: true
         description: 1:◎, 2:○, 3:△
         tests:
           - accepted_values:
@@ -880,21 +1109,26 @@ models:
 
       # todo
       - name: 騎手コード
+        quote: true
         description: 騎手マスタとリンク
 
       # todo
       - name: 調教師コード
+        quote: true
         description: 調教師マスタとリンク
 
       - name: 賞金情報_獲得賞金
+        quote: true
         description: 単位万円(含む付加賞)
         tests:
           - not_null
       - name: 賞金情報_収得賞金
+        quote: true
         description: 単位万円
         tests:
           - not_null
       - name: 賞金情報_条件クラス
+        quote: true
         description: 収得賞金から出走できるクラス
         tests:
           - not_null
@@ -902,71 +1136,93 @@ models:
               to: ref('jrdb__race_condition_codes')
               field: group_code
       - name: 展開予想データ_テン指数
+        quote: true
         description: 予想テン指数
       - name: 展開予想データ_ペース指数
+        quote: true
         description: 予想ペース指数
       - name: 展開予想データ_上がり指数
+        quote: true
         description: 予想上がり指数
       - name: 展開予想データ_位置指数
+        quote: true
         description: 予想位置指数
       - name: 展開予想データ_ペース予想
+        quote: true
         description: H,M,S
         tests:
           - accepted_values:
               values: [H, M, S]
       - name: 展開予想データ_道中順位
+        quote: true
       - name: 展開予想データ_道中差
+        quote: true
         description: 半馬身(約0.1秒)単位
       - name: 展開予想データ_道中内外
+        quote: true
         tests:
           - accepted_values:
               values: [2, 3, 4, 5]
       - name: 展開予想データ_後３Ｆ順位
+        quote: true
       - name: 展開予想データ_後３Ｆ差
+        quote: true
       - name: 展開予想データ_後３Ｆ内外
+        quote: true
         tests:
           - accepted_values:
               values: [2, 3, 4, 5]
       - name: 展開予想データ_ゴール順位
+        quote: true
       - name: 展開予想データ_ゴール差
+        quote: true
       - name: 展開予想データ_ゴール内外
+        quote: true
         tests:
           - accepted_values:
               values: [1, 2, 3, 4, 5]
       - name: 展開予想データ_展開記号
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__race_development_codes')
               field: code
       - name: 距離適性２ # what does this field mean given we already have 距離適性?
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__distance_aptitude_codes')
               field: code
       - name: 枠確定馬体重
+        quote: true
         description: |
           Note: Useless. Only contains null values.
 
       # do null and 0 mean the same thing?
       - name: 枠確定馬体重増減
+        quote: true
         description: |
           符号+数字２桁,データ無:スペース
           Note: Useless. Only contains null values.
 
       - name: 取消フラグ
+        quote: true
         description: 1:取消
         tests:
           - not_null
       - name: 性別コード
+        quote: true
         description: 1:牡,2:牝,3,セン
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3]
       - name: 馬主名
+        quote: true
         tests:
           - not_null
       - name: 馬主会コード
+        quote: true
         description: |
           競馬場毎にあり、コードは、場コードと同じです。馬主会に所属されていない馬主の方もおられます。
           馬主会が「不明」の方は、スペースになっています。
@@ -974,21 +1230,31 @@ models:
           ※"10" は、九州馬主会です。
           "00":無所属,スペース:不明
       - name: 馬記号コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__horse_symbol_codes')
               field: code
       - name: 激走順位
+        quote: true
         description: レース出走馬中での順位
       - name: LS指数順位
+        quote: true
       - name: テン指数順位
+        quote: true
       - name: ペース指数順位
+        quote: true
       - name: 上がり指数順位
+        quote: true
       - name: 位置指数順位
+        quote: true
       - name: 騎手期待単勝率
+        quote: true
       - name: 騎手期待３着内率
+        quote: true
       - name: 輸送区分
+        quote: true
         description: |
           滞在、遠征などの輸送過程を表します。直前輸送（直輸）を通常／遠征に分けました。
           1 滞在 ローカル競馬場で、競馬場に入厩している馬を表します。
@@ -1009,148 +1275,187 @@ models:
           - accepted_values:
               values: [0, 1, 2, 3, 4]
       - name: 走法
+        quote: true
         description: don't use, this field is no longer updated
       - name: 体型_全体
+        quote: true
         description: 馬体の全体的な形状
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_背中
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_胴
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_尻
+        quote: true
         description: 大きさ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_トモ
+        quote: true
         description: 角度
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_腹袋
+        quote: true
         description: 大きさ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_頭
+        quote: true
         description: 大きさ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_首
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_胸
+        quote: true
         description: 大きさ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_肩
+        quote: true
         description: 角度
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_前長
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_後長
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_前幅
+        quote: true
         description: 前脚の歩幅
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_後幅
+        quote: true
         description: 後脚の歩幅
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_前繋
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
       - name: 体型_後繋
+        quote: true
         description: 長さ
         tests:
           - accepted_values:
               values: [1, 2, 3]
         # 体型_尾 and 体型_振 contain mostly nulls and shouldn't be used
       - name: 体型_尾
+        quote: true
         description: つけ根の上げ方	1:上げる,2:下げる
       - name: 体型_振
+        quote: true
         description: 尾の振り方	1:激しい,2:少し,3:あまり振らない
       - name: 体型_予備1
+        quote: true
       - name: 体型_予備2
+        quote: true
       - name: 体型_予備3
+        quote: true
       - name: 体型_予備4
+        quote: true
       - name: 体型_予備5
+        quote: true
       - name: 体型_予備6
+        quote: true
       - name: 体型_予備7
+        quote: true
       - name: 体型_予備8
+        quote: true
       - name: 体型総合１
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 体型総合２
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 体型総合３
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 馬特記１
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 馬特記２
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 馬特記３
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__special_mention_codes')
               field: code
       - name: 展開参考データ_馬スタート指数
+        quote: true
       - name: 展開参考データ_馬出遅率
+        quote: true
 
       # このフィールドの意味/形式が分からない
       - name: 展開参考データ_参考前走
+        quote: true
         description: 参考となる前走（２走分格納）
 
       # todo: relationship with 騎手 master
       - name: 展開参考データ_参考前走騎手コード
+        quote: true
         description: 参考となる前走の騎手
 
       - name: 万券指数
+        quote: true
         description: |
           ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を加え、
           さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
 
       # 1-8が格納されている
       - name: 万券印
+        quote: true
         description: |
           ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を加え、
           さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
@@ -1161,6 +1466,7 @@ models:
 
       # このフィールドは19'以降全部「0:通常」になっているので使わない方が良さそう
       - name: 降級フラグ
+        quote: true
         description: |
           ４歳馬の場合６月中旬ごろクラス編成が行なわれます。この後、出走可能なレース
           条件が下がり前半より下のレース条件で出走する場合、このフラグがONとなります。
@@ -1171,6 +1477,7 @@ models:
               values: [0, 1, 2]
 
       - name: 激走タイプ
+        quote: true
         description: |
           激走馬選定の候補に上がった馬を含めた、激走馬のタイプです。
           穴馬分析用データとして出力しました。
@@ -1193,11 +1500,13 @@ models:
           - accepted_values:
               values: [A1, A2, A3, A4, B1, B2]
       - name: 休養理由分類コード
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__rest_reason_codes')
               field: code
       - name: 芝ダ障害フラグ
+        quote: true
         description: |
           0:変化なし
           1:トラック替り(芝ダ替り)
@@ -1206,6 +1515,7 @@ models:
           - accepted_values:
               values: [0, 1, 2]
       - name: 距離フラグ
+        quote: true
         description: |
           0: 経験有り
           1: 最長距離
@@ -1213,6 +1523,7 @@ models:
           - accepted_values:
               values: [0, 1]
       - name: クラスフラグ
+        quote: true
         description: |
           0: 変化なし
           1: 昇級初戦
@@ -1222,6 +1533,7 @@ models:
           - accepted_values:
               values: [0, 1, 2, 3]
       - name: 転厩フラグ
+        quote: true
         description: |
           0:変化なし
           1～3:転厩何戦目（３戦目まで）
@@ -1229,6 +1541,7 @@ models:
           - accepted_values:
               values: [0, 1, 2, 3]
       - name: 去勢フラグ
+        quote: true
         description: |
           0:変化なし
           1～3:去勢何戦目（３戦目まで）
@@ -1236,6 +1549,7 @@ models:
           - accepted_values:
               values: [0, 1, 2, 3]
       - name: 乗替フラグ
+        quote: true
         description: |
           0: 変化なし
           1: 乗替 (初)
@@ -1246,15 +1560,20 @@ models:
 
       # just contains blank space
       - name: 予備フラグ
+        quote: true
 
       - name: 入厩何走目
+        quote: true
         description: 例）2:入厩後２走目
       - name: 入厩年月日
+        quote: true
       - name: 入厩何日前
+        quote: true
         description: |
           レース日から遡っての入厩の日数
           （今走前に入厩の場合）
       - name: 放牧先
+        quote: true
         description: |
           判明した分だけ出力されます。
           地域名だけの場合もあります。
@@ -1262,6 +1581,7 @@ models:
           入厩何走目が１の場合は、この中間で放牧に出されていたことになり、２なら、放牧から帰厩して、２走目となります。
           入厩何日前は、この中間で放牧に出されていた場合にセットされます。
       - name: 放牧先ランク
+        quote: true
         description: |
           休み明けの放牧先データを分析して放牧先ランクを作成。
 
@@ -1284,6 +1604,7 @@ models:
           - accepted_values:
               values: [A, B, C, D, E]
       - name: 厩舎ランク
+        quote: true
         description: |
           ランクと色付けの対応について。 
           デフォルトは５。→何も色無し。
@@ -1303,168 +1624,243 @@ models:
   - name: stg_jrdb__sed
     columns:
       - name: sed_sk
+        quote: true
         tests:
           # takes way too long and is not strictly necessary because spark does this for us
           # - unique
           - not_null
       - name: sed_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: 競走成績キー_血統登録番号
+        quote: true
         description: 競走馬データとのリンクに使用
       - name: 競走成績キー_年月日
-        description: 競走馬データとのリンクに使用 | YYYYMMDD <-暫定版より順序
+        quote: true
+        description: 競走馬データとのリンクに使用 | yyyyMMdd <-暫定版より順序
       - name: 馬名
+        quote: true
         description: 全角１８文字 <-入れ替え
       - name: レース条件_距離
+        quote: true
       - name: レース条件_トラック情報_芝ダ障害コード
+        quote: true
         tests:
           - not_null
           - accepted_values:
               values: [芝, ダート, 障害]
       - name: レース条件_トラック情報_右左
+        quote: true
         description: 1:右, 2:左, 3:直, 9:他
       - name: レース条件_トラック情報_内外
+        quote: true
         description: |
           1:通常(内), 2:外, 3,直ダ, 9:他,
           ※障害のトラックは、以下の２通りとなります。
           "393":障害直線ダート
           "391":障害直線芝
       - name: レース条件_馬場状態
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__going_codes')
               field: code
       - name: レース条件_種別
+        quote: true
         description: ４歳以上等、→成績データの説明
       - name: レース条件_条件
+        quote: true
         description: 900万下等、 →成績データの説明
       - name: レース条件_記号
+        quote: true
         description: ○混等、 →成績データの説明
       - name: レース条件_重量
+        quote: true
         description: ハンデ等、 →成績データの説明
       - name: レース条件_グレード
+        quote: true
       - name: レース条件_レース名
+        quote: true
         description: レース名の通称（全角２５文字）
       - name: レース条件_頭数
+        quote: true
       - name: レース条件_レース名略称
+        quote: true
         description: 全角４文字
       - name: 馬成績_着順
+        quote: true
       - name: 馬成績_異常区分
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__anomaly_codes')
               field: code
       - name: 馬成績_タイム
+        quote: true
         description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
       - name: 馬成績_斤量
+        quote: true
         description: 0.1Kg単位
       - name: 馬成績_騎手名
+        quote: true
         description: 全角６文字
       - name: 馬成績_調教師名
+        quote: true
         description: 全角６文字
       - name: 馬成績_確定単勝オッズ
+        quote: true
       - name: 馬成績_確定単勝人気順位
+        quote: true
       - name: ＪＲＤＢデータ_ＩＤＭ
+        quote: true
       - name: ＪＲＤＢデータ_素点
+        quote: true
       - name: ＪＲＤＢデータ_馬場差
+        quote: true
       - name: ＪＲＤＢデータ_ペース
+        quote: true
       - name: ＪＲＤＢデータ_出遅
+        quote: true
       - name: ＪＲＤＢデータ_位置取
+        quote: true
       - name: ＪＲＤＢデータ_不利
+        quote: true
       - name: ＪＲＤＢデータ_前不利
+        quote: true
         description: 前３Ｆ内での不利
       - name: ＪＲＤＢデータ_中不利
+        quote: true
         description: 道中での不利
       - name: ＪＲＤＢデータ_後不利
+        quote: true
         description: 後３Ｆ内での不利
       - name: ＪＲＤＢデータ_レース
+        quote: true
       - name: ＪＲＤＢデータ_コース取り
+        quote: true
         description: 1:最内,2:内,3:中,4:外,5:大外
       - name: ＪＲＤＢデータ_上昇度コード
+        quote: true
         description: 1:AA, 2:A, 3:B, 4:C, 5:?
       - name: ＪＲＤＢデータ_クラスコード
+        quote: true
       - name: ＪＲＤＢデータ_馬体コード
+        quote: true
       - name: ＪＲＤＢデータ_気配コード
+        quote: true
       - name: ＪＲＤＢデータ_レースペース
+        quote: true
         description: H:ハイ, M:平均, S:スロー
       - name: ＪＲＤＢデータ_馬ペース
+        quote: true
         description: 馬自身のペース(H:M:S)
       - name: ＪＲＤＢデータ_テン指数
+        quote: true
         description: 前３Ｆタイムを指数化したもの
       - name: ＪＲＤＢデータ_上がり指数
+        quote: true
         description: 後３Ｆタイムを指数化したもの
       - name: ＪＲＤＢデータ_ペース指数
+        quote: true
         description: 馬のペースを指数化したもの
       - name: ＪＲＤＢデータ_レースＰ指数
+        quote: true
         description: レースのペースを指数化したもの
       - name: ＪＲＤＢデータ_1(2)着馬名
+        quote: true
         description: 全角６文字
       - name: ＪＲＤＢデータ_1(2)着タイム差
+        quote: true
         description: 0.1秒単位
       - name: ＪＲＤＢデータ_前３Ｆタイム
+        quote: true
         description: 0.1秒単位
       - name: ＪＲＤＢデータ_後３Ｆタイム
+        quote: true
         description: 0.1秒単位
       - name: ＪＲＤＢデータ_備考
+        quote: true
         description: 全角１２文字（地方競馬場名等）
       - name: 確定複勝オッズ下
+        quote: true
         description: 最終的な複勝オッズ（下限）
       - name: 10時単勝オッズ
+        quote: true
         description: 10時頃の単勝オッズ
       - name: 10時複勝オッズ
+        quote: true
         description: 10時頃の複勝オッズ
       - name: コーナー順位１
+        quote: true
       - name: コーナー順位２
+        quote: true
       - name: コーナー順位３
+        quote: true
       - name: コーナー順位４
+        quote: true
       - name: 前３Ｆ先頭差
+        quote: true
         description: 前３Ｆ地点での先頭とのタイム差 (0.1秒単位)
       - name: 後３Ｆ先頭差
+        quote: true
         description: 後３Ｆ地点での先頭とのタイム差 (0.1秒単位)
       - name: 騎手コード
+        quote: true
         description: 騎手マスタとリンク
         tests:
           - not_null
       - name: 調教師コード
+        quote: true
         description: 調教師マスタとリンク
         tests:
           - not_null
       - name: 馬体重
+        quote: true
         description: データ無:スペース
       - name: 馬体重増減
+        quote: true
         description: 符号+数字２桁、データ無:スペース
       - name: 天候コード
+        quote: true
         description: コード表参照
         tests:
           - not_null
@@ -1472,90 +1868,118 @@ models:
               to: ref('jrdb__weather_codes')
               field: code
       - name: コース
+        quote: true
         description: 1:A,2:A1,3:A2,4:B,5:C,6:D
       - name: レース脚質
+        quote: true
         description: 脚質コード参照
         tests:
           - relationships:
               to: ref('jrdb__run_style_codes')
               field: code
       - name: 払戻データ_単勝
+        quote: true
         description: 単位（円）
       - name: 払戻データ_複勝
+        quote: true
         description: 単位（円）
       - name: 本賞金
+        quote: true
         description: 単位（万円）
       - name: 収得賞金
+        quote: true
         description: |
           単位（万円）
           https://dic.nicovideo.jp/a/%E5%8F%8E%E5%BE%97%E8%B3%9E%E9%87%91
       - name: レースペース流れ
+        quote: true
         description: →成績データの説明
       - name: 馬ペース流れ
+        quote: true
         description: →成績データの説明
       - name: ４角コース取り
+        quote: true
         description: 1:最内,2:内,3:中,4:外,5:大外
       - name: 発走時間
+        quote: true
         description: HHMM
 
   - name: stg_jrdb__tyb
     columns:
       - name: tyb_sk
+        quote: true
         tests:
           # Takes way too long. Just trust pyspark is doing this for us correctly
           # - unique
           - not_null
       - name: tyb_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: ＩＤＭ
+        quote: true
         tests:
           - not_null
       - name: 騎手指数
+        quote: true
         tests:
           - not_null
       - name: 情報指数
+        quote: true
         tests:
           - not_null
       - name: オッズ指数
+        quote: true
         tests:
           - not_null
       - name: パドック指数
+        quote: true
         tests:
           - not_null
       - name: 予備１
+        quote: true
       - name: 総合指数
+        quote: true
         tests:
           - not_null
       - name: 馬具変更情報
+        quote: true
         description: |
           0:馬具変更なし
           1:馬具変更（通常）
@@ -1565,6 +1989,7 @@ models:
           - accepted_values:
               values: [0, 1, 2]
       - name: 脚元情報
+        quote: true
         description: |
           0:平行線
           1:良化（!）
@@ -1575,35 +2000,42 @@ models:
           - accepted_values:
               values: [0, 1, 2, 3]
       - name: 取消フラグ
+        quote: true
         description: 取消フラグ
         tests:
           - not_null
 
       # todo: link with 騎手 master
       - name: 騎手コード
+        quote: true
         tests:
           - not_null
 
       - name: 騎手名
+        quote: true
         tests:
           - not_null
       - name: 負担重量
+        quote: true
         description: 0.1Kg単位
         tests:
           - not_null
       - name: 見習い区分
+        quote: true
         description: 1:☆(1K減),2:△(2K減),3:▲(3K減)
         tests:
           - not_null
           - accepted_values:
               values: [0, 1, 2, 3]
       - name: 馬場状態コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__going_codes')
               field: code
       - name: 天候コード
+        quote: true
         tests:
           - not_null
           - relationships:
@@ -1612,36 +2044,45 @@ models:
 
       # there are only 14 rows of null records (from 1999)
       - name: 単勝オッズ
+        quote: true
         description: 単勝オッズ（データ作成時点）
       - name: 複勝オッズ
+        quote: true
         description: 複勝オッズの下側
       - name: オッズ取得時間
+        quote: true
         description: HHMM
-
       - name: 馬体重
+        quote: true
       - name: 馬体重増減
+        quote: true
         description: 符号+数字２桁、データ無:スペース
       - name: オッズ印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: パドック印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 直前総合印
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__symbol_codes')
               field: code
       - name: 馬体コード
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__horse_form_codes')
               field: code
       - name: 気配コード
+        quote: true
         tests:
           - relationships:
               to: ref('jrdb__demeanor_codes')
@@ -1649,6 +2090,7 @@ models:
 
       # todo: handle invalid times like 9:90
       - name: 発走時間
+        quote: true
         description: HHMM
 
   - name: stg_jrdb__ukc
@@ -1707,7 +2149,7 @@ models:
           - not_null
       - name: 生年月日
         quote: true
-        description: YYYYMMDD
+        description: yyyyMMdd
       - name: 父馬生年
         quote: true
       - name: 母馬生年
@@ -1749,104 +2191,146 @@ models:
     description: 基準オッズデータ
     columns:
       - name: oz_sk
+        quote: true
         tests:
           - unique
           - not_null
       - name: oz_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 登録頭数
+        quote: true
         tests:
           - not_null
       - name: 単勝オッズ
+        quote: true
         tests:
           - not_null
       - name: 複勝オッズ
+        quote: true
         tests:
           - not_null
       - name: 連勝オッズ
+        quote: true
         tests:
           - not_null
 
   - name: stg_jrdb__skb
     columns:
       - name: skb_sk
+        quote: true
         tests:
           # Takes way too long. Just trust pyspark is doing this for us correctly
           # - unique
           - not_null
       - name: skb_bk
+        quote: true
         tests:
           - unique
           - not_null
       - name: レースキー
+        quote: true
         tests:
           - not_null
       - name: 開催キー
+        quote: true
         tests:
           - not_null
       - name: レースキー_場コード
+        quote: true
         tests:
           - not_null
           - relationships:
               to: ref('jrdb__racetrack_codes')
               field: code
       - name: レースキー_年
+        quote: true
         tests:
           - not_null
       - name: レースキー_回
+        quote: true
         tests:
           - not_null
       - name: レースキー_日
+        quote: true
         tests:
           - not_null
       - name: レースキー_Ｒ
+        quote: true
         tests:
           - not_null
       - name: 馬番
+        quote: true
         tests:
           - not_null
       - name: 競走成績キー_血統登録番号
+        quote: true
       - name: 競走成績キー_年月日
+        quote: true
       - name: 特記コード
+        quote: true
       - name: 馬具コード
+        quote: true
       - name: 脚元コード_総合
+        quote: true
       - name: 脚元コード_左前
+        quote: true
       - name: 脚元コード_右前
+        quote: true
       - name: 脚元コード_左後
+        quote: true
       - name: 脚元コード_右後
+        quote: true
       - name: パドックコメント
+        quote: true
       - name: 脚元コメント
+        quote: true
       - name: 馬具(その他)コメント
+        quote: true
       - name: レースコメント
+        quote: true
       - name: 分析用データ_ハミ
+        quote: true
       - name: 分析用データ_バンテージ
+        quote: true
       - name: 分析用データ_蹄鉄
+        quote: true
       - name: 分析用データ_蹄状態
+        quote: true
       - name: 分析用データ_ソエ
+        quote: true
       - name: 分析用データ_骨瘤
+        quote: true

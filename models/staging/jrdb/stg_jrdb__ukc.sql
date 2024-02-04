@@ -1,16 +1,9 @@
--- indexes=[{'columns': ['血統登録番号', 'データ年月日'], 'unique': True}]
-{{
-  config(
-    materialized='table'
-  )
-}}
-
 with
   source as (
   select
     *
   from
-    {{ source('jrdb', 'ukc') }}
+    {{ source('jrdb', 'raw_jrdb__ukc') }}
     -- parquet.`/Users/hankehly/Projects/JapanHorseRaceAnalytics/UKC`
   where
     -- there are 8 records with values of '99999999'

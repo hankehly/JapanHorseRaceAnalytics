@@ -27,7 +27,7 @@
   byte_length: 8
   format: "9"
   relative: 7
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 開催区分
   repeat_factor: 1
   byte_length: 1

@@ -175,7 +175,7 @@ models:
       - name: 天気
         tests:
           - relationships:
-              to: ref('jma_天気記号')
+              to: ref('jma__weather_symbols')
               field: code
       - name: 天気_品質情報
         tests:

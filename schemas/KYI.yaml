@@ -929,7 +929,7 @@
   byte_length: 8
   format: "9"
   relative: 562
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 入厩何日前
   repeat_factor: 1
   byte_length: 3

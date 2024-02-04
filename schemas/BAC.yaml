@@ -33,7 +33,7 @@
   byte_length: 8
   format: "9"
   relative: 9
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 発走時間
   repeat_factor: 1
   byte_length: 4

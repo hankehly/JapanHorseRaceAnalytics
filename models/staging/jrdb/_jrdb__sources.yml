@@ -1,8 +1,8 @@
 sources:
   - name: jrdb
-    schema: jrdb_raw
+    schema: jhra_raw
     tables:
-      - name: bac
+      - name: raw_jrdb__bac
         description: 番組データ仕様
         columns:
           - name: レースキー_場コード
@@ -45,7 +45,7 @@ sources:
           - name: 馬券発売フラグ_３連複
           - name: 馬券発売フラグ_３連単
           - name: WIN5フラグ
-      - name: cha
+      - name: raw_jrdb__cha
         description: 調教本追切データ仕様
         columns:
           - name: レースキー_場コード
@@ -73,7 +73,7 @@ sources:
           - name: 併せ馬相手データ_追切種類
           - name: 併せ馬相手データ_年齢
           - name: 併せ馬相手データ_クラス
-      - name: cyb
+      - name: raw_jrdb__cyb
         description: 調教分析データ仕様
         columns:
           - name: レースキー_場コード
@@ -102,7 +102,7 @@ sources:
           - name: 調教評価
           - name: 一週前追切指数
           - name: 一週前追切コース
-      - name: hjc
+      - name: raw_jrdb__hjc
         description: 払戻情報データ仕様
         columns:
           - name: レースキー_場コード
@@ -118,7 +118,7 @@ sources:
           - name: 馬単払戻
           - name: ３連複払戻
           - name: ３連単払戻
-      - name: kab
+      - name: raw_jrdb__kab
         description: 開催データ仕様
         columns:
           - name: 開催キー_場コード
@@ -152,7 +152,7 @@ sources:
           - name: 転圧
           - name: 凍結防止剤
           - name: 中間降水量
-      - name: kyi
+      - name: raw_jrdb__kyi
         description: 競走馬データ仕様
         columns:
           - name: レースキー_場コード
@@ -282,7 +282,7 @@ sources:
           - name: 放牧先
           - name: 放牧先ランク
           - name: 厩舎ランク
-      - name: ot
+      - name: raw_jrdb__ot
         description: 基準オッズ３連複データ仕様
         columns:
           - name: レースキー_場コード
@@ -292,7 +292,7 @@ sources:
           - name: レースキー_Ｒ
           - name: 登録頭数
           - name: ３連複オッズ
-      - name: ou
+      - name: raw_jrdb__ou
         description: 基準オッズ馬単データ仕様
         columns:
           - name: レースキー_場コード
@@ -302,7 +302,7 @@ sources:
           - name: レースキー_Ｒ
           - name: 登録頭数
           - name: 馬単オッズ
-      - name: ov
+      - name: raw_jrdb__ov
         description: 基準オッズ３連単データ仕様
         columns:
           - name: レースキー_場コード
@@ -312,7 +312,7 @@ sources:
           - name: レースキー_Ｒ
           - name: 登録頭数
           - name: ３連単オッズ
-      - name: ow
+      - name: raw_jrdb__ow
         description: 基準オッズワイドデータ仕様
         columns:
           - name: レースキー_場コード
@@ -322,7 +322,7 @@ sources:
           - name: レースキー_Ｒ
           - name: 登録頭数
           - name: ワイドオッズ
-      - name: oz
+      - name: raw_jrdb__oz
         description: 基準オッズデータ仕様
         columns:
           - name: レースキー_場コード
@@ -334,7 +334,7 @@ sources:
           - name: 単勝オッズ
           - name: 複勝オッズ
           - name: 連勝オッズ
-      - name: sed
+      - name: raw_jrdb__sed
         description: 成績データ仕様
         columns:
           - name: レースキー_場コード
@@ -418,7 +418,7 @@ sources:
           - name: 馬ペース流れ
           - name: ４角コース取り
           - name: 発走時間
-      - name: skb
+      - name: raw_jrdb__skb
         description: 成績拡張データ仕様
         columns:
           - name: レースキー_場コード
@@ -446,7 +446,7 @@ sources:
           - name: 分析用データ_蹄状態
           - name: 分析用データ_ソエ
           - name: 分析用データ_骨瘤
-      - name: tyb
+      - name: raw_jrdb__tyb
         description: 直前情報データ仕様
         columns:
           - name: レースキー_場コード
@@ -482,7 +482,7 @@ sources:
           - name: 馬体コード
           - name: 気配コード
           - name: 発走時間
-      - name: ukc
+      - name: raw_jrdb__ukc
         description: 馬基本データ仕様
         columns:
           - name: 血統登録番号

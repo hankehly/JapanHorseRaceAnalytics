@@ -45,7 +45,7 @@
   byte_length: 8
   format: "9"
   relative: 19
-  comments: 競走馬データとのリンクに使用 | YYYYMMDD <-暫定版より順序
+  comments: 競走馬データとのリンクに使用 | yyyyMMdd <-暫定版より順序
 - name: 馬名
   repeat_factor: 1
   byte_length: 36

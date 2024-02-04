@@ -45,7 +45,7 @@
   byte_length: 8
   format: "9"
   relative: 19
-  comments: YYYYMMDD
+  comments: yyyyMMdd
 - name: 特記コード
   repeat_factor: 6
   byte_length: 3
