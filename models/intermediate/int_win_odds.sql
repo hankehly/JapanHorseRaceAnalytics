@@ -1,11 +1,3 @@
-{{
-  config(
-    materialized='table',
-    schema='intermediate',
-    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}]
-  )
-}}
-
 with
   oz as (
   select
@@ -16,18 +8,18 @@ with
 
   final as (
   select
-    レースキー,
-    開催キー,
-    レースキー_場コード,
-    レースキー_年,
-    レースキー_回,
-    レースキー_日,
-    レースキー_Ｒ,
-    lpad(cast(idx as varchar), 2, '0') as 馬番,
-    cast(nullif(el, '') as numeric) 単勝オッズ
+    oz.`レースキー`,
+    oz.`開催キー`,
+    oz.`レースキー_場コード`,
+    oz.`レースキー_年`,
+    oz.`レースキー_回`,
+    oz.`レースキー_日`,
+    oz.`レースキー_Ｒ`,
+    lpad(cast(idx + 1 as string), 2, '0') as `馬番`,
+    cast(nullif(el, '') as float) `単勝オッズ`
   from
-    oz,
-    unnest(単勝オッズ) WITH ORDINALITY AS t(el, idx)
+    oz
+  lateral view posexplode(oz.`単勝オッズ`) t AS idx, el
   where
     nullif(el, '') is not null
 )

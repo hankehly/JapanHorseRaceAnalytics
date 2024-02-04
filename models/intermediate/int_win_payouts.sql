@@ -1,11 +1,3 @@
-{{
-  config(
-    materialized='table',
-    schema='intermediate',
-    indexes=[{'columns': ['レースキー', '馬番'], 'unique': True}]
-  )
-}}
-
 with
   hjc as (
   select
@@ -16,12 +8,12 @@ with
 
   final as (
   select
-    レースキー,
-    left(val, 2) as 馬番,
-    cast(right(val, 7) as integer) as 払戻金
+    `レースキー`,
+    left(val, 2) as `馬番`,
+    cast(right(val, 7) as integer) as `払戻金`
   from
-    hjc,
-    unnest(単勝払戻) as val
+    hjc
+  lateral view explode(`単勝払戻`) t as val
   where
     cast(left(val, 2) as integer) != 0
   )
