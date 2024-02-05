@@ -35,7 +35,7 @@ with
     {{ ref('stg_jrdb__tyb') }}
   ),
 
-  base as (
+  race_jockeys_base as (
   select
     concat(kyi.`レースキー`, kyi.`馬番`) as `unique_key`,
     kyi.`レースキー`,
@@ -50,7 +50,9 @@ with
     -- jockey_runs
     coalesce(cast(count(*) over (partition by coalesce(tyb.`騎手コード`, kyi.`騎手コード`) order by bac.`年月日`, kyi.`レースキー_Ｒ`) - 1 as integer), 0) as `騎手レース数`,
     -- jockey_wins
-    coalesce(cast(sum(case when sed.`馬成績_着順` = 1 then 1 else 0 end) over (partition by coalesce(tyb.`騎手コード`, kyi.`騎手コード`) order by bac.`年月日`, kyi.`レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手1位完走`
+    coalesce(cast(sum(case when sed.`馬成績_着順` = 1 then 1 else 0 end) over (partition by coalesce(tyb.`騎手コード`, kyi.`騎手コード`) order by bac.`年月日`, kyi.`レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手1位完走`,
+    case when sed.`馬成績_着順` = 1 then 1 else 0 end as is_win,
+    case when sed.`馬成績_着順` <= 3 then 1 else 0 end as is_place
   from
     kyi
 
@@ -75,29 +77,50 @@ with
     and kyi.`馬番` = tyb.`馬番`
   ),
 
-  jockey_features as (
+  race_jockeys_streaks as (
   select
     `レースキー`,
     `馬番`,
+    sum(is_win) over (partition by `騎手コード`, win_group order by `騎手レース数`) as `騎手連続1着`,
+    sum(is_place) over (partition by `騎手コード`, place_group order by `騎手レース数`) as `騎手連続3着内`
+  from (
+    select
+      `レースキー`,
+      `馬番`,
+      `騎手コード`,
+      is_win,
+      is_place,
+      `騎手レース数`,
+      sum(case when is_win = 0 then 1 else 0 end) over (partition by `騎手コード` order by `騎手レース数`) as win_group,
+      sum(case when is_place = 0 then 1 else 0 end) over (partition by `騎手コード` order by `騎手レース数`) as place_group
+    from
+      race_jockeys_base
+    )
+  ),
+
+  race_jockeys as (
+  select
+    base.`レースキー`,
+    base.`馬番`,
     `騎手レース数`,
     `騎手1位完走`,
 
     -- jockey_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手トップ3完走`,
 
     -- ratio_win_jockey
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手1位完走率`,
 
     -- ratio_place_jockey
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手トップ3完走率`,
 
@@ -105,76 +128,76 @@ with
     -- jockey_win_percent_past_5_races
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding) - 1 as float)'
       )
     }}, 0) as `騎手過去5走勝率`,
 
     -- jockey_place_percent_past_5_races
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード` order by `年月日`, `レースキー_Ｒ` rows between 5 preceding and 1 preceding) - 1 as float)'
       )
     }}, 0) as `騎手過去5走トップ3完走率`,
 
     -- jockey_venue_runs
-    coalesce(cast(count(*) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as integer), 0) as `騎手場所レース数`,
+    coalesce(cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as integer), 0) as `騎手場所レース数`,
 
     -- jockey_venue_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手場所1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手場所1位完走`,
 
     -- jockey_venue_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手場所トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手場所トップ3完走`,
 
     -- ratio_win_jockey_venue
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手場所1位完走率`,
 
     -- ratio_place_jockey_venue
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手場所トップ3完走率`,
 
     -- jockey_distance_runs
-    coalesce(cast(count(*) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as integer), 0) as `騎手距離レース数`,
+    coalesce(cast(count(*) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as integer), 0) as `騎手距離レース数`,
 
     -- jockey_distance_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手距離1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手距離1位完走`,
 
     -- jockey_distance_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手距離トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding) as integer), 0) as `騎手距離トップ3完走`,
 
     -- ratio_win_jockey_distance
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手距離1位完走率`,
 
     -- ratio_place_jockey_distance
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `年月日`, `レースキー_Ｒ`) - 1 as float)'
       )
     }}, 0) as `騎手距離トップ3完走率`,
 
     -- prize_jockey_cumulative
-    coalesce(sum(`本賞金`) over (partition by `騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding), 0) as `騎手本賞金累計`,
+    coalesce(sum(`本賞金`) over (partition by base.`騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding), 0) as `騎手本賞金累計`,
 
     -- avg_prize_wins_jockey
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by `騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
+        'sum(`本賞金`) over (partition by base.`騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
         '`騎手1位完走`'
       )
     }}, 0) as `騎手1位完走平均賞金`,
@@ -182,47 +205,57 @@ with
     -- avg_prize_runs_jockey
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by `騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
+        'sum(`本賞金`) over (partition by base.`騎手コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
         '`騎手レース数`'
       )
-    }}, 0) as `騎手レース数平均賞金`
+    }}, 0) as `騎手レース数平均賞金`,
+
+    lag(race_jockeys_streaks.`騎手連続1着`, 1, 0) over (partition by base.`騎手コード` order by `年月日`) as `騎手連続1着`,
+    lag(race_jockeys_streaks.`騎手連続3着内`, 1, 0) over (partition by base.`騎手コード` order by `年月日`) as `騎手連続3着内`
   from
-    base
+    race_jockeys_base base
+  inner join
+    race_jockeys_streaks
+  on
+    base.`レースキー` = race_jockeys_streaks.`レースキー`
+    and base.`馬番` = race_jockeys_streaks.`馬番`
   ),
 
   final as (
   select
-    base.`unique_key`,
-    base.`レースキー`,
-    base.`馬番`,
-    jockey_features.`騎手レース数`, -- jockey_runs
-    jockey_features.`騎手1位完走`, -- jockey_wins
-    jockey_features.`騎手トップ3完走`, -- jockey_places
-    jockey_features.`騎手1位完走率`, -- ratio_win_jockey
-    jockey_features.`騎手トップ3完走率`, -- ratio_place_jockey
-    jockey_features.`騎手過去5走勝率`,
-    jockey_features.`騎手過去5走トップ3完走率`,
-    jockey_features.`騎手場所レース数`, -- jockey_venue_runs
-    jockey_features.`騎手場所1位完走`, -- jockey_venue_wins
-    jockey_features.`騎手場所トップ3完走`, -- jockey_venue_places
-    jockey_features.`騎手場所1位完走率`, -- ratio_win_jockey_venue
-    jockey_features.`騎手場所トップ3完走率`, -- ratio_place_jockey_venue
-    jockey_features.`騎手距離レース数`, -- jockey_distance_runs
-    jockey_features.`騎手距離1位完走`, -- jockey_distance_wins
-    jockey_features.`騎手距離トップ3完走`, -- jockey_distance_places
-    jockey_features.`騎手距離1位完走率`, -- ratio_win_jockey_distance
-    jockey_features.`騎手距離トップ3完走率`, -- ratio_place_jockey_distance
-    jockey_features.`騎手本賞金累計`, -- prize_jockey_cumulative
-    jockey_features.`騎手1位完走平均賞金`, -- avg_prize_wins_jockey
-    jockey_features.`騎手レース数平均賞金` -- avg_prize_runs_jockey
+    race_jockeys_base.`unique_key`,
+    race_jockeys_base.`レースキー`,
+    race_jockeys_base.`馬番`,
+    race_jockeys.`騎手レース数`, -- jockey_runs
+    race_jockeys.`騎手1位完走`, -- jockey_wins
+    race_jockeys.`騎手トップ3完走`, -- jockey_places
+    race_jockeys.`騎手1位完走率`, -- ratio_win_jockey
+    race_jockeys.`騎手トップ3完走率`, -- ratio_place_jockey
+    race_jockeys.`騎手過去5走勝率`,
+    race_jockeys.`騎手過去5走トップ3完走率`,
+    race_jockeys.`騎手場所レース数`, -- jockey_venue_runs
+    race_jockeys.`騎手場所1位完走`, -- jockey_venue_wins
+    race_jockeys.`騎手場所トップ3完走`, -- jockey_venue_places
+    race_jockeys.`騎手場所1位完走率`, -- ratio_win_jockey_venue
+    race_jockeys.`騎手場所トップ3完走率`, -- ratio_place_jockey_venue
+    race_jockeys.`騎手距離レース数`, -- jockey_distance_runs
+    race_jockeys.`騎手距離1位完走`, -- jockey_distance_wins
+    race_jockeys.`騎手距離トップ3完走`, -- jockey_distance_places
+    race_jockeys.`騎手距離1位完走率`, -- ratio_win_jockey_distance
+    race_jockeys.`騎手距離トップ3完走率`, -- ratio_place_jockey_distance
+    race_jockeys.`騎手本賞金累計`, -- prize_jockey_cumulative
+    race_jockeys.`騎手1位完走平均賞金`, -- avg_prize_wins_jockey
+    race_jockeys.`騎手レース数平均賞金`, -- avg_prize_runs_jockey
+    race_jockeys.`騎手連続1着`,
+    race_jockeys.`騎手連続3着内`
 
   from
-    base
+    race_jockeys_base
   inner join
-    jockey_features
+    race_jockeys
   on
-    base.`レースキー` = jockey_features.`レースキー`
-    and base.`馬番` = jockey_features.`馬番`
+    race_jockeys_base.`レースキー` = race_jockeys.`レースキー`
+    and race_jockeys_base.`馬番` = race_jockeys.`馬番`
   )
 
 select
