@@ -51,7 +51,7 @@ with
     (`血統登録番号`, `データ年月日`) in (select `血統登録番号`, MAX(`データ年月日`) from ukc group by `血統登録番号`)
   ),
 
-  good_finish_turf as (
+  horses_good_finish_turf as (
   select
     `競走成績キー_血統登録番号` as `血統登録番号`,
     sum(
@@ -75,7 +75,7 @@ with
     `血統登録番号`
   ),
 
-  good_finish_dirt as (
+  horses_good_finish_dirt as (
   select
     `競走成績キー_血統登録番号` as `血統登録番号`,
     sum(
@@ -99,7 +99,7 @@ with
     `血統登録番号`
   ),
 
-  good_finish_any as (
+  horses_good_finish_any as (
   select
     `競走成績キー_血統登録番号` as `血統登録番号`,
     sum(
@@ -131,26 +131,26 @@ with
       else 'セン'
     end `性別`,
     ukc.`生年月日` as `生年月日`,
-    good_finish_turf.`瞬発戦好走馬` as `瞬発戦好走馬_芝`,
-    good_finish_turf.`消耗戦好走馬` as `消耗戦好走馬_芝`,
-    good_finish_dirt.`瞬発戦好走馬` as `瞬発戦好走馬_ダート`,
-    good_finish_dirt.`消耗戦好走馬` as `消耗戦好走馬_ダート`,
-    good_finish_any.`瞬発戦好走馬` as `瞬発戦好走馬_総合`,
-    good_finish_any.`消耗戦好走馬` as `消耗戦好走馬_総合`
+    horses_good_finish_turf.`瞬発戦好走馬` as `瞬発戦好走馬_芝`,
+    horses_good_finish_turf.`消耗戦好走馬` as `消耗戦好走馬_芝`,
+    horses_good_finish_dirt.`瞬発戦好走馬` as `瞬発戦好走馬_ダート`,
+    horses_good_finish_dirt.`消耗戦好走馬` as `消耗戦好走馬_ダート`,
+    horses_good_finish_any.`瞬発戦好走馬` as `瞬発戦好走馬_総合`,
+    horses_good_finish_any.`消耗戦好走馬` as `消耗戦好走馬_総合`
   from
     ukc_latest as ukc
   left join
-    good_finish_turf 
+    horses_good_finish_turf 
   on
-    ukc.`血統登録番号` = good_finish_turf.`血統登録番号`
+    ukc.`血統登録番号` = horses_good_finish_turf.`血統登録番号`
   left join
-    good_finish_dirt
+    horses_good_finish_dirt
   on
-    ukc.`血統登録番号` = good_finish_dirt.`血統登録番号`
+    ukc.`血統登録番号` = horses_good_finish_dirt.`血統登録番号`
   left join
-    good_finish_any
+    horses_good_finish_any
   on
-    ukc.`血統登録番号` = good_finish_any.`血統登録番号`
+    ukc.`血統登録番号` = horses_good_finish_any.`血統登録番号`
   ),
 
   race_horses_base as (
@@ -170,6 +170,13 @@ with
     kyi.`血統登録番号`,
     kyi.`入厩年月日`,
     horses.`生年月日`,
+    horses.`性別`,
+    horses.`瞬発戦好走馬_芝`,
+    horses.`消耗戦好走馬_芝`,
+    horses.`瞬発戦好走馬_ダート`,
+    horses.`消耗戦好走馬_ダート`,
+    horses.`瞬発戦好走馬_総合`,
+    horses.`消耗戦好走馬_総合`,
     -- Assumption: TYB is available (~15 minutes before race)
     tyb.`馬体重`,
     tyb.`馬体重増減`,
@@ -204,8 +211,8 @@ with
           end
         ) over (partition by kyi.`血統登録番号` order by bac.`年月日` rows between unbounded preceding and 1 preceding) as integer
       ), 0) as `1位完走`, -- horse_wins
-    -- nth race (used to calculate streaks)
-    row_number() over (partition by kyi.`血統登録番号` order by bac.`年月日`) as rn
+    case when `着順` = 1 then 1 else 0 end as is_win,
+    case when `着順` <= 3 then 1 else 0 end as is_place
   from
     kyi
 
@@ -241,89 +248,26 @@ with
     kyi.`血統登録番号` = horses.`血統登録番号`
   ),
 
-
-
-ranked_horses AS (
-  SELECT
+  race_horses_streaks as (
+  select
     `レースキー`,
     `馬番`,
-    `血統登録番号`,
-    rn,
-    `着順`,
-    CASE WHEN `着順` = 1 THEN 1 ELSE 0 END AS `連続1着_`,
-    CASE WHEN `着順` <= 3 THEN 1 ELSE 0 END AS `連続3着内_`
-  FROM
-    race_horses_base
-),
-streaks_calculated AS (
-  -- race_horses_streaks AS (
-  SELECT
-    *,
-    SUM(`連続1着_`) OVER (PARTITION BY `血統登録番号`, win_group ORDER BY rn) AS `連続1着`,
-    SUM(`連続3着内_`) OVER (PARTITION BY `血統登録番号`, top3_group ORDER BY rn) AS `連続3着内`
-  FROM (
-    SELECT
-      *,
-      SUM(CASE WHEN `連続1着_` = 0 THEN 1 ELSE 0 END) OVER (PARTITION BY `血統登録番号` ORDER BY rn) AS win_group,
-      SUM(CASE WHEN `連続3着内_` = 0 THEN 1 ELSE 0 END) OVER (PARTITION BY `血統登録番号` ORDER BY rn) AS top3_group
-    FROM ranked_horses
-  ) t
-),
-race_horses_streaks AS (
-SELECT
-  `レースキー`,
-  `馬番`,
-  `血統登録番号`,
-  `連続1着`,
-  `連続3着内`
-FROM streaks_calculated
-),
-
-
-
-
-
-
-
-
-  -- race_horses_streaks as (
-  -- -- Base case: Initialize the first row of the CTE for each horse
-  -- select
-  --   `レースキー`,
-  --   `馬番`,
-  --   `血統登録番号`,
-  --   rn,
-  --   case when `着順` = 1 then 1 else 0 end as `連続1着`,
-  --   case when `着順` <= 3 then 1 else 0 end as `連続3着内`
-  -- from
-  --   race_horses_base
-  -- where
-  --   rn = 1
-
-  -- union all
-
-  -- -- Recursive step: Calculate streaks by comparing with the previous row
-  -- select
-  --   r.`レースキー`,
-  --   r.`馬番`,
-  --   r.`血統登録番号`,
-  --   r.rn,
-  --   case
-  --     when r.`着順` = 1 then c.`連続1着` + 1 -- Increase streak if win
-  --     else 0 -- Reset streak if not a win
-  --   end as `連続1着`,
-  --   case
-  --     when r.`着順` <= 3 then c.`連続3着内` + 1
-  --     else 0
-  --   end as `連続3着内`
-  -- from
-  --   race_horses_base r
-  -- inner join
-  --   race_horses_streaks c
-  -- on
-  --   r.`血統登録番号` = c.`血統登録番号`
-  --   and r.rn = c.rn + 1
-  -- ),
+    sum(is_win) over (partition by `血統登録番号`, win_group order by `レース数`) as `連続1着`,
+    sum(is_place) over (partition by `血統登録番号`, place_group order by `レース数`) as `連続3着内`
+  from (
+    select
+      `レースキー`,
+      `馬番`,
+      `血統登録番号`,
+      is_win,
+      is_place,
+      `レース数`,
+      sum(case when is_win = 0 then 1 else 0 end) over (partition by `血統登録番号` order by `レース数`) as win_group,
+      sum(case when is_place = 0 then 1 else 0 end) over (partition by `血統登録番号` order by `レース数`) as place_group
+    from
+      race_horses_base
+    )
+  ),
 
   -- 参考:
   -- https://github.com/codeworks-data/mvp-horse-racing-prediction/blob/master/extract_features.py#L73
@@ -335,6 +279,13 @@ FROM streaks_calculated
     base.`馬番`,
     base.`血統登録番号`,
     base.`年月日`,
+    base.`性別`,
+    base.`瞬発戦好走馬_芝`,
+    base.`消耗戦好走馬_芝`,
+    base.`瞬発戦好走馬_ダート`,
+    base.`消耗戦好走馬_ダート`,
+    base.`瞬発戦好走馬_総合`,
+    base.`消耗戦好走馬_総合`,
 
     `一走前着順`,
     `二走前着順`,
@@ -605,9 +556,9 @@ FROM streaks_calculated
     a.`馬番`,
 
     -- `性別`
-    -- sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牡割合`,
-    -- sum(case when b.`性別` = '牝' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牝割合`,
-    -- sum(case when b.`性別` = 'セン' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別セ割合`,
+    sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牡割合`,
+    sum(case when b.`性別` = '牝' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牝割合`,
+    sum(case when b.`性別` = 'セン' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別セ割合`,
 
     -- `一走前着順`
     max(b.`一走前着順`) as `競争相手最高一走前着順`,
@@ -858,22 +809,22 @@ FROM streaks_calculated
     stddev_pop(b.`レース数平均賞金`) as `競争相手レース数平均賞金標準偏差`,
 
     -- `瞬発戦好走馬_芝`
-    -- sum(case when b.`瞬発戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_芝割合`,
+    sum(case when b.`瞬発戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_芝割合`,
 
     -- `消耗戦好走馬_芝`
-    -- sum(case when b.`消耗戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_芝割合`,
+    sum(case when b.`消耗戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_芝割合`,
 
     -- `瞬発戦好走馬_ダート`
-    -- sum(case when b.`瞬発戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_ダート割合`,
+    sum(case when b.`瞬発戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_ダート割合`,
 
     -- `消耗戦好走馬_ダート`
-    -- sum(case when b.`消耗戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_ダート割合`,
+    sum(case when b.`消耗戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_ダート割合`,
 
     -- `瞬発戦好走馬_総合`
-    -- sum(case when b.`瞬発戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_総合割合`,
+    sum(case when b.`瞬発戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_総合割合`,
 
     -- `消耗戦好走馬_総合`
-    -- sum(case when b.`消耗戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_総合割合`,
+    sum(case when b.`消耗戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_総合割合`,
 
     -- `連続1着`
     max(b.`連続1着`) as `競争相手最高連続1着`,
@@ -962,19 +913,18 @@ FROM streaks_calculated
     race_horses.`レース数平均賞金`,
     race_horses.`連続1着`,
     race_horses.`連続3着内`,
+    race_horses.`性別`,
+    race_horses.`血統登録番号`,
+    race_horses.`瞬発戦好走馬_芝`,
+    race_horses.`消耗戦好走馬_芝`,
+    race_horses.`瞬発戦好走馬_ダート`,
+    race_horses.`消耗戦好走馬_ダート`,
+    race_horses.`瞬発戦好走馬_総合`,
+    race_horses.`消耗戦好走馬_総合`,
 
-    horses.`血統登録番号`,
-    horses.`瞬発戦好走馬_芝`,
-    horses.`消耗戦好走馬_芝`,
-    horses.`瞬発戦好走馬_ダート`,
-    horses.`消耗戦好走馬_ダート`,
-    horses.`瞬発戦好走馬_総合`,
-    horses.`消耗戦好走馬_総合`,
-    horses.`性別`,
-
-    -- competitors.`競争相手性別牡割合`,
-    -- competitors.`競争相手性別牝割合`,
-    -- competitors.`競争相手性別セ割合`,
+    competitors.`競争相手性別牡割合`,
+    competitors.`競争相手性別牝割合`,
+    competitors.`競争相手性別セ割合`,
     competitors.`競争相手最高一走前着順`,
     competitors.`競争相手最低一走前着順`,
     competitors.`競争相手平均一走前着順`,
@@ -1128,12 +1078,12 @@ FROM streaks_calculated
     competitors.`競争相手最低レース数平均賞金`,
     competitors.`競争相手平均レース数平均賞金`,
     competitors.`競争相手レース数平均賞金標準偏差`,
-    -- competitors.`競争相手瞬発戦好走馬_芝割合`,
-    -- competitors.`競争相手消耗戦好走馬_芝割合`,
-    -- competitors.`競争相手瞬発戦好走馬_ダート割合`,
-    -- competitors.`競争相手消耗戦好走馬_ダート割合`,
-    -- competitors.`競争相手瞬発戦好走馬_総合割合`,
-    -- competitors.`競争相手消耗戦好走馬_総合割合`,
+    competitors.`競争相手瞬発戦好走馬_芝割合`,
+    competitors.`競争相手消耗戦好走馬_芝割合`,
+    competitors.`競争相手瞬発戦好走馬_ダート割合`,
+    competitors.`競争相手消耗戦好走馬_ダート割合`,
+    competitors.`競争相手瞬発戦好走馬_総合割合`,
+    competitors.`競争相手消耗戦好走馬_総合割合`,
     competitors.`競争相手最高連続1着`,
     competitors.`競争相手最低連続1着`,
     competitors.`競争相手平均連続1着`,
@@ -1189,10 +1139,6 @@ FROM streaks_calculated
     race_horses
   -- 馬はどうするか。。inner joinだと初走の馬は結果に出てこなくなる
   -- 初走の馬にかけても意味がないので、inner joinでいい
-  inner join
-    horses
-  on
-    race_horses.`血統登録番号` = horses.`血統登録番号`
   inner join
     competitors
   on
