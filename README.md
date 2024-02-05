@@ -42,7 +42,7 @@ Run schematool on metastore_db in postgres.
 Start hive
 
 ```
-make start_spark_server
+make start_hive_server
 ```
 
 ## Data sources
