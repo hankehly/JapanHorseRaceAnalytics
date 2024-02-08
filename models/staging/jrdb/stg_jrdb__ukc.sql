@@ -12,37 +12,22 @@ with
     `データ年月日` != '99999999'
   ),
 
-  duplicates as (
+  prioritized as (
   select
-    `血統登録番号`,
-    `データ年月日`,
-    count(*)
+    *,
+    -- ukc duplicates have identical rows, so we can use any row
+    row_number() over (partition by `血統登録番号`, `データ年月日` order by `血統登録番号`, `データ年月日`) as row_priority
   from
     source
-  group by
-    `血統登録番号`,
-    `データ年月日`
-  having
-    count(*) > 1
-  ),
-
-  duplicates_with_sk as (
-  select
-    row_number() over (partition by `血統登録番号`, `データ年月日` order by ukc_sk) rn,
-    *
-  from
-    source
-  where
-    (`血統登録番号`, `データ年月日`) in (select `血統登録番号`, `データ年月日` from duplicates)
   ),
 
   source_dedupe as (
   select
     *
   from
-    source
+    prioritized
   where
-    ukc_sk not in (select ukc_sk from duplicates_with_sk where rn > 1)
+    row_priority = 1
   ),
 
   final as (

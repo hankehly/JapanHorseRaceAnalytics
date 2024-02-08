@@ -24,8 +24,6 @@ with
     prioritized
   where
     row_priority = 1
-  order by
-    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`
   ),
 
   final as (

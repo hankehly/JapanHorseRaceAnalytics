@@ -17,6 +17,7 @@ with
   from
     {{ source('jrdb', 'raw_jrdb__bac') }}
   ),
+
   source_dedupe as (
   select
     *
@@ -24,9 +25,8 @@ with
     prioritized
   where
     row_priority = 1
-  order by
-    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`
   ),
+
   final as (
   select
     bac_sk,

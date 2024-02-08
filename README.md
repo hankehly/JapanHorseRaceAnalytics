@@ -77,8 +77,14 @@ make start_hive_server
 | HJC  | 払戻(実績)情報に関するデータを格納 (payout information, i.e. which horse won how much for what 馬券 type) | 1 race         | レースキー                               | 土日 17:00 | 当日情報  |
 
 Notes:
-1. 同じ開催キーのレースは基本的に同じ日に行われるが、天気によって二日後など延期されることが稀にある（例: 2011年1小倉7）。そのため、開催キー＋年月日が本当のキーとなる。
-2. 1) 直前データ／直前累積データの場合 競馬開催日 各レース出走１５分前頃。仕様書では、15分前となっていますが、10分前になってしまうこともあります。（コロナ渦以降の運用体制のため）(verified, sometimes it just comes in late, but its there beforehand. Must download from bottom of race day tab in http://www.jrdb.com/member/n_index.html) 2) 直前累積データ最終版の場合 競馬開催日 全レース終了後、午後５：００頃
+1. 同じ開催キーのレースは基本的に同じ日に行われるが、天気によって二日後など延期されることが稀にある（例: 2011年1小倉7）。そのため、開催キー＋年月日が本当のキーとなる。例:
+
+| 開催キー | 場コード | 年  | 回  | 日  | 年月日     |
+| -------- | -------- | --- | --- | --- | ---------- |
+| 101117   | 10       | 11  | 1   | 7   | 2011-02-12 |
+| 101117   | 10       | 11  | 1   | 7   | 2011-02-14 |
+
+2. 直前データ／直前累積データの場合 競馬開催日 各レース出走１５分前頃。仕様書では、15分前となっていますが、10分前になってしまうこともあります。（コロナ渦以降の運用体制のため）(verified, sometimes it just comes in late, but its there beforehand. Must download from bottom of race day tab in http://www.jrdb.com/member/n_index.html). 直前累積データ最終版の場合 競馬開催日 全レース終了後、午後5:00頃.
 
 
 #### Key descriptions
@@ -93,30 +99,37 @@ Notes:
 
 #### Duplicates
 
-| Dataset | Verified range | Has duplicates? | Notes                                                  |
-| ------- | -------------- | --------------- | ------------------------------------------------------ |
-| bac     | ~2023/12/17    | [x]             |                                                        |
-| cha     | ~2023/12/17    | [ ]             |                                                        |
-| cyb     | ~2023/12/17    | [x]             |                                                        |
-| hjc     | ~2023/12/17    | [ ]             |                                                        |
-| kab     | ~2023/12/17    | [ ]             |                                                        |
-| kyi     | ~2023/12/17    | [ ]             |                                                        |
-| oz      | ~2023/12/17    | [ ]             |                                                        |
-| sed     | ~2023/12/17    | [x]             |                                                        |
-| skb     | ~2023/12/17    | [ ]             |                                                        |
-| tyb     | ~2023/12/17    | [x]             |                                                        |
-| ukc     | ~2023/12/17    | [x]             | May contain duplicates in new files prior to new races |
+Some datasets have identitical rows. Others have rows that are identical except for specific columns. The following table shows which datasets have duplicates and which columns are different.
+
+| dataset | duplicates | different columns | notes                                                                                                      |
+| ------- | ---------- | ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| BAC     | yes        | 年月日            | E.g., see 開催キー in '061345', '091115', '101125'. Keep rows with the latest date (verified in netkeiba). |
+| CHA     |            |                   | todo                                                                                                       |
+| CYB     |            |                   | todo                                                                                                       |
+| HJC     |            |                   | todo                                                                                                       |
+| KAB     |            |                   | todo                                                                                                       |
+| KYI     |            |                   | todo                                                                                                       |
+| OZ      |            |                   | todo                                                                                                       |
+| OT      |            |                   | todo                                                                                                       |
+| OU      |            |                   | todo                                                                                                       |
+| OV      |            |                   | todo                                                                                                       |
+| OW      |            |                   | todo                                                                                                       |
+| SED     |            |                   | todo                                                                                                       |
+| SKB     |            |                   | todo                                                                                                       |
+| TYB     |            |                   | todo                                                                                                       |
+| UKC     | yes        |                   | Identical rows, take whichever you please                                                                  |
+
 
 #### Other data notes
 
 bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも少ないので無視することにする。`runner_count_difference`に特定するためのクエリを書いておく。
 
-| レースキー   | 頭数_kyi | 頭数_bac |
-| ------------ | -------- | -------- |
-| 05041405     | 13       | 14       |
-| 08004402     | 13       | 14       |
-| 08004409     | 8        | 9        |
-| 08085302     | 15       | 14       |
+| レースキー | 頭数_kyi | 頭数_bac |
+| ---------- | -------- | -------- |
+| 05041405   | 13       | 14       |
+| 08004402   | 13       | 14       |
+| 08004409   | 8        | 9        |
+| 08085302   | 15       | 14       |
 
 
 ## Modeling methodology
