@@ -4,7 +4,7 @@ select
 	`競走成績キー_血統登録番号`,
 	count(*)
 from
-    {{ ref("stg_jrdb__sed") }}
+    {{ ref('stg_jrdb__sed') }}
 group by
 	`競走成績キー_年月日`,
 	`競走成績キー_血統登録番号`
