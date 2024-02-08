@@ -11,7 +11,7 @@ with
     `年月日`,
     count(*)
   from
-    jhra_raw.raw_jrdb__kab
+    {{ source('jrdb', 'raw_jrdb__kab') }}
   group by
     `開催キー_場コード`,
     `開催キー_年`,
@@ -20,19 +20,12 @@ with
     `年月日`
   having
     count(*) > 1
-  ),
-  duplicates_with_sk as (
-  select
-    row_number() over (partition by `開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日` order by kab_sk) rn,
-    *
-  from
-    jhra_raw.raw_jrdb__kab
-  where
-    (`開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日`) in (select `開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日` from duplicates)
   )
-
--- The following query will return all duplicate rows.
 select
   *
 from
-  duplicates_with_sk
+  {{ source('jrdb', 'raw_jrdb__kab') }}
+where
+  (`開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日`) in (select `開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日` from duplicates)
+order by
+  `開催キー_場コード`, `開催キー_年`, `開催キー_回`, `開催キー_日`, `年月日`

@@ -6,46 +6,26 @@ with
     {{ source('jrdb', 'raw_jrdb__tyb') }}
   ),
 
-  duplicates as (
+  prioritized as (
   select
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`,
-    count(*)
+    *,
+    -- TYB has many duplicates, and most of them are identical.
+    -- But about 360 rows have values for 単勝オッズ and 複勝オッズ, etc. and the rest are empty.
+    -- Checking on 単勝オッズ returns the correct rows.
+    row_number() over(partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by case when trim(`単勝オッズ`) = '' then 1 else 0 end) AS row_priority
   from
-    source
-  group by
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`
-  having
-    count(*) > 1
-  ),
-
-  duplicates_with_sk as (
-  select
-    -- For tyb, the row with the highest sk contains the more complete data.
-    row_number() over (partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by tyb_sk desc) rn,
-    *
-  from
-    source
-  where
-    (`レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`) in (select `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` from duplicates)
+    {{ source('jrdb', 'raw_jrdb__tyb') }}
   ),
 
   source_dedupe as (
   select
     *
   from
-    source
+    prioritized
   where
-    tyb_sk not in (select tyb_sk from duplicates_with_sk where rn > 1)
+    row_priority = 1
+  order by
+    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`
   ),
 
   final as (
