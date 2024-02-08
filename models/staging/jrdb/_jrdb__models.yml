@@ -4,8 +4,7 @@ models:
       - name: bac_sk
         quote: true
         tests:
-          # takes way too long
-          # - unique
+          - unique
           - not_null
       - name: bac_bk
         quote: true
@@ -359,8 +358,7 @@ models:
       - name: cyb_sk
         quote: true
         tests:
-          # takes way too long
-          # - unique
+          - unique
           - not_null
       - name: cyb_bk
         quote: true
@@ -718,8 +716,7 @@ models:
       - name: kyi_sk
         quote: true
         tests:
-          # Takes too long
-          # - unique
+          - unique
           - not_null
       - name: kyi_bk
         quote: true
@@ -1626,8 +1623,7 @@ models:
       - name: sed_sk
         quote: true
         tests:
-          # takes way too long and is not strictly necessary because spark does this for us
-          # - unique
+          - unique
           - not_null
       - name: sed_bk
         quote: true
@@ -1909,8 +1905,7 @@ models:
       - name: tyb_sk
         quote: true
         tests:
-          # Takes way too long. Just trust pyspark is doing this for us correctly
-          # - unique
+          - unique
           - not_null
       - name: tyb_bk
         quote: true
@@ -2099,8 +2094,7 @@ models:
         # https://docs.getdbt.com/reference/resource-properties/quote
         quote: true
         tests:
-          # Takes too long
-          # - unique
+          - unique
           - not_null
       - name: ukc_bk
         quote: true
@@ -2253,8 +2247,7 @@ models:
       - name: skb_sk
         quote: true
         tests:
-          # Takes way too long. Just trust pyspark is doing this for us correctly
-          # - unique
+          - unique
           - not_null
       - name: skb_bk
         quote: true
