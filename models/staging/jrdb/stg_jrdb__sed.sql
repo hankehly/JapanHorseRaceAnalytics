@@ -6,48 +6,26 @@ with
     {{ source('jrdb', 'raw_jrdb__sed') }}
   ),
 
-  duplicates as (
+  prioritized as (
   select
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`,
-    count(*)
+    *,
+    -- duplicates exist where 競走成績キー_年月日=20220827
+    -- half of the rows have empty ＪＲＤＢデータ_* columns, the other half have non-empty values
+    -- we want to keep the rows with non-empty values
+    row_number() over(partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by case when trim(`ＪＲＤＢデータ_ＩＤＭ`) = '' then 1 else 0 end) AS row_priority
   from
-    source
-  group by
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`
-  having
-    count(*) > 1
-  ),
-
-  duplicates_with_sk as (
-  select
-    -- The following line orders the rows by sed_sk in ascending order because we want to keep the oldest row in the case of sed.
-    -- For other tables, this is not the case because we want to keep the newest row.
-    -- Check netkeiba to see if the oldest or newest row should be kept.
-    row_number() over (partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by sed_sk) rn,
-    *
-  from
-    source
-  where
-    (`レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`) in (select `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` from duplicates)
+    jhra_raw.raw_jrdb__sed
   ),
 
   source_dedupe as (
   select
     *
   from
-    source
+    prioritized
   where
-    sed_sk not in (select sed_sk from duplicates_with_sk where rn > 1)
+    row_priority = 1
+  order by
+    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`
   ),
 
   final as (
