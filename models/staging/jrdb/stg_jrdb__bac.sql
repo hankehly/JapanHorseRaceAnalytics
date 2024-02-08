@@ -5,36 +5,27 @@ with
   from
     {{ source('jrdb', 'raw_jrdb__bac') }}
   ),
-  duplicates as (
+  prioritized as (
   select
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    count(*)
+    *,
+    -- bac has rows with duplicate race keys but different 年月日.
+    -- E.g., see 開催キー in '061345', '091115', '101125'
+    -- we want the rows with the latest 年月日
+    -- Note: the 'YYYYMMDD' format maintains chronological ordering when sorted alphabetically as strings,
+    -- so we don't need to cast to date or integer when sorting
+    row_number() over(partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ` order by `年月日` desc) AS row_priority
   from
-    source
-  group by
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`
-  having
-    count(*) > 1
-  ),
-  duplicates_with_sk as (
-  select
-    row_number() over (partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ` order by bac_sk desc) rn,
-    *
-  from
-    source
-  where
-    (`レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`) in (select `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ` from duplicates)
+    {{ source('jrdb', 'raw_jrdb__bac') }}
   ),
   source_dedupe as (
-    select * from source where bac_sk not in (select bac_sk from duplicates_with_sk where rn > 1)
+  select
+    *
+  from
+    prioritized
+  where
+    row_priority = 1
+  order by
+    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`
   ),
   final as (
   select

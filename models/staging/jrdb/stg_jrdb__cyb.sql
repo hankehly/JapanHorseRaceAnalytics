@@ -6,46 +6,25 @@ with
     {{ source('jrdb', 'raw_jrdb__cyb') }}
   ),
 
-  duplicates as (
+  prioritized as (
   select
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`,
-    count(*)
+    *,
+    -- for cyb, duplicate keys exist but only some rows have 一週前追切指数 and 一週前追切コース populated
+    -- so we prioritize rows with these fields populated
+    row_number() over(partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by case when trim(`一週前追切指数`) = '' then 1 else 0 end) AS row_priority
   from
-    source
-  group by
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
-    `馬番`
-  having
-    count(*) > 1
-  ),
-
-  duplicates_with_sk as (
-  select
-    -- For cyb, the row with the highest cyb_sk has the newest data.
-    row_number() over (partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` order by cyb_sk desc) rn,
-    *
-  from
-    source
-  where
-    (`レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`) in (select `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番` from duplicates)
+    {{ source('jrdb', 'raw_jrdb__cyb') }}
   ),
 
   source_dedupe as (
   select
     *
   from
-    source
+    prioritized
   where
-    cyb_sk not in (select cyb_sk from duplicates_with_sk where rn > 1)
+    row_priority = 1
+  order by
+    `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ`, `馬番`
   ),
 
   final as (
