@@ -144,9 +144,7 @@ with
     coalesce(tv.`調教師場所トップ3完走`, 0) as `調教師場所トップ3完走`, -- trainer_venue_places
     coalesce(tv.`調教師場所1位完走` / tv.`調教師場所レース数`, 0) as `調教師場所1位完走率`, -- ratio_win_trainer_venue
     coalesce(tv.`調教師場所トップ3完走` / tv.`調教師場所レース数`, 0) as `調教師場所トップ3完走率`, -- ratio_place_trainer_venue
-
     coalesce(cp.`調教師本賞金累計`, 0) as `調教師本賞金累計`, -- prize_trainer_cumulative
-
     -- When you win, how much money do you win on average?
     coalesce(cp.`調教師本賞金1着累計` / cp.`調教師1位完走`, 0) as `調教師1位完走平均賞金`, -- avg_prize_wins_trainer
     coalesce(cp.`調教師本賞金累計` / cp.`調教師レース数`, 0) as `調教師レース数平均賞金`  -- avg_prize_runs_trainer

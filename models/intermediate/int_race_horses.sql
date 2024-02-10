@@ -159,13 +159,13 @@ with
     kyi.`レースキー`,
     kyi.`馬番`,
     kyi.`枠番`,
-    bac.`年月日`,
+    bac.`発走日時`,
     kyi.`レースキー_場コード` as `場コード`,
     case
-      when extract(month from bac.`年月日`) <= 3 then 1
-      when extract(month from bac.`年月日`) <= 6 then 2
-      when extract(month from bac.`年月日`) <= 9 then 3
-      when extract(month from bac.`年月日`) <= 12 then 4
+      when extract(month from bac.`発走日時`) <= 3 then 1
+      when extract(month from bac.`発走日時`) <= 6 then 2
+      when extract(month from bac.`発走日時`) <= 9 then 3
+      when extract(month from bac.`発走日時`) <= 12 then 4
     end as `四半期`,
     kyi.`血統登録番号`,
     kyi.`入厩年月日`,
@@ -193,14 +193,19 @@ with
     bac.`頭数`,
     bac.`レース条件_トラック情報_芝ダ障害コード` as `トラック種別`,
     sed.`馬成績_着順` as `着順`,
-    lag(sed.`馬成績_着順`, 1) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `一走前着順`,
-    lag(sed.`馬成績_着順`, 2) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `二走前着順`,
-    lag(sed.`馬成績_着順`, 3) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `三走前着順`,
-    lag(sed.`馬成績_着順`, 4) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `四走前着順`,
-    lag(sed.`馬成績_着順`, 5) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `五走前着順`,
-    lag(sed.`馬成績_着順`, 6) over (partition by kyi.`血統登録番号` order by bac.`年月日`) as `六走前着順`,
+    lag(sed.`馬成績_着順`, 1) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `一走前着順`,
+    lag(sed.`馬成績_着順`, 2) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `二走前着順`,
+    lag(sed.`馬成績_着順`, 3) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `三走前着順`,
+    lag(sed.`馬成績_着順`, 4) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `四走前着順`,
+    lag(sed.`馬成績_着順`, 5) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `五走前着順`,
+    lag(sed.`馬成績_着順`, 6) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `六走前着順`,
+    -- Todo: add later
+    -- ＪＲＤＢデータ_不利
+    -- ＪＲＤＢデータ_前不利
+    -- ＪＲＤＢデータ_中不利
+    -- ＪＲＤＢデータ_後不利
     -- how many races this horse has run until now
-    row_number() over (partition by kyi.`血統登録番号` order by bac.`年月日`) - 1 as `レース数`,
+    row_number() over (partition by kyi.`血統登録番号` order by bac.`発走日時`) - 1 as `レース数`,
     -- how many races this horse has won until now (incremented by one on the following race)
     coalesce(
       cast(
@@ -209,7 +214,7 @@ with
             when sed.`馬成績_着順` = 1 then 1
             else 0
           end
-        ) over (partition by kyi.`血統登録番号` order by bac.`年月日` rows between unbounded preceding and 1 preceding) as integer
+        ) over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding) as integer
       ), 0) as `1位完走`, -- horse_wins
     case when `着順` = 1 then 1 else 0 end as is_win,
     case when `着順` <= 3 then 1 else 0 end as is_place
@@ -278,7 +283,7 @@ with
     base.`レースキー`,
     base.`馬番`,
     base.`血統登録番号`,
-    base.`年月日`,
+    base.`発走日時`,
     base.`性別`,
     base.`瞬発戦好走馬_芝`,
     base.`消耗戦好走馬_芝`,
@@ -297,24 +302,24 @@ with
     -- whether the horse placed in the previous race
     -- last_place
     case
-      when lag(`着順`) over (partition by base.`血統登録番号` order by `年月日`) <= 3 then true
+      when lag(`着順`) over (partition by base.`血統登録番号` order by `発走日時`) <= 3 then true
       else false
     end as `前走トップ3`,
 
     -- previous race draw
-    lag(`枠番`) over (partition by base.`血統登録番号` order by `年月日`) as `前走枠番`, -- last_draw
+    lag(`枠番`) over (partition by base.`血統登録番号` order by `発走日時`) as `前走枠番`, -- last_draw
 
     -- horse_rest_time
-    -- `年月日` - `入厩年月日` as `入厩何日前`,
-    date_diff(`年月日`, `入厩年月日`) as `入厩何日前`,
+    -- `発走日時` - `入厩年月日` as `入厩何日前`,
+    date_diff(`発走日時`, `入厩年月日`) as `入厩何日前`,
 
     -- horse_rest_lest14
-    -- `年月日` - `入厩年月日` < 15 as `入厩15日未満`,
-    date_diff(`年月日`, `入厩年月日`) < 15 as `入厩15日未満`,
+    -- `発走日時` - `入厩年月日` < 15 as `入厩15日未満`,
+    date_diff(`発走日時`, `入厩年月日`) < 15 as `入厩15日未満`,
 
     -- horse_rest_over35
-    -- `年月日` - `入厩年月日` >= 35 as `入厩35日以上`,
-    date_diff(`年月日`, `入厩年月日`) >= 35 as `入厩35日以上`,
+    -- `発走日時` - `入厩年月日` >= 35 as `入厩35日以上`,
+    date_diff(`発走日時`, `入厩年月日`) >= 35 as `入厩35日以上`,
 
     -- declared_weight
     `馬体重`,
@@ -327,19 +332,19 @@ with
     `距離`,
 
     -- diff_distance from previous race
-    coalesce(`距離` - lag(`距離`) over (partition by base.`血統登録番号` order by `年月日`), 0) as `前走距離差`,
+    coalesce(`距離` - lag(`距離`) over (partition by base.`血統登録番号` order by `発走日時`), 0) as `前走距離差`,
 
     -- horse_age in years
-    -- extract(year from age(`年月日`, `生年月日`)) + extract(month from age(`年月日`, `生年月日`)) / 12 + extract(day from age(`年月日`, `生年月日`)) / (12 * 30.44) AS `年齢`,
-    (months_between(`年月日`, `生年月日`) / 12) as `年齢`,
+    -- extract(year from age(`発走日時`, `生年月日`)) + extract(month from age(`発走日時`, `生年月日`)) / 12 + extract(day from age(`発走日時`, `生年月日`)) / (12 * 30.44) AS `年齢`,
+    (months_between(`発走日時`, `生年月日`) / 12) as `年齢`,
 
     -- horse_age_4 or less
-    -- age(`年月日`, `生年月日`) < '5 years' as `4歳以下`,
-    (months_between(`年月日`, `生年月日`) / 12) < 5 as `4歳以下`,
+    -- age(`発走日時`, `生年月日`) < '5 years' as `4歳以下`,
+    (months_between(`発走日時`, `生年月日`) / 12) < 5 as `4歳以下`,
 
     sum(
       case
-        when (months_between(`年月日`, `生年月日`) / 12) < 5 then 1
+        when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
         else 0
       end
     ) over (partition by base.`レースキー`) as `4歳以下頭数`,
@@ -347,7 +352,7 @@ with
     coalesce(
       sum(
         case
-          when (months_between(`年月日`, `生年月日`) / 12) < 5 then 1
+          when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
           else 0
         end
       ) over (partition by base.`レースキー`) / cast(`頭数` as float), 0) as `4歳以下割合`,
@@ -356,21 +361,21 @@ with
     `1位完走`, -- horse_wins
 
     -- how many races this horse has placed in until now (incremented by one on the following race)
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `トップ3完走`, -- horse_places
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トップ3完走`, -- horse_places
 
     -- ratio_win_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `1位完走率`,
 
     -- ratio_place_horse
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `トップ3完走率`,
 
@@ -378,141 +383,141 @@ with
     -- horse_win_percent_past_5_races
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `年月日` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `年月日` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
       )
     }}, 0) as `過去5走勝率`,
 
     -- horse_place_percent_past_5_races
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `年月日` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `年月日` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
       )
     }}, 0) as `過去5走トップ3完走率`,
 
     -- horse_venue_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `年月日`) - 1 as integer), 0) as `場所レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as integer), 0) as `場所レース数`,
 
     -- horse_venue_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `場所1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `場所1位完走`,
 
     -- horse_venue_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `場所トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `場所トップ3完走`,
 
     -- ratio_win_horse_venue
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `場所1位完走率`,
 
     -- ratio_place_horse_venue
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `場所トップ3完走率`,
 
     -- horse_surface_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日`) - 1 as integer), 0) as `トラック種別レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as integer), 0) as `トラック種別レース数`,
 
     -- horse_surface_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `トラック種別1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トラック種別1位完走`,
 
     -- horse_surface_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `トラック種別トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トラック種別トップ3完走`,
 
     -- ratio_win_horse_surface
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `トラック種別1位完走率`,
 
     -- ratio_place_horse_surface
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `トラック種別トップ3完走率`,
 
     -- horse_going_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日`) - 1 as integer), 0) as `馬場状態レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as integer), 0) as `馬場状態レース数`,
 
     -- horse_going_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `馬場状態1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `馬場状態1位完走`,
 
     -- horse_going_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `馬場状態トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `馬場状態トップ3完走`,
 
     -- ratio_win_horse_going
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `馬場状態1位完走率`,
 
     -- ratio_place_horse_going
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `馬場状態トップ3完走率`,
 
     -- horse_distance_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `年月日`) - 1 as integer), 0) as `距離レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as integer), 0) as `距離レース数`,
 
     -- horse_distance_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離1位完走`,
 
     -- horse_distance_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離トップ3完走`,
 
     -- ratio_win_horse_distance
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `距離1位完走率`,
 
     -- ratio_place_horse_distance
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `距離トップ3完走率`,
 
     -- horse_quarter_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `年月日`) - 1 as integer), 0) as `四半期レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as integer), 0) as `四半期レース数`,
 
     -- horse_quarter_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `四半期1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `四半期1位完走`,
 
     -- horse_quarter_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `年月日` rows between unbounded preceding and 1 preceding) as integer), 0) as `四半期トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `四半期トップ3完走`,
 
     -- ratio_win_horse_quarter
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `四半期1位完走率`,
 
     -- ratio_place_horse_quarter
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `年月日` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `年月日`) - 1 as float)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as float)'
       )
     }}, 0) as `四半期トップ3完走率`,
 
@@ -520,12 +525,12 @@ with
     cast(coalesce(power(`一走前着順` - 1, 2) + power(`二走前着順` - 1, 2) + power(`三走前着順` - 1, 2), 0) as integer) as `過去3走順位平方和`, -- horse_std_rank
 
     -- prize_horse_cumulative
-    coalesce(sum(`本賞金`) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding), 0) as `本賞金累計`,
+    coalesce(sum(`本賞金`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) as `本賞金累計`,
 
     -- avg_prize_wins_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding)',
+        'sum(`本賞金`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
         '`1位完走`'
       )
     }}, 0) as `1位完走平均賞金`,
@@ -533,13 +538,13 @@ with
     -- avg_prize_runs_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by base.`血統登録番号` order by `年月日` rows between unbounded preceding and 1 preceding)',
+        'sum(`本賞金`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
         '`レース数`'
       )
     }}, 0) as `レース数平均賞金`,
 
-    lag(race_horses_streaks.`連続1着`, 1, 0) over (partition by base.`血統登録番号` order by `年月日`) as `連続1着`,
-    lag(race_horses_streaks.`連続3着内`, 1, 0) over (partition by base.`血統登録番号` order by `年月日`) as `連続3着内`
+    lag(race_horses_streaks.`連続1着`, 1, 0) over (partition by base.`血統登録番号` order by `発走日時`) as `連続1着`,
+    lag(race_horses_streaks.`連続3着内`, 1, 0) over (partition by base.`血統登録番号` order by `発走日時`) as `連続3着内`
 
   from
     race_horses_base base
@@ -855,7 +860,7 @@ with
     race_horses.`unique_key`,
     race_horses.`レースキー`,
     race_horses.`馬番`,
-    race_horses.`年月日`,
+    race_horses.`発走日時`,
     race_horses.`一走前着順`,
     race_horses.`二走前着順`,
     race_horses.`三走前着順`,
