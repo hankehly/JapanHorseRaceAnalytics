@@ -100,6 +100,7 @@ with
     base.`レースキー_Ｒ`,
     base.`騎手コード`,
     base.`着順` as `先読み注意_着順`,
+    base.`本賞金` as `先読み注意_本賞金`,
     base.`騎手レース数`,
     base.`騎手1位完走`,
 
@@ -193,10 +194,9 @@ with
     coalesce(sum(`本賞金`) over (partition by base.`騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) as `騎手本賞金累計`,
 
     -- avg_prize_wins_jockey
-    -- todo: check if this is the correct calculation
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by base.`騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'sum(case when `着順` = 1 then `本賞金` else 0 end) over (partition by base.`騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
         '`騎手1位完走`'
       )
     }}, 0) as `騎手1位完走平均賞金`,
@@ -356,6 +356,7 @@ with
     race_jockeys.`レースキー_Ｒ`,
     race_jockeys.`騎手コード`,
     race_jockeys.`先読み注意_着順`,
+    race_jockeys.`先読み注意_本賞金`,
 
     -- Base features
     race_jockeys.`騎手レース数`, -- jockey_runs
