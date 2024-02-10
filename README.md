@@ -51,6 +51,10 @@ make start_hive_server
 
 ![ER](./images/JRDB.drawio.png)
 
+#### 翻訳方針
+
+時間がかかり、ドキュメントと一致しなくなるため、原則カラム名などは日本語のままにする。ただし、技術的な制約により、カラム名などを英語に変更することがある。最終的なデータセットのカラム名は、日本語のみになる。
+
 #### Data update schedule
 
 ![schedule](./images/schedule.png)
