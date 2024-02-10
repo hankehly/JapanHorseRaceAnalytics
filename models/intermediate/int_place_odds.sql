@@ -22,9 +22,6 @@ with
     lateral view posexplode(oz.`複勝オッズ`) t AS idx, el
   where
     nullif(el, '') is not null
-)
+  )
 
-select
-  *
-from
-  final
+select * from final

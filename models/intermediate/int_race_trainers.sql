@@ -40,13 +40,11 @@ with
     case when sed.`馬成績_着順` <= 3 then 1 else 0 end as is_place
   from
     kyi
-
   -- 前日系は inner join
   inner join
     bac
   on
     kyi.`レースキー` = bac.`レースキー`
-
   -- 実績系はレースキーがないかもしれないから left join
   inner join
     sed
@@ -122,7 +120,6 @@ with
 
   race_trainers as (
   select
-    -- Metadata fields (not used for prediction)
     yt.`unique_key`,
     yt.`レースキー`,
     yt.`馬番`,
@@ -131,14 +128,11 @@ with
     yt.`発走日時`,
     yt.`着順` as `先読み注意_着順`,
     yt.`本賞金` as `先読み注意_本賞金`,
-
-    -- Base features
     coalesce(cp.`調教師レース数`, 0) as `調教師レース数`, -- trainer_runs
     coalesce(cp.`調教師1位完走`, 0) as `調教師1位完走`, -- trainer_wins
     coalesce(cp.`調教師トップ3完走`, 0) as `調教師トップ3完走`, -- trainer_places
     coalesce(cp.`調教師1位完走` / cp.`調教師レース数`, 0) as `調教師1位完走率`, -- ratio_win_trainer
     coalesce(cp.`調教師トップ3完走` / cp.`調教師レース数`, 0) as `調教師トップ3完走率`, -- ratio_place_trainer
-
     coalesce(tv.`調教師場所レース数`, 0) as `調教師場所レース数`, -- trainer_venue_runs
     coalesce(tv.`調教師場所1位完走`, 0) as `調教師場所1位完走`, -- trainer_venue_wins
     coalesce(tv.`調教師場所トップ3完走`, 0) as `調教師場所トップ3完走`, -- trainer_venue_places
@@ -148,11 +142,9 @@ with
     -- When you win, how much money do you win on average?
     coalesce(cp.`調教師本賞金1着累計` / cp.`調教師1位完走`, 0) as `調教師1位完走平均賞金`, -- avg_prize_wins_trainer
     coalesce(cp.`調教師本賞金累計` / cp.`調教師レース数`, 0) as `調教師レース数平均賞金`  -- avg_prize_runs_trainer
-
     -- Do this later
     -- 調教師連続1着
     -- 調教師連続3着内
-
   from
     race_trainers_base yt
   inner join
@@ -288,7 +280,7 @@ with
     race_trainers.`調教師1位完走平均賞金`,
     race_trainers.`調教師レース数平均賞金`,
 
-    -- Competitors features
+    -- Competitor features
     competitors.`競争相手最高調教師レース数`,
     competitors.`競争相手最低調教師レース数`,
     competitors.`競争相手平均調教師レース数`,

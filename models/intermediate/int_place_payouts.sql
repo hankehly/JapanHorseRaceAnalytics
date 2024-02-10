@@ -18,7 +18,4 @@ with
     cast(left(val, 2) as integer) != 0
   )
 
-select
-  *
-from
-  final
+select * from final

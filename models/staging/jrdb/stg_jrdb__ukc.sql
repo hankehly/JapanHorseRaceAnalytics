@@ -4,7 +4,6 @@ with
     *
   from
     {{ source('jrdb', 'raw_jrdb__ukc') }}
-    -- parquet.`/Users/hankehly/Projects/JapanHorseRaceAnalytics/UKC`
   where
     -- there are 8 records with values of '99999999'
     -- these records are identical to the records with the same 血統登録番号
