@@ -1,12 +1,12 @@
 start_mlflow_server:
-	mlflow server \
+	source .venv/bin/activate && mlflow server \
 		--host 127.0.0.1 \
 		--port 8080 \
 		--backend-store-uri postgresql://admin:admin@127.0.0.1:5432/mlflow \
 		--default-artifact-root ./mlruns
 
 start_hive_server:
-	spark-submit \
+	source .venv/bin/activate && spark-submit \
 		--master 'local[*]' \
 		--executor-memory 4g \
 		--driver-memory 4g \
