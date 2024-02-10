@@ -284,6 +284,8 @@ with
     base.`馬番`,
     base.`血統登録番号`,
     base.`発走日時`,
+    base.`着順` as `先読み注意_着順`,
+    base.`本賞金` as `先読み注意_本賞金`,
     base.`性別`,
     base.`瞬発戦好走馬_芝`,
     base.`消耗戦好走馬_芝`,
@@ -530,7 +532,7 @@ with
     -- avg_prize_wins_horse
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(`本賞金`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'sum(case when `着順` = 1 then `本賞金` else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
         '`1位完走`'
       )
     }}, 0) as `1位完走平均賞金`,
@@ -857,10 +859,15 @@ with
 
   final as (
   select
+    -- Metadata (not used for training)
     race_horses.`unique_key`,
     race_horses.`レースキー`,
     race_horses.`馬番`,
     race_horses.`発走日時`,
+    race_horses.`先読み注意_着順`,
+    race_horses.`先読み注意_本賞金`,
+
+    -- Base features
     race_horses.`一走前着順`,
     race_horses.`二走前着順`,
     race_horses.`三走前着順`,
@@ -927,6 +934,7 @@ with
     race_horses.`瞬発戦好走馬_総合`,
     race_horses.`消耗戦好走馬_総合`,
 
+    -- Competitors
     competitors.`競争相手性別牡割合`,
     competitors.`競争相手性別牝割合`,
     competitors.`競争相手性別セ割合`,
@@ -1098,6 +1106,7 @@ with
     competitors.`競争相手平均連続3着内`,
     competitors.`競争相手連続3着内標準偏差`,
 
+    -- Relative to competitors
     race_horses.`一走前着順` - competitors.`競争相手平均一走前着順` as `競争相手平均一走前着順差`,
     race_horses.`二走前着順` - competitors.`競争相手平均二走前着順` as `競争相手平均二走前着順差`,
     race_horses.`三走前着順` - competitors.`競争相手平均三走前着順` as `競争相手平均三走前着順差`,
