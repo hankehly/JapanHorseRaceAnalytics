@@ -416,7 +416,6 @@ with
 
   final as (
   select
-    concat(base.`レースキー`, base.`馬番`) as `unique_key`,
     base.`レースキー`,
     base.`馬番`,
     base.`枠番`,

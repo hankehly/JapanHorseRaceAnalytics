@@ -14,16 +14,36 @@ models:
   - name: features_20240120_v1
     config:
       enabled: false
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
+      - name: レースキー
+        quote: true
         tests:
-          - unique
+          - not_null
+      - name: 馬番
+        quote: true
+        tests:
           - not_null
   - name: features_20240202_v1
     config:
       enabled: true
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
+      - name: レースキー
+        quote: true
         tests:
-          - unique
+          - not_null
+      - name: 馬番
+        quote: true
+        tests:
           - not_null
