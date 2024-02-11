@@ -71,8 +71,8 @@ with
   select
     `レースキー`,
     `馬番`,
-    sum(is_win) over (partition by `騎手コード`, win_group order by `騎手レース数`) as `騎手連続1着`,
-    sum(is_place) over (partition by `騎手コード`, place_group order by `騎手レース数`) as `騎手連続3着内`
+    cast(sum(is_win) over (partition by `騎手コード`, win_group order by `騎手レース数`) as integer) as `騎手連続1着`,
+    cast(sum(is_place) over (partition by `騎手コード`, place_group order by `騎手レース数`) as integer) as `騎手連続3着内`
   from (
     select
       `レースキー`,

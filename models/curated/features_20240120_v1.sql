@@ -327,7 +327,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬騎手1位完走率`,
     -- places_horse_jockey
@@ -336,7 +336,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬騎手トップ3完走率`,
     -- first_second_jockey
@@ -351,7 +351,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬騎手場所1位完走率`,
     -- places_horse_jockey_venue
@@ -360,7 +360,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬騎手場所トップ3完走率`,
 
@@ -374,7 +374,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬調教師1位完走率`,
     -- places_horse_trainer
@@ -383,7 +383,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬調教師トップ3完走率`,
     -- first_second_trainer
@@ -398,7 +398,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬調教師場所1位完走率`,
     -- places_horse_trainer_venue
@@ -407,7 +407,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `年月日`, `レースキー_Ｒ`) - 1 as double)'
       )
     }}, 0) as `馬調教師場所トップ3完走率`
   from

@@ -110,9 +110,9 @@ with
     `発走日時`,
     `調教師コード`,
     `場コード`,
-    sum(races) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師場所レース数`,
-    sum(wins) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師場所1位完走`,
-    sum(placings) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師場所トップ3完走`
+    cast(sum(races) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師場所レース数`,
+    cast(sum(wins) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師場所1位完走`,
+    cast(sum(placings) over (partition by `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師場所トップ3完走`
   from
     trainer_venue_counts
   ),

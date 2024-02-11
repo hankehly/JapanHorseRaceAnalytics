@@ -2,15 +2,19 @@ models:
   - name: features_20231226_v1
     config:
       enabled: false
+
   - name: features_20240102_v1
     config:
       enabled: false
+
   - name: features_20240102_v2
     config:
       enabled: false
+
   - name: features_20240106_v1
     config:
       enabled: false
+
   - name: features_20240120_v1
     config:
       enabled: false
@@ -29,6 +33,7 @@ models:
         quote: true
         tests:
           - not_null
+
   - name: features_20240202_v1
     config:
       enabled: true
@@ -41,7 +46,6 @@ models:
             - 馬番
           quote_columns: true
     columns:
-      # Metadata
       - name: レースキー
         data_type: STRING
         quote: true
@@ -102,7 +106,6 @@ models:
         quote: true
         meta:
           pandas_dtype: int
-      # Base features
       - name: 場コード
         data_type: STRING
         quote: true
@@ -828,7 +831,6 @@ models:
         quote: true
         meta:
           pandas_dtype: category
-      # Horse features
       - name: 一走前着順
         data_type: INTEGER
         quote: true
@@ -1155,15 +1157,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高一走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低一走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均一走前着順
         data_type: DOUBLE
         quote: true
@@ -1175,15 +1177,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高二走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低二走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均二走前着順
         data_type: DOUBLE
         quote: true
@@ -1195,15 +1197,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高三走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低三走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均三走前着順
         data_type: DOUBLE
         quote: true
@@ -1215,15 +1217,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高四走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低四走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均四走前着順
         data_type: DOUBLE
         quote: true
@@ -1235,15 +1237,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高五走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低五走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均五走前着順
         data_type: DOUBLE
         quote: true
@@ -1255,15 +1257,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高六走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低六走前着順
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均六走前着順
         data_type: DOUBLE
         quote: true
@@ -1280,15 +1282,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高入厩何日前
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低入厩何日前
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均入厩何日前
         data_type: DOUBLE
         quote: true
@@ -1300,15 +1302,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高馬体重
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低馬体重
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均馬体重
         data_type: DOUBLE
         quote: true
@@ -1320,15 +1322,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高馬体重増減
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低馬体重増減
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均馬体重増減
         data_type: DOUBLE
         quote: true
@@ -1360,15 +1362,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均レース数
         data_type: DOUBLE
         quote: true
@@ -1380,15 +1382,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均1位完走
         data_type: DOUBLE
         quote: true
@@ -1400,15 +1402,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1500,15 +1502,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均場所レース数
         data_type: DOUBLE
         quote: true
@@ -1520,15 +1522,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均場所1位完走
         data_type: DOUBLE
         quote: true
@@ -1540,15 +1542,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均場所トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1600,15 +1602,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高トラック種別レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低トラック種別レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均トラック種別レース数
         data_type: DOUBLE
         quote: true
@@ -1620,15 +1622,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高トラック種別1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低トラック種別1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均トラック種別1位完走
         data_type: DOUBLE
         quote: true
@@ -1640,15 +1642,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高トラック種別トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低トラック種別トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均トラック種別トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1660,15 +1662,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高馬場状態レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低馬場状態レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均馬場状態レース数
         data_type: DOUBLE
         quote: true
@@ -1680,15 +1682,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高馬場状態1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低馬場状態1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均馬場状態1位完走
         data_type: DOUBLE
         quote: true
@@ -1700,15 +1702,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高馬場状態トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低馬場状態トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均馬場状態トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1720,15 +1722,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高距離レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低距離レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均距離レース数
         data_type: DOUBLE
         quote: true
@@ -1740,15 +1742,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高距離1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低距離1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均距離1位完走
         data_type: DOUBLE
         quote: true
@@ -1760,15 +1762,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高距離トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低距離トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均距離トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1780,15 +1782,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高四半期レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低四半期レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均四半期レース数
         data_type: DOUBLE
         quote: true
@@ -1800,15 +1802,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高四半期1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低四半期1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均四半期1位完走
         data_type: DOUBLE
         quote: true
@@ -1820,15 +1822,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高四半期トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低四半期トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均四半期トップ3完走
         data_type: DOUBLE
         quote: true
@@ -1840,15 +1842,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高過去3走順位平方和
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低過去3走順位平方和
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均過去3走順位平方和
         data_type: DOUBLE
         quote: true
@@ -1940,15 +1942,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高連続1着
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低連続1着
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均連続1着
         data_type: DOUBLE
         quote: true
@@ -1960,15 +1962,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高連続3着内
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低連続3着内
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均連続3着内
         data_type: DOUBLE
         quote: true
@@ -2184,7 +2186,6 @@ models:
         quote: true
         meta:
           pandas_dtype: float
-      # Jockey features
       - name: 騎手レース数
         data_type: INTEGER
         quote: true
@@ -2296,15 +2297,15 @@ models:
         meta:
           pandas_dtype: int
       - name: 競争相手最大騎手レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手レース数
         data_type: DOUBLE
         quote: true
@@ -2316,15 +2317,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手1位完走
         data_type: DOUBLE
         quote: true
@@ -2336,15 +2337,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手トップ3完走
         data_type: DOUBLE
         quote: true
@@ -2436,15 +2437,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手場所レース数
         data_type: DOUBLE
         quote: true
@@ -2456,15 +2457,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手場所1位完走
         data_type: DOUBLE
         quote: true
@@ -2476,15 +2477,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手場所トップ3完走
         data_type: DOUBLE
         quote: true
@@ -2536,15 +2537,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手距離レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手距離レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手距離レース数
         data_type: DOUBLE
         quote: true
@@ -2556,15 +2557,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手距離1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手距離1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手距離1位完走
         data_type: DOUBLE
         quote: true
@@ -2576,15 +2577,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最大騎手距離トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最小騎手距離トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手距離トップ3完走
         data_type: DOUBLE
         quote: true
@@ -2696,15 +2697,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高騎手連続1着
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低騎手連続1着
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手連続1着
         data_type: DOUBLE
         quote: true
@@ -2716,15 +2717,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高騎手連続3着内
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低騎手連続3着内
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均騎手連続3着内
         data_type: DOUBLE
         quote: true
@@ -2845,7 +2846,6 @@ models:
         quote: true
         meta:
           pandas_dtype: float
-      # Trainer features
       - name: 調教師レース数
         data_type: INTEGER
         quote: true
@@ -2912,15 +2912,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師レース数
         data_type: DOUBLE
         quote: true
@@ -2932,15 +2932,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師1位完走
         data_type: DOUBLE
         quote: true
@@ -2952,15 +2952,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師トップ3完走
         data_type: DOUBLE
         quote: true
@@ -3012,15 +3012,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師場所レース数
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師場所レース数
         data_type: DOUBLE
         quote: true
@@ -3032,15 +3032,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師場所1位完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師場所1位完走
         data_type: DOUBLE
         quote: true
@@ -3052,15 +3052,15 @@ models:
         meta:
           pandas_dtype: float
       - name: 競争相手最高調教師場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手最低調教師場所トップ3完走
-        data_type: DOUBLE
+        data_type: INTEGER
         quote: true
         meta:
-          pandas_dtype: float
+          pandas_dtype: int
       - name: 競争相手平均調教師場所トップ3完走
         data_type: DOUBLE
         quote: true
@@ -3356,7 +3356,6 @@ models:
         quote: true
         meta:
           pandas_dtype: float
-      # Weather features
       - name: temperature
         data_type: DOUBLE
         quote: true
