@@ -29,14 +29,11 @@ with
 
   race_jockeys_base as (
   select
-    concat(kyi.`レースキー`, kyi.`馬番`) as `unique_key`,
     kyi.`レースキー`,
     kyi.`馬番`,
     bac.`発走日時`,
     kyi.`レースキー_場コード` as `場コード`,
     coalesce(tyb.`騎手コード`, kyi.`騎手コード`) as `騎手コード`,
-    -- レースキー_Ｒ must be cast to integer to avoid ordering numbers like 1, 10, 11, 2..
-    cast(kyi.`レースキー_Ｒ` as integer) `レースキー_Ｒ`,
     bac.`レース条件_距離` as `距離`,
     sed.`本賞金`,
     sed.`馬成績_着順` as `着順`,
@@ -93,11 +90,9 @@ with
 
   race_jockeys as (
   select
-    base.`unique_key`,
     base.`レースキー`,
     base.`馬番`,
     base.`発走日時`,
-    base.`レースキー_Ｒ`,
     base.`騎手コード`,
     base.`着順` as `先読み注意_着順`,
     base.`本賞金` as `先読み注意_本賞金`,
@@ -349,11 +344,9 @@ with
   final as (
   select
     -- Metadata fields (not used for prediction)
-    race_jockeys.`unique_key`,
     race_jockeys.`レースキー`,
     race_jockeys.`馬番`,
     race_jockeys.`発走日時`,
-    race_jockeys.`レースキー_Ｒ`,
     race_jockeys.`騎手コード`,
     race_jockeys.`先読み注意_着順`,
     race_jockeys.`先読み注意_本賞金`,
@@ -495,8 +488,6 @@ with
     race_jockeys.`騎手レース数平均賞金` - competitors.`競争相手平均騎手レース数平均賞金` as `競争相手平均騎手レース数平均賞金差`,
     race_jockeys.`騎手連続1着` - competitors.`競争相手平均騎手連続1着` as `競争相手平均騎手連続1着差`,
     race_jockeys.`騎手連続3着内` - competitors.`競争相手平均騎手連続3着内` as `競争相手平均騎手連続3着内差`
-
-
   from
     race_jockeys
   inner join

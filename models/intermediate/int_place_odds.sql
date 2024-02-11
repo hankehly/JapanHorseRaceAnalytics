@@ -8,7 +8,6 @@ with
 
   final as (
   select
-    concat(oz.`レースキー`, lpad(cast(idx + 1 as string), 2, '0')) as `unique_key`,
     oz.`レースキー`,
     lpad(cast(idx + 1 as string), 2, '0') as `馬番`,
     cast(nullif(el, '') as float) `複勝オッズ`

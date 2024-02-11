@@ -1,11 +1,12 @@
 models:
   - name: int_place_odds
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
-        quote: true
-        tests:
-          - unique
-          - not_null
       - name: レースキー
         quote: true
         tests:
@@ -20,12 +21,13 @@ models:
           - not_null
 
   - name: int_win_odds
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
-        quote: true
-        tests:
-          - unique
-          - not_null
       - name: レースキー
         quote: true
         tests:
@@ -40,48 +42,107 @@ models:
           - not_null
 
   - name: int_place_payouts
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
       - name: レースキー
+        quote: true
+        tests:
+          - not_null
       - name: 馬番
+        quote: true
+        tests:
+          - not_null
       - name: 払戻金
+        quote: true
+        tests:
+          - not_null
+
   - name: int_win_payouts
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
       - name: レースキー
+        quote: true
+        tests:
+          - not_null
       - name: 馬番
+        quote: true
+        tests:
+          - not_null
       - name: 払戻金
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_trainers
     description: |
       調教師の特徴量。
       調教師は同じレースに複数の馬を出走させることがあるから、集計方法に注意が必要。
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
+      - name: レースキー
+        quote: true
         tests:
           - not_null
-          - unique
-      # I would like to use this test, but it does not work
-      # for column names containing japanese characters.
-      # - name: 調教師レース数
-      #   quote: true
-      #   tests:
-      #     - dbt_utils.sequential_values
+      - name: 馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_jockeys
     description: |
       騎手の特徴量。
       騎手は同じ日に複数のレースに出走することがある。
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
+      - name: レースキー
+        quote: true
         tests:
           - not_null
-          - unique
+      - name: 馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_horses
     description: |
       出走馬の特徴量。
-      馬は必ず一日に一度だけ出走する。
+      馬は必ず一日に一度だけ出走する (find_horses_multiple_races_single_day.sql)
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - レースキー
+            - 馬番
+          quote_columns: true
     columns:
-      - name: unique_key
+      - name: レースキー
+        quote: true
         tests:
           - not_null
-          - unique
+      - name: 馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_weather
     columns:
       - name: レースキー

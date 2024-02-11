@@ -155,7 +155,6 @@ with
 
   race_horses_base as (
   select
-    concat(kyi.`レースキー`, kyi.`馬番`) as `unique_key`,
     kyi.`レースキー`,
     kyi.`馬番`,
     kyi.`枠番`,
@@ -177,7 +176,6 @@ with
     horses.`消耗戦好走馬_ダート`,
     horses.`瞬発戦好走馬_総合`,
     horses.`消耗戦好走馬_総合`,
-    -- Assumption: TYB is available (~15 minutes before race)
     tyb.`馬体重`,
     tyb.`馬体重増減`,
     bac.`レース条件_距離` as `距離`,
@@ -279,11 +277,11 @@ with
   -- https://medium.com/codeworksparis/horse-racing-prediction-a-machine-learning-approach-part-2-e9f5eb9a92e9
   race_horses as (
   select
-    base.`unique_key`,
     base.`レースキー`,
     base.`馬番`,
     base.`血統登録番号`,
     base.`発走日時`,
+    base.`枠番`,
     base.`着順` as `先読み注意_着順`,
     base.`本賞金` as `先読み注意_本賞金`,
     base.`性別`,
@@ -861,9 +859,9 @@ with
   final as (
   select
     -- Metadata (not used for training)
-    race_horses.`unique_key`,
     race_horses.`レースキー`,
     race_horses.`馬番`,
+    race_horses.`血統登録番号`,
     race_horses.`発走日時`,
     race_horses.`先読み注意_着順`,
     race_horses.`先読み注意_本賞金`,
@@ -876,13 +874,13 @@ with
     race_horses.`五走前着順`,
     race_horses.`六走前着順`,
     race_horses.`前走トップ3`,
+    race_horses.`枠番`,
     race_horses.`前走枠番`,
     race_horses.`入厩何日前`, -- horse_rest_time
     race_horses.`入厩15日未満`, -- horse_rest_lest14
     race_horses.`入厩35日以上`, -- horse_rest_over35
     race_horses.`馬体重`, -- declared_weight
     race_horses.`馬体重増減`, -- diff_declared_weight (todo: check if this matches lag)
-    race_horses.`距離`, -- distance
     race_horses.`前走距離差`, -- diff_distance
     race_horses.`年齢`, -- horse_age (years)
     race_horses.`4歳以下`,
@@ -927,7 +925,6 @@ with
     race_horses.`連続1着`,
     race_horses.`連続3着内`,
     race_horses.`性別`,
-    race_horses.`血統登録番号`,
     race_horses.`瞬発戦好走馬_芝`,
     race_horses.`消耗戦好走馬_芝`,
     race_horses.`瞬発戦好走馬_ダート`,

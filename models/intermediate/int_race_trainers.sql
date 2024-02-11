@@ -22,7 +22,6 @@ with
 
   race_trainers_base as (
   select
-    concat(kyi.`レースキー`, kyi.`馬番`) as `unique_key`,
     kyi.`レースキー`,
     kyi.`馬番`,
     bac.`発走日時`,
@@ -120,7 +119,6 @@ with
 
   race_trainers as (
   select
-    yt.`unique_key`,
     yt.`レースキー`,
     yt.`馬番`,
     yt.`場コード`,
@@ -256,7 +254,6 @@ with
   final as (
   select
     -- Metadata fields (not used for prediction)
-    race_trainers.`unique_key`,
     race_trainers.`レースキー`,
     race_trainers.`馬番`,
     race_trainers.`場コード`,
