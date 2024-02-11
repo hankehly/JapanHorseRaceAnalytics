@@ -8,13 +8,8 @@ with
 
   final as (
   select
-    `レースキー`,
-    `開催キー`,
-    `レースキー_場コード`,
-    `レースキー_年`,
-    `レースキー_回`,
-    `レースキー_日`,
-    `レースキー_Ｒ`,
+    concat(oz.`レースキー`, lpad(cast(idx + 1 as string), 2, '0')) as `unique_key`,
+    oz.`レースキー`,
     lpad(cast(idx + 1 as string), 2, '0') as `馬番`,
     cast(nullif(el, '') as float) `複勝オッズ`
   from

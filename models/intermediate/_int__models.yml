@@ -1,11 +1,49 @@
 models:
   - name: int_place_odds
+    columns:
+      - name: unique_key
+        quote: true
+        tests:
+          - unique
+          - not_null
+      - name: レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: 馬番
+        quote: true
+        tests:
+          - not_null
+      - name: 複勝オッズ
+        quote: true
+        tests:
+          - not_null
+
+  - name: int_win_odds
+    columns:
+      - name: unique_key
+        quote: true
+        tests:
+          - unique
+          - not_null
+      - name: レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: 馬番
+        quote: true
+        tests:
+          - not_null
+      - name: 単勝オッズ
+        quote: true
+        tests:
+          - not_null
+
   - name: int_place_payouts
     columns:
       - name: レースキー
       - name: 馬番
       - name: 払戻金
-  - name: int_win_odds
   - name: int_win_payouts
     columns:
       - name: レースキー
