@@ -13,6 +13,14 @@ models:
       enabled: false
   - name: features_20240120_v1
     config:
+      enabled: false
+    columns:
+      - name: unique_key
+        tests:
+          - unique
+          - not_null
+  - name: features_20240202_v1
+    config:
       enabled: true
     columns:
       - name: unique_key
