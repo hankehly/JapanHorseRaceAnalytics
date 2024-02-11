@@ -80,11 +80,11 @@ with
   select
     `発走日時`,
     `調教師コード`,
-    sum(races) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師レース数`,
-    sum(wins) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師1位完走`,
-    sum(placings) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師トップ3完走`,
-    sum(`本賞金`) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師本賞金累計`,
-    sum(`本賞金1着`) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as `調教師本賞金1着累計`
+    cast(sum(races) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師レース数`,
+    cast(sum(wins) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師1位完走`,
+    cast(sum(placings) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer) as `調教師トップ3完走`,
+    cast(sum(`本賞金`) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as double) as `調教師本賞金累計`,
+    cast(sum(`本賞金1着`) over (partition by `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding) as double) as `調教師本賞金1着累計`
   from
     trainer_counts
   ),

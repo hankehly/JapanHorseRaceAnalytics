@@ -106,7 +106,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手1位完走率`,
 
@@ -114,7 +114,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手トップ3完走率`,
 
@@ -123,7 +123,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
       )
     }}, 0) as `騎手過去5走勝率`,
 
@@ -131,7 +131,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
       )
     }}, 0) as `騎手過去5走トップ3完走率`,
 
@@ -148,7 +148,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手場所1位完走率`,
 
@@ -156,7 +156,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手場所トップ3完走率`,
 
@@ -173,7 +173,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手距離1位完走率`,
 
@@ -181,7 +181,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`騎手コード`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`騎手コード`, `距離` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `騎手距離トップ3完走率`,
 

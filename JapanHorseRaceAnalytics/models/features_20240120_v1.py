@@ -20,9 +20,9 @@ def get_features() -> List[Feature]:
         Feature(name="複勝払戻金", pandas_dtype="float", tags=[]),
         Feature(name="四半期", pandas_dtype="category", tags=["default", "芝", "ダート"]),
         Feature(name="馬場差", pandas_dtype="float", tags=["default", "芝", "ダート"]),
-        Feature(name="芝馬場状態内", pandas_dtype="category", tags=["default", "芝"]),
-        Feature(name="芝馬場状態中", pandas_dtype="category", tags=["default", "芝"]),
-        Feature(name="芝馬場状態外", pandas_dtype="category", tags=["default", "芝"]),
+        Feature(name="芝馬場状態内", pandas_dtype="category", tags=["芝"]),
+        Feature(name="芝馬場状態中", pandas_dtype="category", tags=["芝"]),
+        Feature(name="芝馬場状態外", pandas_dtype="category", tags=["芝"]),
         Feature(name="直線馬場差最内", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="直線馬場差内", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="直線馬場差中", pandas_dtype="float", tags=["default", "芝", "ダート"]),
@@ -267,8 +267,8 @@ def get_features() -> List[Feature]:
         Feature(name="レース数平均賞金", pandas_dtype="float", tags=["default", "芝", "ダート"]),
         Feature(name="瞬発戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
         Feature(name="消耗戦好走馬_芝", pandas_dtype="category", tags=["default", "芝"]),
-        Feature(name="瞬発戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
-        Feature(name="消耗戦好走馬_ダート", pandas_dtype="category", tags=["ダート"]),
+        Feature(name="瞬発戦好走馬_ダート", pandas_dtype="category", tags=["default", "ダート"]),
+        Feature(name="消耗戦好走馬_ダート", pandas_dtype="category", tags=["default", "ダート"]),
         Feature(
             name="瞬発戦好走馬_総合", pandas_dtype="category", tags=["default", "芝", "ダート"]
         ),

@@ -135,8 +135,8 @@ with
     horses_good_finish_turf.`消耗戦好走馬` as `消耗戦好走馬_芝`,
     horses_good_finish_dirt.`瞬発戦好走馬` as `瞬発戦好走馬_ダート`,
     horses_good_finish_dirt.`消耗戦好走馬` as `消耗戦好走馬_ダート`,
-    horses_good_finish_any.`瞬発戦好走馬` as `瞬発戦好走馬_総合`,
-    horses_good_finish_any.`消耗戦好走馬` as `消耗戦好走馬_総合`
+    horses_good_finish_any.`瞬発戦好走馬` as `総合瞬発戦好走馬`,
+    horses_good_finish_any.`消耗戦好走馬` as `総合消耗戦好走馬`
   from
     ukc_latest as ukc
   left join
@@ -175,12 +175,16 @@ with
     kyi.`入厩年月日`,
     horses.`生年月日`,
     horses.`性別`,
-    horses.`瞬発戦好走馬_芝`,
-    horses.`消耗戦好走馬_芝`,
-    horses.`瞬発戦好走馬_ダート`,
-    horses.`消耗戦好走馬_ダート`,
-    horses.`瞬発戦好走馬_総合`,
-    horses.`消耗戦好走馬_総合`,
+    case
+      when bac.`レース条件_トラック情報_芝ダ障害コード` = 'ダート' then horses.`瞬発戦好走馬_ダート`
+      else horses.`瞬発戦好走馬_芝`
+    end as `トラック種別瞬発戦好走馬`,
+    case
+      when bac.`レース条件_トラック情報_芝ダ障害コード` = 'ダート' then horses.`消耗戦好走馬_ダート`
+      else horses.`消耗戦好走馬_芝`
+    end as `トラック種別消耗戦好走馬`,
+    horses.`総合瞬発戦好走馬`,
+    horses.`総合消耗戦好走馬`,
     tyb.`馬体重`,
     tyb.`馬体重増減`,
     bac.`レース条件_距離` as `距離`,
@@ -255,8 +259,8 @@ with
   select
     `レースキー`,
     `馬番`,
-    sum(is_win) over (partition by `血統登録番号`, win_group order by `レース数`) as `連続1着`,
-    sum(is_place) over (partition by `血統登録番号`, place_group order by `レース数`) as `連続3着内`
+    cast(sum(is_win) over (partition by `血統登録番号`, win_group order by `レース数`) as integer) as `連続1着`,
+    cast(sum(is_place) over (partition by `血統登録番号`, place_group order by `レース数`) as integer) as `連続3着内`
   from (
     select
       `レースキー`,
@@ -285,12 +289,10 @@ with
     base.`着順` as `先読み注意_着順`,
     base.`本賞金` as `先読み注意_本賞金`,
     base.`性別`,
-    base.`瞬発戦好走馬_芝`,
-    base.`消耗戦好走馬_芝`,
-    base.`瞬発戦好走馬_ダート`,
-    base.`消耗戦好走馬_ダート`,
-    base.`瞬発戦好走馬_総合`,
-    base.`消耗戦好走馬_総合`,
+    base.`トラック種別瞬発戦好走馬`,
+    base.`トラック種別消耗戦好走馬`,
+    base.`総合瞬発戦好走馬`,
+    base.`総合消耗戦好走馬`,
 
     `一走前着順`,
     `二走前着順`,
@@ -310,15 +312,15 @@ with
     lag(`枠番`) over (partition by base.`血統登録番号` order by `発走日時`) as `前走枠番`, -- last_draw
 
     -- horse_rest_time
-    -- `発走日時` - `入厩年月日` as `入厩何日前`,
+    -- 発走日時` - `入厩年月日` as `入厩何日前`
     date_diff(`発走日時`, `入厩年月日`) as `入厩何日前`,
 
     -- horse_rest_lest14
-    -- `発走日時` - `入厩年月日` < 15 as `入厩15日未満`,
+    -- 発走日時` - `入厩年月日` < 15 as `入厩15日未満`
     date_diff(`発走日時`, `入厩年月日`) < 15 as `入厩15日未満`,
 
     -- horse_rest_over35
-    -- `発走日時` - `入厩年月日` >= 35 as `入厩35日以上`,
+    -- 発走日時` - `入厩年月日` >= 35 as `入厩35日以上`
     date_diff(`発走日時`, `入厩年月日`) >= 35 as `入厩35日以上`,
 
     -- declared_weight
@@ -343,12 +345,12 @@ with
     -- age(`発走日時`, `生年月日`) < '5 years' as `4歳以下`,
     (months_between(`発走日時`, `生年月日`) / 12) < 5 as `4歳以下`,
 
-    sum(
+    cast(sum(
       case
         when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
         else 0
       end
-    ) over (partition by base.`レースキー`) as `4歳以下頭数`,
+    ) over (partition by base.`レースキー`) as integer) as `4歳以下頭数`,
 
     coalesce(
       sum(
@@ -356,7 +358,7 @@ with
           when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
           else 0
         end
-      ) over (partition by base.`レースキー`) / cast(`頭数` as float), 0) as `4歳以下割合`,
+      ) over (partition by base.`レースキー`) / cast(`頭数` as double), 0) as `4歳以下割合`,
 
     `レース数`, -- horse_runs
     `1位完走`, -- horse_wins
@@ -368,7 +370,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `1位完走率`,
 
@@ -376,7 +378,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `トップ3完走率`,
 
@@ -385,7 +387,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
       )
     }}, 0) as `過去5走勝率`,
 
@@ -393,7 +395,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
       )
     }}, 0) as `過去5走トップ3完走率`,
 
@@ -410,7 +412,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `場所1位完走率`,
 
@@ -418,7 +420,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `場所トップ3完走率`,
 
@@ -435,7 +437,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `トラック種別1位完走率`,
 
@@ -443,7 +445,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `トラック種別` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `トラック種別トップ3完走率`,
 
@@ -460,7 +462,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬場状態1位完走率`,
 
@@ -468,7 +470,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `馬場状態コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬場状態トップ3完走率`,
 
@@ -485,7 +487,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `距離1位完走率`,
 
@@ -493,7 +495,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `距離トップ3完走率`,
 
@@ -510,7 +512,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `四半期1位完走率`,
 
@@ -518,7 +520,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `四半期` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as float)'
+        'cast(count(*) over (partition by base.`血統登録番号`, `四半期` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `四半期トップ3完走率`,
 
@@ -561,284 +563,278 @@ with
     a.`レースキー`,
     a.`馬番`,
 
-    -- `性別`
-    sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牡割合`,
-    sum(case when b.`性別` = '牝' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別牝割合`,
-    sum(case when b.`性別` = 'セン' then 1 else 0 end) / cast(count(*) as float) as `競争相手性別セ割合`,
+    -- 性別
+    sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別牡割合`,
+    sum(case when b.`性別` = '牝' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別牝割合`,
+    sum(case when b.`性別` = 'セン' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別セ割合`,
 
-    -- `一走前着順`
+    -- 一走前着順
     max(b.`一走前着順`) as `競争相手最高一走前着順`,
     min(b.`一走前着順`) as `競争相手最低一走前着順`,
     avg(b.`一走前着順`) as `競争相手平均一走前着順`,
     stddev_pop(b.`一走前着順`) as `競争相手一走前着順標準偏差`,
 
-    -- `二走前着順`
+    -- 二走前着順
     max(b.`二走前着順`) as `競争相手最高二走前着順`,
     min(b.`二走前着順`) as `競争相手最低二走前着順`,
     avg(b.`二走前着順`) as `競争相手平均二走前着順`,
     stddev_pop(b.`二走前着順`) as `競争相手二走前着順標準偏差`,
 
-    -- `三走前着順`
+    -- 三走前着順
     max(b.`三走前着順`) as `競争相手最高三走前着順`,
     min(b.`三走前着順`) as `競争相手最低三走前着順`,
     avg(b.`三走前着順`) as `競争相手平均三走前着順`,
     stddev_pop(b.`三走前着順`) as `競争相手三走前着順標準偏差`,
 
-    -- `四走前着順`
+    -- 四走前着順
     max(b.`四走前着順`) as `競争相手最高四走前着順`,
     min(b.`四走前着順`) as `競争相手最低四走前着順`,
     avg(b.`四走前着順`) as `競争相手平均四走前着順`,
     stddev_pop(b.`四走前着順`) as `競争相手四走前着順標準偏差`,
 
-    -- `五走前着順`
+    -- 五走前着順
     max(b.`五走前着順`) as `競争相手最高五走前着順`,
     min(b.`五走前着順`) as `競争相手最低五走前着順`,
     avg(b.`五走前着順`) as `競争相手平均五走前着順`,
     stddev_pop(b.`五走前着順`) as `競争相手五走前着順標準偏差`,
 
-    -- `六走前着順`
+    -- 六走前着順
     max(b.`六走前着順`) as `競争相手最高六走前着順`,
     min(b.`六走前着順`) as `競争相手最低六走前着順`,
     avg(b.`六走前着順`) as `競争相手平均六走前着順`,
     stddev_pop(b.`六走前着順`) as `競争相手六走前着順標準偏差`,
 
-    -- `前走トップ3`
-    sum(case when b.`前走トップ3` then 1 else 0 end) / cast(count(*) as float) as `競争相手前走トップ3割合`,
+    -- 前走トップ3
+    sum(case when b.`前走トップ3` then 1 else 0 end) / cast(count(*) as double) as `競争相手前走トップ3割合`,
 
-    -- `前走枠番`
+    -- 前走枠番
 
-    -- `入厩何日前`
+    -- 入厩何日前
     max(b.`入厩何日前`) as `競争相手最高入厩何日前`,
     min(b.`入厩何日前`) as `競争相手最低入厩何日前`,
     avg(b.`入厩何日前`) as `競争相手平均入厩何日前`,
     stddev_pop(b.`入厩何日前`) as `競争相手入厩何日前標準偏差`,
 
-    -- `入厩15日未満`
-    -- `入厩35日以上`
+    -- 入厩15日未満
+    -- 入厩35日以上
 
-    -- `馬体重`
+    -- 馬体重
     max(b.`馬体重`) as `競争相手最高馬体重`,
     min(b.`馬体重`) as `競争相手最低馬体重`,
     avg(b.`馬体重`) as `競争相手平均馬体重`,
     stddev_pop(b.`馬体重`) as `競争相手馬体重標準偏差`,
 
-    -- `馬体重増減`
+    -- 馬体重増減
     max(b.`馬体重増減`) as `競争相手最高馬体重増減`,
     min(b.`馬体重増減`) as `競争相手最低馬体重増減`,
     avg(b.`馬体重増減`) as `競争相手平均馬体重増減`,
     stddev_pop(b.`馬体重増減`) as `競争相手馬体重増減標準偏差`,
 
-    -- `距離`
+    -- 距離
 
-    -- `前走距離差`
+    -- 前走距離差
     max(b.`前走距離差`) as `競争相手最高前走距離差`,
     min(b.`前走距離差`) as `競争相手最低前走距離差`,
     avg(b.`前走距離差`) as `競争相手平均前走距離差`,
     stddev_pop(b.`前走距離差`) as `競争相手前走距離差標準偏差`,
 
-    -- `年齢`
+    -- 年齢
     max(b.`年齢`) as `競争相手最高年齢`,
     min(b.`年齢`) as `競争相手最低年齢`,
     avg(b.`年齢`) as `競争相手平均年齢`,
     stddev_pop(b.`年齢`) as `競争相手年齢標準偏差`,
 
-    -- `4歳以下`
-    -- `4歳以下頭数`
-    -- `4歳以下割合`
+    -- 4歳以下
+    -- 4歳以下頭数
+    -- 4歳以下割合
 
-    -- `レース数`
+    -- レース数
     max(b.`レース数`) as `競争相手最高レース数`,
     min(b.`レース数`) as `競争相手最低レース数`,
     avg(b.`レース数`) as `競争相手平均レース数`,
     stddev_pop(b.`レース数`) as `競争相手レース数標準偏差`,
 
-    -- `1位完走`
+    -- 1位完走
     max(b.`1位完走`) as `競争相手最高1位完走`,
     min(b.`1位完走`) as `競争相手最低1位完走`,
     avg(b.`1位完走`) as `競争相手平均1位完走`,
     stddev_pop(b.`1位完走`) as `競争相手1位完走標準偏差`,
 
-    -- `トップ3完走`
+    -- トップ3完走
     max(b.`トップ3完走`) as `競争相手最高トップ3完走`,
     min(b.`トップ3完走`) as `競争相手最低トップ3完走`,
     avg(b.`トップ3完走`) as `競争相手平均トップ3完走`,
     stddev_pop(b.`トップ3完走`) as `競争相手トップ3完走標準偏差`,
 
-    -- `1位完走率`
+    -- 1位完走率
     max(b.`1位完走率`) as `競争相手最高1位完走率`,
     min(b.`1位完走率`) as `競争相手最低1位完走率`,
     avg(b.`1位完走率`) as `競争相手平均1位完走率`,
     stddev_pop(b.`1位完走率`) as `競争相手1位完走率標準偏差`,
 
-    -- `トップ3完走率`
+    -- トップ3完走率
     max(b.`トップ3完走率`) as `競争相手最高トップ3完走率`,
     min(b.`トップ3完走率`) as `競争相手最低トップ3完走率`,
     avg(b.`トップ3完走率`) as `競争相手平均トップ3完走率`,
     stddev_pop(b.`トップ3完走率`) as `競争相手トップ3完走率標準偏差`,
 
-    -- `過去5走勝率`
+    -- 過去5走勝率
     max(b.`過去5走勝率`) as `競争相手最高過去5走勝率`,
     min(b.`過去5走勝率`) as `競争相手最低過去5走勝率`,
     avg(b.`過去5走勝率`) as `競争相手平均過去5走勝率`,
     stddev_pop(b.`過去5走勝率`) as `競争相手過去5走勝率標準偏差`,
 
-    -- `過去5走トップ3完走率`
+    -- 過去5走トップ3完走率
     max(b.`過去5走トップ3完走率`) as `競争相手最高過去5走トップ3完走率`,
     min(b.`過去5走トップ3完走率`) as `競争相手最低過去5走トップ3完走率`,
     avg(b.`過去5走トップ3完走率`) as `競争相手平均過去5走トップ3完走率`,
     stddev_pop(b.`過去5走トップ3完走率`) as `競争相手過去5走トップ3完走率標準偏差`,
 
-    -- `場所レース数`
+    -- 場所レース数
     max(b.`場所レース数`) as `競争相手最高場所レース数`,
     min(b.`場所レース数`) as `競争相手最低場所レース数`,
     avg(b.`場所レース数`) as `競争相手平均場所レース数`,
     stddev_pop(b.`場所レース数`) as `競争相手場所レース数標準偏差`,
 
-    -- `場所1位完走`
+    -- 場所1位完走
     max(b.`場所1位完走`) as `競争相手最高場所1位完走`,
     min(b.`場所1位完走`) as `競争相手最低場所1位完走`,
     avg(b.`場所1位完走`) as `競争相手平均場所1位完走`,
     stddev_pop(b.`場所1位完走`) as `競争相手場所1位完走標準偏差`,
 
-    -- `場所トップ3完走`
+    -- 場所トップ3完走
     max(b.`場所トップ3完走`) as `競争相手最高場所トップ3完走`,
     min(b.`場所トップ3完走`) as `競争相手最低場所トップ3完走`,
     avg(b.`場所トップ3完走`) as `競争相手平均場所トップ3完走`,
     stddev_pop(b.`場所トップ3完走`) as `競争相手場所トップ3完走標準偏差`,
 
-    -- `場所1位完走率`
+    -- 場所1位完走率
     max(b.`場所1位完走率`) as `競争相手最高場所1位完走率`,
     min(b.`場所1位完走率`) as `競争相手最低場所1位完走率`,
     avg(b.`場所1位完走率`) as `競争相手平均場所1位完走率`,
     stddev_pop(b.`場所1位完走率`) as `競争相手場所1位完走率標準偏差`,
 
-    -- `場所トップ3完走率`
+    -- 場所トップ3完走率
     max(b.`場所トップ3完走率`) as `競争相手最高場所トップ3完走率`,
     min(b.`場所トップ3完走率`) as `競争相手最低場所トップ3完走率`,
     avg(b.`場所トップ3完走率`) as `競争相手平均場所トップ3完走率`,
     stddev_pop(b.`場所トップ3完走率`) as `競争相手場所トップ3完走率標準偏差`,
 
-    -- `トラック種別レース数`
+    -- トラック種別レース数
     max(b.`トラック種別レース数`) as `競争相手最高トラック種別レース数`,
     min(b.`トラック種別レース数`) as `競争相手最低トラック種別レース数`,
     avg(b.`トラック種別レース数`) as `競争相手平均トラック種別レース数`,
     stddev_pop(b.`トラック種別レース数`) as `競争相手トラック種別レース数標準偏差`,
 
-    -- `トラック種別1位完走`
+    -- トラック種別1位完走
     max(b.`トラック種別1位完走`) as `競争相手最高トラック種別1位完走`,
     min(b.`トラック種別1位完走`) as `競争相手最低トラック種別1位完走`,
     avg(b.`トラック種別1位完走`) as `競争相手平均トラック種別1位完走`,
     stddev_pop(b.`トラック種別1位完走`) as `競争相手トラック種別1位完走標準偏差`,
 
-    -- `トラック種別トップ3完走`
+    -- トラック種別トップ3完走
     max(b.`トラック種別トップ3完走`) as `競争相手最高トラック種別トップ3完走`,
     min(b.`トラック種別トップ3完走`) as `競争相手最低トラック種別トップ3完走`,
     avg(b.`トラック種別トップ3完走`) as `競争相手平均トラック種別トップ3完走`,
     stddev_pop(b.`トラック種別トップ3完走`) as `競争相手トラック種別トップ3完走標準偏差`,
 
-    -- `馬場状態レース数`
+    -- 馬場状態レース数
     max(b.`馬場状態レース数`) as `競争相手最高馬場状態レース数`,
     min(b.`馬場状態レース数`) as `競争相手最低馬場状態レース数`,
     avg(b.`馬場状態レース数`) as `競争相手平均馬場状態レース数`,
     stddev_pop(b.`馬場状態レース数`) as `競争相手馬場状態レース数標準偏差`,
 
-    -- `馬場状態1位完走`
+    -- 馬場状態1位完走
     max(b.`馬場状態1位完走`) as `競争相手最高馬場状態1位完走`,
     min(b.`馬場状態1位完走`) as `競争相手最低馬場状態1位完走`,
     avg(b.`馬場状態1位完走`) as `競争相手平均馬場状態1位完走`,
     stddev_pop(b.`馬場状態1位完走`) as `競争相手馬場状態1位完走標準偏差`,
 
-    -- `馬場状態トップ3完走`
+    -- 馬場状態トップ3完走
     max(b.`馬場状態トップ3完走`) as `競争相手最高馬場状態トップ3完走`,
     min(b.`馬場状態トップ3完走`) as `競争相手最低馬場状態トップ3完走`,
     avg(b.`馬場状態トップ3完走`) as `競争相手平均馬場状態トップ3完走`,
     stddev_pop(b.`馬場状態トップ3完走`) as `競争相手馬場状態トップ3完走標準偏差`,
 
-    -- `距離レース数`
+    -- 距離レース数
     max(b.`距離レース数`) as `競争相手最高距離レース数`,
     min(b.`距離レース数`) as `競争相手最低距離レース数`,
     avg(b.`距離レース数`) as `競争相手平均距離レース数`,
     stddev_pop(b.`距離レース数`) as `競争相手距離レース数標準偏差`,
 
-    -- `距離1位完走`
+    -- 距離1位完走
     max(b.`距離1位完走`) as `競争相手最高距離1位完走`,
     min(b.`距離1位完走`) as `競争相手最低距離1位完走`,
     avg(b.`距離1位完走`) as `競争相手平均距離1位完走`,
     stddev_pop(b.`距離1位完走`) as `競争相手距離1位完走標準偏差`,
 
-    -- `距離トップ3完走`
+    -- 距離トップ3完走
     max(b.`距離トップ3完走`) as `競争相手最高距離トップ3完走`,
     min(b.`距離トップ3完走`) as `競争相手最低距離トップ3完走`,
     avg(b.`距離トップ3完走`) as `競争相手平均距離トップ3完走`,
     stddev_pop(b.`距離トップ3完走`) as `競争相手距離トップ3完走標準偏差`,
 
-    -- `四半期レース数`
+    -- 四半期レース数
     max(b.`四半期レース数`) as `競争相手最高四半期レース数`,
     min(b.`四半期レース数`) as `競争相手最低四半期レース数`,
     avg(b.`四半期レース数`) as `競争相手平均四半期レース数`,
     stddev_pop(b.`四半期レース数`) as `競争相手四半期レース数標準偏差`,
 
-    -- `四半期1位完走`
+    -- 四半期1位完走
     max(b.`四半期1位完走`) as `競争相手最高四半期1位完走`,
     min(b.`四半期1位完走`) as `競争相手最低四半期1位完走`,
     avg(b.`四半期1位完走`) as `競争相手平均四半期1位完走`,
     stddev_pop(b.`四半期1位完走`) as `競争相手四半期1位完走標準偏差`,
 
-    -- `四半期トップ3完走`
+    -- 四半期トップ3完走
     max(b.`四半期トップ3完走`) as `競争相手最高四半期トップ3完走`,
     min(b.`四半期トップ3完走`) as `競争相手最低四半期トップ3完走`,
     avg(b.`四半期トップ3完走`) as `競争相手平均四半期トップ3完走`,
     stddev_pop(b.`四半期トップ3完走`) as `競争相手四半期トップ3完走標準偏差`,
 
-    -- `過去3走順位平方和`
+    -- 過去3走順位平方和
     max(b.`過去3走順位平方和`) as `競争相手最高過去3走順位平方和`,
     min(b.`過去3走順位平方和`) as `競争相手最低過去3走順位平方和`,
     avg(b.`過去3走順位平方和`) as `競争相手平均過去3走順位平方和`,
     stddev_pop(b.`過去3走順位平方和`) as `競争相手過去3走順位平方和標準偏差`,
 
-    -- `本賞金累計`
+    -- 本賞金累計
     max(b.`本賞金累計`) as `競争相手最高本賞金累計`,
     min(b.`本賞金累計`) as `競争相手最低本賞金累計`,
     avg(b.`本賞金累計`) as `競争相手平均本賞金累計`,
     stddev_pop(b.`本賞金累計`) as `競争相手本賞金累計標準偏差`,
 
-    -- `1位完走平均賞金`
+    -- 1位完走平均賞金
     max(b.`1位完走平均賞金`) as `競争相手最高1位完走平均賞金`,
     min(b.`1位完走平均賞金`) as `競争相手最低1位完走平均賞金`,
     avg(b.`1位完走平均賞金`) as `競争相手平均1位完走平均賞金`,
     stddev_pop(b.`1位完走平均賞金`) as `競争相手1位完走平均賞金標準偏差`,
 
-    -- `レース数平均賞金`
+    -- レース数平均賞金
     max(b.`レース数平均賞金`) as `競争相手最高レース数平均賞金`,
     min(b.`レース数平均賞金`) as `競争相手最低レース数平均賞金`,
     avg(b.`レース数平均賞金`) as `競争相手平均レース数平均賞金`,
     stddev_pop(b.`レース数平均賞金`) as `競争相手レース数平均賞金標準偏差`,
 
-    -- `瞬発戦好走馬_芝`
-    sum(case when b.`瞬発戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_芝割合`,
+    -- トラック種別瞬発戦好走馬
+    sum(case when b.`トラック種別瞬発戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手トラック種別瞬発戦好走馬割合`,
 
-    -- `消耗戦好走馬_芝`
-    sum(case when b.`消耗戦好走馬_芝` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_芝割合`,
+    -- トラック種別消耗戦好走馬
+    sum(case when b.`トラック種別消耗戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手トラック種別消耗戦好走馬割合`,
 
-    -- `瞬発戦好走馬_ダート`
-    sum(case when b.`瞬発戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_ダート割合`,
+    -- 総合瞬発戦好走馬
+    sum(case when b.`総合瞬発戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手総合瞬発戦好走馬割合`,
 
-    -- `消耗戦好走馬_ダート`
-    sum(case when b.`消耗戦好走馬_ダート` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_ダート割合`,
+    -- 総合消耗戦好走馬
+    sum(case when b.`総合消耗戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手総合消耗戦好走馬割合`,
 
-    -- `瞬発戦好走馬_総合`
-    sum(case when b.`瞬発戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手瞬発戦好走馬_総合割合`,
-
-    -- `消耗戦好走馬_総合`
-    sum(case when b.`消耗戦好走馬_総合` then 1 else 0 end) / cast(count(*) as float) as `競争相手消耗戦好走馬_総合割合`,
-
-    -- `連続1着`
+    -- 連続1着
     max(b.`連続1着`) as `競争相手最高連続1着`,
     min(b.`連続1着`) as `競争相手最低連続1着`,
     avg(b.`連続1着`) as `競争相手平均連続1着`,
     stddev_pop(b.`連続1着`) as `競争相手連続1着標準偏差`,
 
-    -- `連続3着内`
+    -- 連続3着内
     max(b.`連続3着内`) as `競争相手最高連続3着内`,
     min(b.`連続3着内`) as `競争相手最低連続3着内`,
     avg(b.`連続3着内`) as `競争相手平均連続3着内`,
@@ -925,12 +921,10 @@ with
     race_horses.`連続1着`,
     race_horses.`連続3着内`,
     race_horses.`性別`,
-    race_horses.`瞬発戦好走馬_芝`,
-    race_horses.`消耗戦好走馬_芝`,
-    race_horses.`瞬発戦好走馬_ダート`,
-    race_horses.`消耗戦好走馬_ダート`,
-    race_horses.`瞬発戦好走馬_総合`,
-    race_horses.`消耗戦好走馬_総合`,
+    race_horses.`トラック種別瞬発戦好走馬`,
+    race_horses.`トラック種別消耗戦好走馬`,
+    race_horses.`総合瞬発戦好走馬`,
+    race_horses.`総合消耗戦好走馬`,
 
     -- Competitors
     competitors.`競争相手性別牡割合`,
@@ -1089,12 +1083,10 @@ with
     competitors.`競争相手最低レース数平均賞金`,
     competitors.`競争相手平均レース数平均賞金`,
     competitors.`競争相手レース数平均賞金標準偏差`,
-    competitors.`競争相手瞬発戦好走馬_芝割合`,
-    competitors.`競争相手消耗戦好走馬_芝割合`,
-    competitors.`競争相手瞬発戦好走馬_ダート割合`,
-    competitors.`競争相手消耗戦好走馬_ダート割合`,
-    competitors.`競争相手瞬発戦好走馬_総合割合`,
-    competitors.`競争相手消耗戦好走馬_総合割合`,
+    competitors.`競争相手トラック種別瞬発戦好走馬割合`,
+    competitors.`競争相手トラック種別消耗戦好走馬割合`,
+    competitors.`競争相手総合瞬発戦好走馬割合`,
+    competitors.`競争相手総合消耗戦好走馬割合`,
     competitors.`競争相手最高連続1着`,
     competitors.`競争相手最低連続1着`,
     competitors.`競争相手平均連続1着`,

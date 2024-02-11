@@ -46,10 +46,10 @@ final as (
         nullif(`データ区分`, '') as `データ区分`,
         cast(nullif(`連続何日目`, '') as integer) as `連続何日目`,
         nullif(`芝種類`, '') as `芝種類`,
-        cast(nullif(`草丈`, '') as float) as `草丈`,
+        cast(nullif(`草丈`, '') as double) as `草丈`,
         cast(nullif(`転圧`, '') as boolean) as `転圧`,
         cast(nullif(`凍結防止剤`, '') as boolean) as `凍結防止剤`,
-        cast(nullif(`中間降水量`, '') as float) as `中間降水量`
+        cast(nullif(`中間降水量`, '') as double) as `中間降水量`
     from source
 )
 select * from final

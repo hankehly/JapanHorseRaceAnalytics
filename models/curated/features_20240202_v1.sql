@@ -70,7 +70,6 @@ with
     kyi.`血統登録番号`,
     coalesce(tyb.`騎手コード`, kyi.`騎手コード`) as `騎手コード`,
     bac.`発走日時`,
-    kyi.`レースキー_場コード` as `場コード`,
     kyi.`調教師コード`,
     sed.`馬成績_着順` as `着順`,
     sed.`本賞金`,
@@ -80,6 +79,7 @@ with
     coalesce(place_payouts.`払戻金`, 0) as `複勝払戻金`,
 
     -- Base features
+    kyi.`レースキー_場コード` as `場コード`,
     case
       when extract(month from bac.`発走日時`) <= 3 then 1
       when extract(month from bac.`発走日時`) <= 6 then 2
@@ -320,7 +320,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬騎手1位完走率`,
 
@@ -331,7 +331,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬騎手トップ3完走率`,
 
@@ -351,7 +351,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬騎手場所1位完走率`,
 
@@ -362,7 +362,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `騎手コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬騎手場所トップ3完走率`,
 
@@ -376,7 +376,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬調教師1位完走率`,
 
@@ -387,7 +387,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬調教師トップ3完走率`,
 
@@ -407,7 +407,7 @@ with
     coalesce({{
       dbt_utils.safe_divide(
         'sum(case when `着順` = 1 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬調教師場所1位完走率`,
 
@@ -418,7 +418,7 @@ with
     coalesce({{ 
       dbt_utils.safe_divide(
         'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時`) - 1 as numeric)'
+        'cast(count(*) over (partition by `血統登録番号`, `調教師コード`, `場コード` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `馬調教師場所トップ3完走率`
   from
@@ -433,7 +433,6 @@ with
     base.`血統登録番号`,
     base.`騎手コード`,
     base.`発走日時`,
-    base.`場コード`,
     base.`調教師コード`,
     base.`着順` as `先読み注意_着順`,
     base.`本賞金` as `先読み注意_本賞金`,
@@ -443,6 +442,7 @@ with
     base.`複勝払戻金` as `先読み注意_複勝払戻金`,
 
     -- Base features
+    base.`場コード`,
     base.`四半期`,
     base.`距離`,
     base.`馬場状態コード`,
@@ -650,12 +650,10 @@ with
     race_horses.`連続1着`,
     race_horses.`連続3着内`,
     race_horses.`性別`,
-    race_horses.`瞬発戦好走馬_芝`,
-    race_horses.`消耗戦好走馬_芝`,
-    race_horses.`瞬発戦好走馬_ダート`,
-    race_horses.`消耗戦好走馬_ダート`,
-    race_horses.`瞬発戦好走馬_総合`,
-    race_horses.`消耗戦好走馬_総合`,
+    race_horses.`トラック種別瞬発戦好走馬`,
+    race_horses.`トラック種別消耗戦好走馬`,
+    race_horses.`総合瞬発戦好走馬`,
+    race_horses.`総合消耗戦好走馬`,
     race_horses.`競争相手性別牡割合`,
     race_horses.`競争相手性別牝割合`,
     race_horses.`競争相手性別セ割合`,
@@ -812,12 +810,10 @@ with
     race_horses.`競争相手最低レース数平均賞金`,
     race_horses.`競争相手平均レース数平均賞金`,
     race_horses.`競争相手レース数平均賞金標準偏差`,
-    race_horses.`競争相手瞬発戦好走馬_芝割合`,
-    race_horses.`競争相手消耗戦好走馬_芝割合`,
-    race_horses.`競争相手瞬発戦好走馬_ダート割合`,
-    race_horses.`競争相手消耗戦好走馬_ダート割合`,
-    race_horses.`競争相手瞬発戦好走馬_総合割合`,
-    race_horses.`競争相手消耗戦好走馬_総合割合`,
+    race_horses.`競争相手トラック種別瞬発戦好走馬割合`,
+    race_horses.`競争相手トラック種別消耗戦好走馬割合`,
+    race_horses.`競争相手総合瞬発戦好走馬割合`,
+    race_horses.`競争相手総合消耗戦好走馬割合`,
     race_horses.`競争相手最高連続1着`,
     race_horses.`競争相手最低連続1着`,
     race_horses.`競争相手平均連続1着`,

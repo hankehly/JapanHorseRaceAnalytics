@@ -37,10 +37,10 @@ with
     nullif(`馬番`, '') as `馬番`,
     nullif(`血統登録番号`, '') as `血統登録番号`,
     nullif(`馬名`, '') as `馬名`,
-    cast(nullif(`ＩＤＭ`, '') as float) as `ＩＤＭ`,
-    cast(nullif(`騎手指数`, '') as float) as `騎手指数`,
-    cast(nullif(`情報指数`, '') as float) as `情報指数`,
-    cast(nullif(`総合指数`, '') as float) as `総合指数`,
+    cast(nullif(`ＩＤＭ`, '') as double) as `ＩＤＭ`,
+    cast(nullif(`騎手指数`, '') as double) as `騎手指数`,
+    cast(nullif(`情報指数`, '') as double) as `情報指数`,
+    cast(nullif(`総合指数`, '') as double) as `総合指数`,
     -- 1-6 is expected, but there are many 0s and rarely some 8s and nulls.
     -- Replacing undefined codes with null.
     case when `脚質` in (SELECT code FROM {{ ref('jrdb__run_style_codes') }}) then `脚質` else null end `脚質`,
@@ -49,9 +49,9 @@ with
     -- 1-5 is expected, but there are many 0s and rarely 8s. Replacing with null.
     case when `上昇度` in (SELECT code FROM {{ ref('jrdb__improvement_codes') }}) then `上昇度` else null end `上昇度`,
     cast(nullif(`ローテーション`, '') as integer) as `ローテーション`,
-    cast(nullif(`基準オッズ`, '') as float) as `基準オッズ`,
+    cast(nullif(`基準オッズ`, '') as double) as `基準オッズ`,
     cast(nullif(`基準人気順位`, '') as integer) as `基準人気順位`,
-    cast(nullif(`基準複勝オッズ`, '') as float) as `基準複勝オッズ`,
+    cast(nullif(`基準複勝オッズ`, '') as double) as `基準複勝オッズ`,
     cast(nullif(`基準複勝人気順位`, '') as integer) as `基準複勝人気順位`,
     coalesce(cast(nullif(`特定情報◎`, '') as integer), 0) as `特定情報◎`,
     coalesce(cast(nullif(`特定情報○`, '') as integer), 0) as `特定情報○`,
@@ -64,13 +64,13 @@ with
     coalesce(cast(nullif(`総合情報△`, '') as integer), 0) as `総合情報△`,
     coalesce(cast(nullif(`総合情報×`, '') as integer), 0) as `総合情報×`,
     cast(nullif(`人気指数`, '') as integer) as `人気指数`,
-    coalesce(cast(nullif(`調教指数`, '') as float), 0) as `調教指数`,
-    cast(nullif(`厩舎指数`, '') as float) as `厩舎指数`,
+    coalesce(cast(nullif(`調教指数`, '') as double), 0) as `調教指数`,
+    cast(nullif(`厩舎指数`, '') as double) as `厩舎指数`,
     -- replacing 2 nulls with most common value
     coalesce(nullif(`調教矢印コード`, ''), '3') as `調教矢印コード`,
     -- replacing 2 nulls with most common value
     coalesce(nullif(`厩舎評価コード`, ''), '3') as `厩舎評価コード`,
-    cast(nullif(`騎手期待連対率`, '') as float) as `騎手期待連対率`,
+    cast(nullif(`騎手期待連対率`, '') as double) as `騎手期待連対率`,
     cast(nullif(`激走指数`, '') as integer) as `激走指数`,
     -- A handful of records contain codes 00, 13, 16, 25, and 45, which are missing from the codes list
     -- defaulting to null for these edge cases
@@ -116,10 +116,10 @@ with
     cast(nullif(`賞金情報_収得賞金`, '') as integer) as `賞金情報_収得賞金`,
     -- has 14 nulls, replacing with 0
     coalesce(nullif(`賞金情報_条件クラス`, ''), '0') as `賞金情報_条件クラス`,
-    cast(nullif(`展開予想データ_テン指数`, '') as float) as `展開予想データ_テン指数`,
-    cast(nullif(`展開予想データ_ペース指数`, '') as float) as `展開予想データ_ペース指数`,
-    cast(nullif(`展開予想データ_上がり指数`, '') as float) as `展開予想データ_上がり指数`,
-    cast(nullif(`展開予想データ_位置指数`, '') as float) as `展開予想データ_位置指数`,
+    cast(nullif(`展開予想データ_テン指数`, '') as double) as `展開予想データ_テン指数`,
+    cast(nullif(`展開予想データ_ペース指数`, '') as double) as `展開予想データ_ペース指数`,
+    cast(nullif(`展開予想データ_上がり指数`, '') as double) as `展開予想データ_上がり指数`,
+    cast(nullif(`展開予想データ_位置指数`, '') as double) as `展開予想データ_位置指数`,
     -- years 2019,2020 have values 0,1,2,3,4 but schema says only S,M,H
     -- the number of integers is only about 2000, so just setting to null instead
     case when `展開予想データ_ペース予想` in ('S', 'M', 'H') then `展開予想データ_ペース予想` else null end `展開予想データ_ペース予想`,
@@ -151,8 +151,8 @@ with
     cast(nullif(`ペース指数順位`, '') as integer) as `ペース指数順位`,
     cast(nullif(`上がり指数順位`, '') as integer) as `上がり指数順位`,
     cast(nullif(`位置指数順位`, '') as integer) as `位置指数順位`,
-    cast(nullif(`騎手期待単勝率`, '') as float) as `騎手期待単勝率`,
-    cast(nullif(`騎手期待３着内率`, '') as float) as `騎手期待３着内率`,
+    cast(nullif(`騎手期待単勝率`, '') as double) as `騎手期待単勝率`,
+    cast(nullif(`騎手期待３着内率`, '') as double) as `騎手期待３着内率`,
     coalesce(nullif(`輸送区分`, ''), '0') as `輸送区分`,
     nullif(`走法`, '') as `走法`,
     case when substring(`体型`, 1, 1) in ('1', '2', '3') then substring(`体型`, 1, 1) else null end `体型_全体`,
@@ -189,8 +189,8 @@ with
     case when `馬特記１` in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then `馬特記１` else null end `馬特記１`,
     case when `馬特記２` in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then `馬特記２` else null end `馬特記２`,
     case when `馬特記３` in (SELECT code FROM {{ ref('jrdb__special_mention_codes') }}) then `馬特記３` else null end `馬特記３`,
-    cast(nullif(`展開参考データ_馬スタート指数`, '') as float) as `展開参考データ_馬スタート指数`,
-    cast(nullif(`展開参考データ_馬出遅率`, '') as float) as `展開参考データ_馬出遅率`,
+    cast(nullif(`展開参考データ_馬スタート指数`, '') as double) as `展開参考データ_馬スタート指数`,
+    cast(nullif(`展開参考データ_馬出遅率`, '') as double) as `展開参考データ_馬出遅率`,
     nullif(`展開参考データ_参考前走`, '') as `展開参考データ_参考前走`,
     nullif(`展開参考データ_参考前走騎手コード`, '') as `展開参考データ_参考前走騎手コード`,
     cast(nullif(`万券指数`, '') as integer) as `万券指数`,
