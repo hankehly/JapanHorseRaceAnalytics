@@ -34,14 +34,6 @@ with
       nullif(`レースキー_年`, ''),
       nullif(`レースキー_回`, ''),
       nullif(`レースキー_日`, ''),
-      nullif(`レースキー_Ｒ`, ''),
-      nullif(`馬番`, '')
-    ) as sed_bk,
-    concat(
-      nullif(`レースキー_場コード`, ''),
-      nullif(`レースキー_年`, ''),
-      nullif(`レースキー_回`, ''),
-      nullif(`レースキー_日`, ''),
       nullif(`レースキー_Ｒ`, '')
     ) as `レースキー`,
     concat(

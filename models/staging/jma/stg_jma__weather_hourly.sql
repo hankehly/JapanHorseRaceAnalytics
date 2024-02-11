@@ -2,7 +2,7 @@ with
   source as (
   select
     *,
-    row_number() over (partition by `station_name`, `年月日時` order by `download_timestamp` desc) as row_number
+    row_number() over (partition by `station_name`, `年月日時` order by `download_timestamp` desc) as row_priority
   from
     {{ source('jma', 'raw_jma__weather_hourly') }}
   ),
@@ -64,7 +64,7 @@ with
   from
     source
   where
-    row_number = 1
+    row_priority = 1
 )
 
 select

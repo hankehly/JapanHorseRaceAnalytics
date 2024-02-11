@@ -1,18 +1,6 @@
 JapanHorseRaceAnalytics:
   target: local
-
   outputs:
-    # old target using postgres
-    # local:
-    #   type: postgres
-    #   method: jdbc
-    #   user: admin
-    #   password: admin
-    #   schema: jrdb
-    #   database: jrdb
-    #   host: localhost
-    #   port: 5432
-
     local:
       type: spark
       method: thrift
@@ -23,4 +11,4 @@ JapanHorseRaceAnalytics:
       schema: jhra
       host: localhost
       port: 10000
-      threads: 4
+      threads: 1

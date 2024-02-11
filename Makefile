@@ -8,12 +8,12 @@ start_mlflow_server:
 start_hive_server:
 	source .venv/bin/activate && spark-submit \
 		--master 'local[*]' \
-		--executor-memory 4g \
-		--driver-memory 4g \
+		--executor-memory 6g \
+		--driver-memory 6g \
 		--conf "spark.dynamicAllocation.enabled=true" \
 		--conf "spark.dynamicAllocation.initialExecutors=2" \
 		--conf "spark.dynamicAllocation.minExecutors=1" \
-		--conf "spark.dynamicAllocation.maxExecutors=5" \
+		--conf "spark.dynamicAllocation.maxExecutors=3" \
 		--conf 'spark.executor.extraJavaOptions=-Duser.timezone=Etc/UTC' \
 		--conf 'spark.eventLog.enabled=false' \
 		--conf 'spark.sql.warehouse.dir=/Users/hankehly/Projects/JapanHorseRaceAnalytics/spark-warehouse' \
