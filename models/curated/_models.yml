@@ -49,61 +49,85 @@ models:
       - name: レースキー
         data_type: STRING
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: string
       - name: 馬番
         data_type: STRING
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: string
       - name: 血統登録番号
         data_type: STRING
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: string
       - name: 騎手コード
         data_type: STRING
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: string
       - name: 発走日時
         data_type: TIMESTAMP
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: datetime64[ns]
       - name: 調教師コード
         data_type: STRING
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: string
       - name: 先読み注意_着順
         data_type: INTEGER
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: int
       - name: 先読み注意_本賞金
         data_type: DOUBLE
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: float
       - name: 先読み注意_単勝的中
         data_type: BOOLEAN
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: category
       - name: 先読み注意_単勝払戻金
         data_type: INTEGER
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: int
       - name: 先読み注意_複勝的中
         data_type: BOOLEAN
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: category
       - name: 先読み注意_複勝払戻金
         data_type: INTEGER
         quote: true
+        tags:
+          - metadata
         meta:
           pandas_dtype: int
       - name: 場コード
@@ -176,17 +200,17 @@ models:
         quote: true
         meta:
           pandas_dtype: int
-      - name: 芝馬場状態内
+      - name: 馬場状態内
         data_type: STRING
         quote: true
         meta:
           pandas_dtype: category
-      - name: 芝馬場状態中
+      - name: 馬場状態中
         data_type: STRING
         quote: true
         meta:
           pandas_dtype: category
-      - name: 芝馬場状態外
+      - name: 馬場状態外
         data_type: STRING
         quote: true
         meta:
@@ -216,21 +240,6 @@ models:
         quote: true
         meta:
           pandas_dtype: int
-      - name: ダ馬場状態内
-        data_type: STRING
-        quote: true
-        meta:
-          pandas_dtype: category
-      - name: ダ馬場状態中
-        data_type: STRING
-        quote: true
-        meta:
-          pandas_dtype: category
-      - name: ダ馬場状態外
-        data_type: STRING
-        quote: true
-        meta:
-          pandas_dtype: category
       - name: 芝種類
         data_type: STRING
         quote: true
