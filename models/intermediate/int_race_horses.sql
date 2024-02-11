@@ -338,6 +338,7 @@ with
 
     -- horse_age in years
     -- extract(year from age(`発走日時`, `生年月日`)) + extract(month from age(`発走日時`, `生年月日`)) / 12 + extract(day from age(`発走日時`, `生年月日`)) / (12 * 30.44) AS `年齢`,
+    -- months_between('2024-01-01', '2022-12-31') = 12.0322 / 12 = 1.0027 years
     (months_between(`発走日時`, `生年月日`) / 12) as `年齢`,
 
     -- horse_age_4 or less
