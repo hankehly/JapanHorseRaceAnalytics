@@ -160,6 +160,11 @@ with
     kyi.`枠番`,
     bac.`発走日時`,
     kyi.`レースキー_場コード` as `場コード`,
+    -- Todo: add later
+    -- ＪＲＤＢデータ_不利
+    -- ＪＲＤＢデータ_前不利
+    -- ＪＲＤＢデータ_中不利
+    -- ＪＲＤＢデータ_後不利
     case
       when extract(month from bac.`発走日時`) <= 3 then 1
       when extract(month from bac.`発走日時`) <= 6 then 2
@@ -197,11 +202,6 @@ with
     lag(sed.`馬成績_着順`, 4) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `四走前着順`,
     lag(sed.`馬成績_着順`, 5) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `五走前着順`,
     lag(sed.`馬成績_着順`, 6) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `六走前着順`,
-    -- Todo: add later
-    -- ＪＲＤＢデータ_不利
-    -- ＪＲＤＢデータ_前不利
-    -- ＪＲＤＢデータ_中不利
-    -- ＪＲＤＢデータ_後不利
     -- how many races this horse has run until now
     row_number() over (partition by kyi.`血統登録番号` order by bac.`発走日時`) - 1 as `レース数`,
     -- how many races this horse has won until now (incremented by one on the following race)
