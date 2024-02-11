@@ -1,12 +1,4 @@
 models:
-  - name: int_horses
-    description: horse features
-    columns:
-      - name: 血統登録番号
-        quote: true
-        tests:
-          - not_null
-          - unique
   - name: int_place_odds
   - name: int_place_payouts
     columns:
