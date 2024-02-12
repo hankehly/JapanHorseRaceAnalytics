@@ -3,9 +3,12 @@ from mlflow.types.schema import ColSpec
 
 
 def get_mlflow_col_spec_type_for_pandas_dtype(dtype) -> str:
-    if str(dtype).startswith("float"):
+    dtype_str = str(dtype).lower()
+    if dtype_str.startswith("float"):
         return "double"
-    elif str(dtype) == "category":
+    elif dtype_str.startswith("int"):
+        return "long"
+    elif dtype_str == "category":
         return "string"
     else:
         raise ValueError(f"Unexpected dtype: {dtype}")

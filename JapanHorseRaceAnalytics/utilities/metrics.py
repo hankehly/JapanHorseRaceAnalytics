@@ -18,7 +18,7 @@ def calculate_binary_classifier_statistics(
     df: pd.DataFrame,
     group_by=None,
     probability_threshold: float = 0.5,
-    payoff_column_name="複勝払戻金",
+    payout_column_name="複勝払戻金",
 ):
     """
     Calculates statistics for a binary classifier.
@@ -41,7 +41,7 @@ def calculate_binary_classifier_statistics(
     Examples
     --------
     >>> calculate_binary_classifier_statistics(results, group_by="場所距離芝ダ")
-    {'payoff_rate': 0.0,
+    {'payout_rate': 0.0,
      'hit_rate': 0.0,
      'precision': 0.0,
      'recall': 0.0,
@@ -49,7 +49,7 @@ def calculate_binary_classifier_statistics(
      'total_bets': 0,
      'total_hits': 0,
      'bet_rate': 0.0,
-     'total_payoff_amount': 0.0,
+     'total_payout_amount': 0.0,
      'total_bet_amount': 0}
     """
     if probability_threshold < 0 or probability_threshold > 1:
@@ -67,19 +67,19 @@ def calculate_binary_classifier_statistics(
             (group["pred_proba_true"] >= probability_threshold) & group["actual"]
         ]
         total_hits = len(hits)
-        total_payoff_amount = hits[payoff_column_name].sum() * (bet_amount / 100)
+        total_payout_amount = hits[payout_column_name].sum() * (bet_amount / 100)
         total_bets = len(bets)
         total_bet_amount = total_bets * bet_amount
         hit_rate = total_hits / total_bets * 100 if total_bets > 0 else 0
         bet_rate = total_bets / len(group) * 100
-        payoff_rate = (
-            total_payoff_amount / total_bet_amount * 100 if total_bet_amount > 0 else 0
+        payout_rate = (
+            total_payout_amount / total_bet_amount * 100 if total_bet_amount > 0 else 0
         )
         precision = precision_score(group["actual"], group["pred"], zero_division=0)
         recall = recall_score(group["actual"], group["pred"], zero_division=0)
         f1 = f1_score(group["actual"], group["pred"], zero_division=0)
         results[name] = {
-            "payoff_rate": payoff_rate,
+            "payout_rate": payout_rate,
             "hit_rate": hit_rate,
             "precision": precision,
             "recall": recall,
@@ -87,7 +87,7 @@ def calculate_binary_classifier_statistics(
             "total_bets": total_bets,
             "total_hits": total_hits,
             "bet_rate": bet_rate,
-            "total_payoff_amount": total_payoff_amount,
+            "total_payout_amount": total_payout_amount,
             "total_bet_amount": total_bet_amount,
         }
     return results
