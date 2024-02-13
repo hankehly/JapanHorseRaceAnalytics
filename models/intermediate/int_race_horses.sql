@@ -1,156 +1,13 @@
 with
-  bac as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__bac') }}
-  ),
-
-  kyi as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__kyi') }}
-  ),
-
-  sed as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__sed') }}
-  ),
-
-  tyb as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__tyb') }}
-  ),
-
-  kab as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__kab') }}
-  ),
-
-  ukc as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__ukc') }}
-  ),
 
   -- Get the latest data for each horse (scd type 2)
   ukc_latest AS (
   select
     *
   from
-    ukc
+    {{ ref('stg_jrdb__ukc') }} ukc
   where
-    (`血統登録番号`, `データ年月日`) in (select `血統登録番号`, MAX(`データ年月日`) from ukc group by `血統登録番号`)
-  ),
-
-  horses_good_finish_turf as (
-  select
-    `競走成績キー_血統登録番号` as `血統登録番号`,
-    sum(
-      case
-        when `ＪＲＤＢデータ_馬場差` <= -10 and `馬成績_着順` <= 3 then 1
-        else 0
-      end
-    ) > 0 `瞬発戦好走馬`,
-    sum(
-      case
-  	    when `ＪＲＤＢデータ_馬場差` >= 10 and `馬成績_着順` <= 3 then 1
-  	    else 0
-      end
-    ) > 0 `消耗戦好走馬`
-  from
-    sed
-  where
-    `馬成績_異常区分` = '0'
-    and `レース条件_トラック情報_芝ダ障害コード` = '芝'
-  group by
-    `血統登録番号`
-  ),
-
-  horses_good_finish_dirt as (
-  select
-    `競走成績キー_血統登録番号` as `血統登録番号`,
-    sum(
-      case
-        when `ＪＲＤＢデータ_馬場差` <= -10 and `馬成績_着順` <= 3 then 1
-        else 0
-      end
-    ) > 0 `瞬発戦好走馬`,
-    sum(
-      case
-  	    when `ＪＲＤＢデータ_馬場差` >= 10 and `馬成績_着順` <= 3 then 1
-  	    else 0
-      end
-    ) > 0 `消耗戦好走馬`
-  from
-    sed
-  where
-    `馬成績_異常区分` = '0'
-    and `レース条件_トラック情報_芝ダ障害コード` = 'ダート'
-  group by
-    `血統登録番号`
-  ),
-
-  horses_good_finish_any as (
-  select
-    `競走成績キー_血統登録番号` as `血統登録番号`,
-    sum(
-      case
-        when `ＪＲＤＢデータ_馬場差` <= -10 and `馬成績_着順` <= 3 then 1
-        else 0
-      end
-    ) > 0 `瞬発戦好走馬`,
-    sum(
-      case
-  	    when `ＪＲＤＢデータ_馬場差` >= 10 and `馬成績_着順` <= 3 then 1
-  	    else 0
-      end
-    ) > 0 `消耗戦好走馬`
-  from
-    sed
-  where
-    `馬成績_異常区分` = '0'
-  group by
-    `血統登録番号`
-  ),
-
-  horses as (
-  select
-    ukc.`血統登録番号`,
-    case
-      when ukc.`性別コード` = '1' then '牡'
-      when ukc.`性別コード` = '2' then '牝'
-      else 'セン'
-    end `性別`,
-    ukc.`生年月日` as `生年月日`,
-    horses_good_finish_turf.`瞬発戦好走馬` as `瞬発戦好走馬_芝`,
-    horses_good_finish_turf.`消耗戦好走馬` as `消耗戦好走馬_芝`,
-    horses_good_finish_dirt.`瞬発戦好走馬` as `瞬発戦好走馬_ダート`,
-    horses_good_finish_dirt.`消耗戦好走馬` as `消耗戦好走馬_ダート`,
-    horses_good_finish_any.`瞬発戦好走馬` as `総合瞬発戦好走馬`,
-    horses_good_finish_any.`消耗戦好走馬` as `総合消耗戦好走馬`
-  from
-    ukc_latest as ukc
-  left join
-    horses_good_finish_turf 
-  on
-    ukc.`血統登録番号` = horses_good_finish_turf.`血統登録番号`
-  left join
-    horses_good_finish_dirt
-  on
-    ukc.`血統登録番号` = horses_good_finish_dirt.`血統登録番号`
-  left join
-    horses_good_finish_any
-  on
-    ukc.`血統登録番号` = horses_good_finish_any.`血統登録番号`
+    (`血統登録番号`, `データ年月日`) in (select `血統登録番号`, MAX(`データ年月日`) from {{ ref('stg_jrdb__ukc') }} group by `血統登録番号`)
   ),
 
   race_horses_base as (
@@ -173,18 +30,60 @@ with
     end as `四半期`,
     kyi.`血統登録番号`,
     kyi.`入厩年月日`,
-    horses.`生年月日`,
-    horses.`性別`,
     case
-      when bac.`レース条件_トラック情報_芝ダ障害コード` = 'ダート' then horses.`瞬発戦好走馬_ダート`
-      else horses.`瞬発戦好走馬_芝`
-    end as `トラック種別瞬発戦好走馬`,
-    case
-      when bac.`レース条件_トラック情報_芝ダ障害コード` = 'ダート' then horses.`消耗戦好走馬_ダート`
-      else horses.`消耗戦好走馬_芝`
-    end as `トラック種別消耗戦好走馬`,
-    horses.`総合瞬発戦好走馬`,
-    horses.`総合消耗戦好走馬`,
+      when ukc.`性別コード` = '1' then '牡'
+      when ukc.`性別コード` = '2' then '牝'
+      else 'セン'
+    end `性別`,
+    ukc.`生年月日` as `生年月日`,
+    sed.`ＪＲＤＢデータ_馬場差` as `先読み注意_馬場差`,
+
+    -- 瞬発戦/消耗戦好走馬の特徴量はレース当日の予測に使わないから
+    -- 過去の実績に頼っても大丈夫
+    coalesce(sum(
+      case 
+        when sed.`ＪＲＤＢデータ_馬場差` <= -10 and sed.`馬成績_着順` <= 3 then 1 
+        else 0 
+      end
+    ) over (
+      partition by kyi.`血統登録番号`
+      order by bac.`発走日時`
+      rows between unbounded preceding and 1 preceding
+    ), 0) > 0 `芝瞬発戦好走馬`,
+    coalesce(sum(
+      case
+        when sed.`ＪＲＤＢデータ_馬場差` >= 10 and sed.`馬成績_着順` <= 3 then 1
+        else 0
+      end
+    ) over (
+      partition by kyi.`血統登録番号`
+      order by bac.`発走日時`
+      rows between unbounded preceding and 1 preceding
+    ), 0) > 0 `芝消耗戦好走馬`,
+    coalesce(sum(
+      case 
+        when sed.`ＪＲＤＢデータ_馬場差` <= -10 and sed.`馬成績_着順` <= 3 then 1 
+        else 0 
+      end
+    ) over (
+      partition by kyi.`血統登録番号`
+      order by bac.`発走日時`
+      rows between unbounded preceding and 1 preceding
+    ), 0) > 0 `ダート瞬発戦好走馬`,
+    coalesce(sum(
+      case
+        when sed.`ＪＲＤＢデータ_馬場差` >= 10 and sed.`馬成績_着順` <= 3 then 1
+        else 0
+      end
+    ) over (
+      partition by kyi.`血統登録番号`
+      order by bac.`発走日時`
+      rows between unbounded preceding and 1 preceding
+    ), 0) > 0 `ダート消耗戦好走馬`,
+
+    -- horses.`総合瞬発戦好走馬`,
+    -- horses.`総合消耗戦好走馬`,
+
     tyb.`馬体重`,
     tyb.`馬体重増減`,
     bac.`レース条件_距離` as `距離`,
@@ -334,38 +233,38 @@ with
     kyi.`放牧先ランク`,
     kyi.`厩舎ランク`
   from
-    kyi
+    {{ ref('stg_jrdb__kyi') }} kyi
 
   -- 前日系は inner join
   inner join
-    bac
+    {{ ref('stg_jrdb__bac') }} bac
   on
     kyi.`レースキー` = bac.`レースキー`
 
   -- 実績系はレースキーがないかもしれないから left join
   left join
-    sed
+    {{ ref('stg_jrdb__sed') }} sed
   on
     kyi.`レースキー` = sed.`レースキー`
     and kyi.`馬番` = sed.`馬番`
 
   -- TYBが公開される前に予測する可能性があるから left join
   left join
-    tyb
+    {{ ref('stg_jrdb__tyb') }} tyb
   on
     kyi.`レースキー` = tyb.`レースキー`
     and kyi.`馬番` = tyb.`馬番`
 
   inner join
-    kab
+    {{ ref('stg_jrdb__kab') }} kab
   on
     kyi.`開催キー` = kab.`開催キー`
     and bac.`年月日` = kab.`年月日`
 
   inner join
-    horses
+    ukc_latest ukc
   on
-    kyi.`血統登録番号` = horses.`血統登録番号`
+    kyi.`血統登録番号` = ukc.`血統登録番号`
 
   left join
     {{ ref('jrdb__horse_form_codes') }} horse_form_codes
@@ -420,13 +319,19 @@ with
     base.`馬番`,
     base.`血統登録番号`,
     base.`発走日時`,
+    base.`トラック種別`,
+    base.`先読み注意_馬場差`,
     base.`着順` as `先読み注意_着順`,
     base.`本賞金` as `先読み注意_本賞金`,
     base.`性別`,
-    base.`トラック種別瞬発戦好走馬`,
-    base.`トラック種別消耗戦好走馬`,
-    base.`総合瞬発戦好走馬`,
-    base.`総合消耗戦好走馬`,
+    case
+      when base.`トラック種別` = 'ダート' then base.`ダート瞬発戦好走馬`
+      else base.`芝瞬発戦好走馬`
+    end `トラック種別瞬発戦好走馬`,
+    case
+      when base.`トラック種別` = 'ダート' then base.`ダート消耗戦好走馬`
+      else base.`芝消耗戦好走馬`
+    end `トラック種別消耗戦好走馬`,
     base.`一走前着順`,
     base.`二走前着順`,
     base.`三走前着順`,
@@ -612,7 +517,8 @@ with
     `1位完走`, -- horse_wins
 
     -- how many races this horse has placed in until now (incremented by one on the following race)
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トップ3完走`, -- horse_places
+    -- horse_placed
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トップ3完走`,
 
     -- ratio_win_horse
     coalesce({{
@@ -821,12 +727,6 @@ with
 
     -- トラック種別消耗戦好走馬
     sum(case when b.`トラック種別消耗戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手トラック種別消耗戦好走馬割合`,
-
-    -- 総合瞬発戦好走馬
-    sum(case when b.`総合瞬発戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手総合瞬発戦好走馬割合`,
-
-    -- 総合消耗戦好走馬
-    sum(case when b.`総合消耗戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手総合消耗戦好走馬割合`,
 
     -- 一走前着順
     max(b.`一走前着順`) as `競争相手最高一走前着順`,
@@ -1379,6 +1279,8 @@ with
     race_horses.`馬番`,
     race_horses.`血統登録番号`,
     race_horses.`発走日時`,
+    race_horses.`トラック種別`,
+    race_horses.`先読み注意_馬場差`,
     race_horses.`先読み注意_着順`,
     race_horses.`先読み注意_本賞金`,
 
@@ -1386,8 +1288,6 @@ with
     race_horses.`性別`,
     race_horses.`トラック種別瞬発戦好走馬`,
     race_horses.`トラック種別消耗戦好走馬`,
-    race_horses.`総合瞬発戦好走馬`,
-    race_horses.`総合消耗戦好走馬`,
     race_horses.`一走前着順`,
     race_horses.`二走前着順`,
     race_horses.`三走前着順`,
@@ -1834,8 +1734,6 @@ with
     competitors.`競争相手レース数平均賞金標準偏差`,
     competitors.`競争相手トラック種別瞬発戦好走馬割合`,
     competitors.`競争相手トラック種別消耗戦好走馬割合`,
-    competitors.`競争相手総合瞬発戦好走馬割合`,
-    competitors.`競争相手総合消耗戦好走馬割合`,
     competitors.`競争相手最高連続1着`,
     competitors.`競争相手最低連続1着`,
     competitors.`競争相手平均連続1着`,
