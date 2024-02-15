@@ -135,6 +135,28 @@ bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも
 | 08004409   | 8        | 9        |
 | 08085302   | 15       | 14       |
 
+*騎手の乗り替わり*
+
+SED、TYB、KYIに騎手コードが入っていますが、乗り替わりがある場合、一致しないことがある。SEDとTYBの差は66件、KYIとは4887件。乗り替わりの影響を最小限にするために、予測時にTYBの騎手コードを使うと良さそう。
+
+See `sed_kyi_tyb_jockey_diff.sql` analysis.
+
+*調教師の変更*
+
+SEDとKYIで調教師が異なるケースが35件ある。
+
+See `sed_kyi_trainer_diff.sql` analysis.
+
+*sed/bac の距離の違い*
+
+There are 2 races (from 2008-2009) where the distance is different between SED and BAC. So infrequent that we can ignore it.
+
+See `sed_bac_distance_diff.sql` analysis.
+
+*sed/kab の馬場状態の違い*
+
+The horse track condition is usually the same or 1 off between SED and KAB.
+
 
 ## Modeling methodology
 
