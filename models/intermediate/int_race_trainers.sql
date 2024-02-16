@@ -1,25 +1,4 @@
 with
-  bac as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__bac') }}
-  ),
-
-  kyi as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__kyi') }}
-  ),
-
-  sed as (
-  select
-    *
-  from
-    {{ ref('stg_jrdb__sed') }}
-  ),
-
   race_trainers_base as (
   select
     kyi.`レースキー`,
@@ -38,15 +17,15 @@ with
     case when sed.`馬成績_着順` = 1 then 1 else 0 end as is_win,
     case when sed.`馬成績_着順` <= 3 then 1 else 0 end as is_place
   from
-    kyi
+    {{ ref('stg_jrdb__kyi') }} kyi
   -- 前日系は inner join
   inner join
-    bac
+    {{ ref('stg_jrdb__bac') }} bac
   on
     kyi.`レースキー` = bac.`レースキー`
   -- 実績系はレースキーがないかもしれないから left join
   inner join
-    sed
+    {{ ref('stg_jrdb__sed') }} sed
   on
     kyi.`レースキー` = sed.`レースキー`
     and kyi.`馬番` = sed.`馬番`
