@@ -54,14 +54,14 @@ with
     kyi.`レースキー`,
     kyi.`馬番`,
     kyi.`血統登録番号`,
-    coalesce(tyb.`騎手コード`, kyi.`騎手コード`) as `騎手コード`,
+    tyb.`騎手コード` as `騎手コード`,
     bac.`発走日時`,
     kyi.`調教師コード`,
     sed.`馬成績_着順` as `着順`,
     sed.`本賞金`,
-    coalesce(win_payouts.`払戻金`, 0) > 0 as `単勝的中`,
+    case when sed.`馬成績_着順` = 1 then TRUE else FALSE end as `単勝的中`,
     coalesce(win_payouts.`払戻金`, 0) as `単勝払戻金`,
-    coalesce(place_payouts.`払戻金`, 0) > 0 as `複勝的中`,
+    case when sed.`馬成績_着順` <= 3 then TRUE else FALSE end as `複勝的中`,
     coalesce(place_payouts.`払戻金`, 0) as `複勝払戻金`,
 
     -- Base features
@@ -329,15 +329,10 @@ with
     base.`中間降水量`,
     base.`天候コード`,
 
-    -- Combination of IDM and IDM標準偏差 to express horse IDM in comparison to standard deviation.
-    -- coalesce( dbt_utils.safe_divide('base.`ＩＤＭ`', 'base.`IDM標準偏差`') , 0) as `IDM標準偏差比`,
-
    -- Horse features
     race_horses.`性別`,
     race_horses.`トラック種別瞬発戦好走馬`,
     race_horses.`トラック種別消耗戦好走馬`,
-    race_horses.`総合瞬発戦好走馬`,
-    race_horses.`総合消耗戦好走馬`,
     race_horses.`一走前着順`,
     race_horses.`二走前着順`,
     race_horses.`三走前着順`,
@@ -782,8 +777,6 @@ with
     race_horses.`競争相手レース数平均賞金標準偏差`,
     race_horses.`競争相手トラック種別瞬発戦好走馬割合`,
     race_horses.`競争相手トラック種別消耗戦好走馬割合`,
-    race_horses.`競争相手総合瞬発戦好走馬割合`,
-    race_horses.`競争相手総合消耗戦好走馬割合`,
     race_horses.`競争相手最高連続1着`,
     race_horses.`競争相手最低連続1着`,
     race_horses.`競争相手平均連続1着`,
