@@ -13,18 +13,10 @@ with
     {{ ref('stg_jma__weather_hourly') }}
   ),
 
-  final as (
+  base as (
   select
     bac.`レースキー`,
-    bac.`開催キー`,
-    `レースキー_場コード` as `場コード`,
-    jrdb_racetrack_jma_station_mapping.jma_station_name as `場名`,
-    `レースキー_年` as `年`,
-    `レースキー_回` as `回`,
-    `レースキー_日` as `日`,
-    `レースキー_Ｒ` as `Ｒ`,
-    bac.`年月日`,
-    bac.`発走日時`,
+
     -- 気温
     case
       when w1.`気温` is not null and w2.`気温` is not null then w1.`気温` + (w2.`気温` - w1.`気温`) * (cast(extract(minute from bac.`発走日時`) as double) / 60)
@@ -140,6 +132,29 @@ with
       ) || ':00:00', 'yyyy-MM-dd HH:mm:ss'
     )
     and w2.station_name = jrdb_racetrack_jma_station_mapping.jma_station_name
+  ),
+
+  final as (
+  select
+    `レースキー` as `meta_int_race_weather_レースキー`,
+    temperature as num_temperature,
+    precipitation as num_precipitation,
+    snowfall as num_snowfall,
+    snow_depth as num_snow_depth,
+    -- sunshine,
+    wind_speed as num_wind_speed,
+    wind_direction as cat_wind_direction,
+    solar_radiation as num_solar_radiation,
+    local_air_pressure as num_local_air_pressure,
+    sea_level_air_pressure as num_sea_level_air_pressure,
+    relative_humidity as num_relative_humidity,
+    vapor_pressure as num_vapor_pressure,
+    dew_point_temperature as num_dew_point_temperature,
+    weather as cat_weather,
+    -- cloud_cover,
+    visibility as num_visibility
+  from
+    base
   )
 
 select * from final

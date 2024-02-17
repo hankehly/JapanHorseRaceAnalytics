@@ -1,4 +1,21 @@
 models:
+  - name: int_combinations
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - meta_int_combinations_レースキー
+            - meta_int_combinations_馬番
+          quote_columns: true
+    columns:
+      - name: meta_int_combinations_レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: meta_int_combinations_馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_place_odds
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -90,15 +107,15 @@ models:
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
-            - レースキー
-            - 馬番
+            - meta_int_race_trainers_レースキー
+            - meta_int_race_trainers_馬番
           quote_columns: true
     columns:
-      - name: レースキー
+      - name: meta_int_race_trainers_レースキー
         quote: true
         tests:
           - not_null
-      - name: 馬番
+      - name: meta_int_race_trainers_馬番
         quote: true
         tests:
           - not_null
@@ -110,15 +127,15 @@ models:
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
-            - レースキー
-            - 馬番
+            - meta_int_race_jockeys_レースキー
+            - meta_int_race_jockeys_馬番
           quote_columns: true
     columns:
-      - name: レースキー
+      - name: meta_int_race_jockeys_レースキー
         quote: true
         tests:
           - not_null
-      - name: 馬番
+      - name: meta_int_race_jockeys_馬番
         quote: true
         tests:
           - not_null
@@ -143,9 +160,34 @@ models:
         tests:
           - not_null
 
+  - name: int_race_horses_20240217
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - meta_int_race_horses_レースキー
+            - meta_int_race_horses_馬番
+          quote_columns: true
+    columns:
+      - name: meta_int_race_horses_レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: meta_int_race_horses_馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_weather
     columns:
-      - name: レースキー
+      - name: meta_int_race_weather_レースキー
+        quote: true
+        tests:
+          - not_null
+          - unique
+
+  - name: int_races
+    columns:
+      - name: meta_int_races_レースキー
         quote: true
         tests:
           - not_null

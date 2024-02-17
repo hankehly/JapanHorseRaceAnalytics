@@ -1278,11 +1278,6 @@ with
     race_horses.`レースキー`,
     race_horses.`馬番`,
     race_horses.`血統登録番号`,
-    race_horses.`発走日時`,
-    race_horses.`トラック種別`,
-    race_horses.`先読み注意_馬場差`,
-    race_horses.`先読み注意_着順`,
-    race_horses.`先読み注意_本賞金`,
 
     -- Base features
     race_horses.`性別`,

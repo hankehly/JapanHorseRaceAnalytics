@@ -70,7 +70,7 @@ with
     nullif(`レース条件_重量`, '') as `レース条件_重量`,
     nullif(`レース条件_グレード`, '') as `レース条件_グレード`,
     nullif(`レース条件_レース名`, '') as `レース条件_レース名`,
-    nullif(`レース条件_頭数`, '') as `レース条件_頭数`,
+    cast(nullif(`レース条件_頭数`, '') as integer) as `レース条件_頭数`,
     nullif(`レース条件_レース名略称`, '') as `レース条件_レース名略称`,
     -- This value is zero when the horse is disqualified.
     -- 0 < 1 which can cause problems when counting number of places.
@@ -79,7 +79,7 @@ with
     nullif(cast(nullif(`馬成績_着順`, '') as integer), 0) as `馬成績_着順`,
     nullif(`馬成績_異常区分`, '') as `馬成績_異常区分`,
     nullif(`馬成績_タイム`, '') as `馬成績_タイム`,
-    nullif(`馬成績_斤量`, '') as `馬成績_斤量`,
+    cast(nullif(`馬成績_斤量`, '') as integer) as `馬成績_斤量`,
     nullif(`馬成績_騎手名`, '') as `馬成績_騎手名`,
     nullif(`馬成績_調教師名`, '') as `馬成績_調教師名`,
     cast(nullif(`馬成績_確定単勝オッズ`, '') as double) as `馬成績_確定単勝オッズ`,
