@@ -285,16 +285,6 @@ models:
         quote: true
         meta:
           pandas_dtype: category
-      - name: 総合瞬発戦好走馬
-        data_type: BOOLEAN
-        quote: true
-        meta:
-          pandas_dtype: category
-      - name: 総合消耗戦好走馬
-        data_type: BOOLEAN
-        quote: true
-        meta:
-          pandas_dtype: category
       - name: 一走前着順
         data_type: INTEGER
         quote: true
@@ -2511,16 +2501,6 @@ models:
         meta:
           pandas_dtype: Float64
       - name: 競争相手トラック種別消耗戦好走馬割合
-        data_type: DOUBLE
-        quote: true
-        meta:
-          pandas_dtype: Float64
-      - name: 競争相手総合瞬発戦好走馬割合
-        data_type: DOUBLE
-        quote: true
-        meta:
-          pandas_dtype: Float64
-      - name: 競争相手総合消耗戦好走馬割合
         data_type: DOUBLE
         quote: true
         meta:
