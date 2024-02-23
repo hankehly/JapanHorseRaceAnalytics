@@ -79,6 +79,7 @@ with
     nullif(cast(nullif(`馬成績_着順`, '') as integer), 0) as `馬成績_着順`,
     nullif(`馬成績_異常区分`, '') as `馬成績_異常区分`,
     nullif(`馬成績_タイム`, '') as `馬成績_タイム`,
+    cast(substring(`馬成績_タイム`, 1, 1) as double) * 60 + cast(substring(`馬成績_タイム`, 2, 2) as double) + cast(substring(`馬成績_タイム`, 4, 1) as double) / 10 as `走破タイム`,
     cast(nullif(`馬成績_斤量`, '') as integer) as `馬成績_斤量`,
     nullif(`馬成績_騎手名`, '') as `馬成績_騎手名`,
     nullif(`馬成績_調教師名`, '') as `馬成績_調教師名`,

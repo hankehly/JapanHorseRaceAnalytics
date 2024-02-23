@@ -1738,6 +1738,13 @@ models:
       - name: 馬成績_タイム
         quote: true
         description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
+        tests:
+          - not_null
+      - name: 走破タイム
+        quote: true
+        description: 馬成績_タイムを秒に変換したもの
+        tests:
+          - not_null
       - name: 馬成績_斤量
         quote: true
         description: 0.1Kg単位
@@ -1859,7 +1866,9 @@ models:
         description: データ無:スペース
       - name: 馬体重増減
         quote: true
-        description: 符号+数字２桁、データ無:スペース
+        description: |
+          符号+数字２桁、データ無:スペース
+          ※このカラムはNULL値があったり自分で計算する方が正確です
       - name: 天候コード
         quote: true
         description: コード表参照

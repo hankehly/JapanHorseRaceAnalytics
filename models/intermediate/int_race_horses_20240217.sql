@@ -17,15 +17,13 @@ with
     kyi.`枠番`,
     bac.`発走日時`,
     kyi.`レースキー_場コード` as `場コード`,
+    sed.`馬成績_異常区分` as `異常区分`,
 
     -- General before
-    tyb.`馬体重` as `事前_馬体重`,
-    tyb.`馬体重増減` as `事前_馬体重増減`,
     coalesce(tyb.`ＩＤＭ`, kyi.`ＩＤＭ`) as `事前_ＩＤＭ`,
     run_style_codes_kyi.`name` as `事前_脚質`,
     coalesce(tyb.`単勝オッズ`, win_odds.`単勝オッズ`) as `事前_単勝オッズ`,
     coalesce(tyb.`複勝オッズ`, place_odds.`複勝オッズ`) as `事前_複勝オッズ`,
-    coalesce(tyb.`負担重量`, kyi.`負担重量`) as `事前_負担重量`,
     horse_form_codes_tyb.`name` as `事前_馬体`,
     tyb.`気配コード` as `事前_気配コード`,
     kyi.`上昇度` as `事前_上昇度`,
@@ -35,13 +33,10 @@ with
     kyi.`展開予想データ_上がり指数` as `事前_上がり指数`,
 
     -- General actual
-    sed.`馬体重` as `実績_馬体重`,
-    sed.`馬体重増減` as `実績_馬体重増減`,
     sed.`ＪＲＤＢデータ_ＩＤＭ` as `実績_ＩＤＭ`,
     run_style_codes_sed.`name` as `実績_脚質`,
     sed.`馬成績_確定単勝オッズ` as `実績_単勝オッズ`,
     sed.`確定複勝オッズ下` as `実績_複勝オッズ`,
-    sed.`馬成績_斤量` as `実績_負担重量`,
     horse_form_codes_sed.`name` as `実績_馬体`,
     sed.`ＪＲＤＢデータ_気配コード` as `実績_気配コード`,
     sed.`ＪＲＤＢデータ_上昇度コード` as `実績_上昇度`,
@@ -51,6 +46,8 @@ with
     sed.`ＪＲＤＢデータ_上がり指数` as `実績_上がり指数`,
 
     -- General common
+    coalesce(tyb.`負担重量`, kyi.`負担重量`) as `負担重量`,
+    tyb.`馬体重` as `馬体重`,
     sed.`ＪＲＤＢデータ_不利` as `不利`,
     case
       when extract(month from bac.`発走日時`) <= 3 then 1
@@ -317,15 +314,13 @@ with
     base.`馬場差` as `実績_馬場差`,
     base.`着順` as `実績_着順`,
     base.`本賞金` as `実績_本賞金`,
+    base.`異常区分`,
 
     -- General before race
-    base.`事前_馬体重`,
-    base.`事前_馬体重増減`,
     base.`事前_ＩＤＭ`,
     base.`事前_脚質`,
     base.`事前_単勝オッズ`,
     base.`事前_複勝オッズ`,
-    base.`事前_負担重量`,
     base.`事前_馬体`,
     base.`事前_気配コード`,
     base.`事前_上昇度`,
@@ -335,13 +330,10 @@ with
     base.`事前_上がり指数`,
 
     -- General actual
-    base.`実績_馬体重`,
-    base.`実績_馬体重増減`,
     base.`実績_ＩＤＭ`,
     base.`実績_脚質`,
     base.`実績_単勝オッズ`,
     base.`実績_複勝オッズ`,
-    base.`実績_負担重量`,
     base.`実績_馬体`,
     base.`実績_気配コード`,
     base.`実績_上昇度`,
@@ -350,6 +342,11 @@ with
     base.`実績_ペース指数`,
     base.`実績_上がり指数`,
 
+    -- General common
+    base.`負担重量`,
+    base.`馬体重`,
+    -- The first race will always be 0
+    coalesce(base.`馬体重` - lag(base.`馬体重`) over (partition by base.`血統登録番号` order by base.`発走日時`), 0) as `馬体重増減`,
     base.`性別`,
     case
       when base.`トラック種別` = 'ダート' then base.`ダート瞬発戦好走馬`
@@ -708,18 +705,6 @@ with
 
     -- 事前 ---------------------------------------------------------------------------------------------------------
 
-    -- 馬体重
-    max(b.`事前_馬体重`) as `事前_競争相手最高馬体重`,
-    min(b.`事前_馬体重`) as `事前_競争相手最低馬体重`,
-    avg(b.`事前_馬体重`) as `事前_競争相手平均馬体重`,
-    stddev_pop(b.`事前_馬体重`) as `事前_競争相手馬体重標準偏差`,
-
-    -- 馬体重増減
-    max(b.`事前_馬体重増減`) as `事前_競争相手最高馬体重増減`,
-    min(b.`事前_馬体重増減`) as `事前_競争相手最低馬体重増減`,
-    avg(b.`事前_馬体重増減`) as `事前_競争相手平均馬体重増減`,
-    stddev_pop(b.`事前_馬体重増減`) as `事前_競争相手馬体重増減標準偏差`,
-
     -- ＩＤＭ
     max(b.`事前_ＩＤＭ`) as `事前_競争相手最高ＩＤＭ`,
     min(b.`事前_ＩＤＭ`) as `事前_競争相手最低ＩＤＭ`,
@@ -737,12 +722,6 @@ with
     min(b.`事前_複勝オッズ`) as `事前_競争相手最低複勝オッズ`,
     avg(b.`事前_複勝オッズ`) as `事前_競争相手平均複勝オッズ`,
     stddev_pop(b.`事前_複勝オッズ`) as `事前_競争相手複勝オッズ標準偏差`,
-
-    -- 負担重量
-    max(b.`事前_負担重量`) as `事前_競争相手最高負担重量`,
-    min(b.`事前_負担重量`) as `事前_競争相手最低負担重量`,
-    avg(b.`事前_負担重量`) as `事前_競争相手平均負担重量`,
-    stddev_pop(b.`事前_負担重量`) as `事前_競争相手負担重量標準偏差`,
 
     -- テン指数
     max(b.`事前_テン指数`) as `事前_競争相手最高テン指数`,
@@ -764,18 +743,6 @@ with
 
     -- 実績 ---------------------------------------------------------------------------------------------------------
 
-    -- 馬体重
-    max(b.`実績_馬体重`) as `実績_競争相手最高馬体重`,
-    min(b.`実績_馬体重`) as `実績_競争相手最低馬体重`,
-    avg(b.`実績_馬体重`) as `実績_競争相手平均馬体重`,
-    stddev_pop(b.`実績_馬体重`) as `実績_競争相手馬体重標準偏差`,
-
-    -- 馬体重増減
-    max(b.`実績_馬体重増減`) as `実績_競争相手最高馬体重増減`,
-    min(b.`実績_馬体重増減`) as `実績_競争相手最低馬体重増減`,
-    avg(b.`実績_馬体重増減`) as `実績_競争相手平均馬体重増減`,
-    stddev_pop(b.`実績_馬体重増減`) as `実績_競争相手馬体重増減標準偏差`,
-
     -- ＩＤＭ
     max(b.`実績_ＩＤＭ`) as `実績_競争相手最高ＩＤＭ`,
     min(b.`実績_ＩＤＭ`) as `実績_競争相手最低ＩＤＭ`,
@@ -793,12 +760,6 @@ with
     min(b.`実績_複勝オッズ`) as `実績_競争相手最低複勝オッズ`,
     avg(b.`実績_複勝オッズ`) as `実績_競争相手平均複勝オッズ`,
     stddev_pop(b.`実績_複勝オッズ`) as `実績_競争相手複勝オッズ標準偏差`,
-
-    -- 負担重量
-    max(b.`実績_負担重量`) as `実績_競争相手最高負担重量`,
-    min(b.`実績_負担重量`) as `実績_競争相手最低負担重量`,
-    avg(b.`実績_負担重量`) as `実績_競争相手平均負担重量`,
-    stddev_pop(b.`実績_負担重量`) as `実績_競争相手負担重量標準偏差`,
 
     -- テン指数
     max(b.`実績_テン指数`) as `実績_競争相手最高テン指数`,
@@ -819,6 +780,24 @@ with
     stddev_pop(b.`実績_上がり指数`) as `実績_競争相手上がり指数標準偏差`,
 
     -- General ---------------------------------------------------------------------------------------------------------
+
+    -- 負担重量
+    max(b.`負担重量`) as `競争相手最高負担重量`,
+    min(b.`負担重量`) as `競争相手最低負担重量`,
+    avg(b.`負担重量`) as `競争相手平均負担重量`,
+    stddev_pop(b.`負担重量`) as `競争相手負担重量標準偏差`,
+
+    -- 馬体重
+    max(b.`馬体重`) as `競争相手最高馬体重`,
+    min(b.`馬体重`) as `競争相手最低馬体重`,
+    avg(b.`馬体重`) as `競争相手平均馬体重`,
+    stddev_pop(b.`馬体重`) as `競争相手馬体重標準偏差`,
+
+    -- 馬体重増減
+    max(b.`馬体重増減`) as `競争相手最高馬体重増減`,
+    min(b.`馬体重増減`) as `競争相手最低馬体重増減`,
+    avg(b.`馬体重増減`) as `競争相手平均馬体重増減`,
+    stddev_pop(b.`馬体重増減`) as `競争相手馬体重増減標準偏差`,
 
     -- 性別
     sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別牡割合`,
@@ -1234,31 +1213,28 @@ with
     -- Metadata (not used for training)
     race_horses.`レースキー` as `meta_int_race_horses_レースキー`,
     race_horses.`馬番` as `meta_int_race_horses_馬番`,
+    race_horses.`血統登録番号` as `meta_int_race_horses_血統登録番号`,
+    race_horses.`発走日時` as `meta_int_race_horses_発走日時`,
+    race_horses.`異常区分` as `meta_int_race_horses_異常区分`,
 
     -- General known before
-    race_horses.`事前_馬体重` as `num_事前_馬体重`,
-    race_horses.`事前_馬体重増減` as `num_事前_馬体重増減`,
     race_horses.`事前_ＩＤＭ` as `num_事前_ＩＤＭ`,
     race_horses.`事前_脚質` as `cat_事前_脚質`,
     race_horses.`事前_単勝オッズ` as `num_事前_単勝オッズ`,
     race_horses.`事前_複勝オッズ` as `num_事前_複勝オッズ`,
-    race_horses.`事前_負担重量` as `num_事前_負担重量`,
     race_horses.`事前_馬体` as `cat_事前_馬体`,
     race_horses.`事前_気配コード` as `cat_事前_気配コード`,
     race_horses.`事前_上昇度` as `cat_事前_上昇度`,
-    race_horses.`事前_クラスコード` as `cat_事前_クラスコード`,
+    race_horses.`事前_クラスコード` as `cat_事前_クラスコード`, -- you need to understand what this means more
     race_horses.`事前_テン指数` as `num_事前_テン指数`,
     race_horses.`事前_ペース指数` as `num_事前_ペース指数`,
     race_horses.`事前_上がり指数` as `num_事前_上がり指数`,
 
     -- General actual
-    race_horses.`実績_馬体重` as `num_実績_馬体重`,
-    race_horses.`実績_馬体重増減` as `num_実績_馬体重増減`,
     race_horses.`実績_ＩＤＭ` as `num_実績_ＩＤＭ`,
     race_horses.`実績_脚質` as `cat_実績_脚質`,
     race_horses.`実績_単勝オッズ` as `num_実績_単勝オッズ`,
     race_horses.`実績_複勝オッズ` as `num_実績_複勝オッズ`,
-    race_horses.`実績_負担重量` as `num_実績_負担重量`,
     race_horses.`実績_馬体` as `cat_実績_馬体`,
     race_horses.`実績_気配コード` as `cat_実績_気配コード`,
     race_horses.`実績_上昇度` as `cat_実績_上昇度`,
@@ -1268,6 +1244,9 @@ with
     race_horses.`実績_上がり指数` as `num_実績_上がり指数`,
 
     -- General common
+    race_horses.`負担重量` as `num_負担重量`, -- only 24 or so records with diff between before/actual
+    race_horses.`馬体重` as `num_馬体重`,  -- barely any difference between before/actual
+    race_horses.`馬体重増減` as `num_馬体重増減`,  -- calculated ourselves
     race_horses.`性別` as `cat_性別`,
     race_horses.`トラック種別瞬発戦好走馬` as `cat_トラック種別瞬発戦好走馬`,
     race_horses.`トラック種別消耗戦好走馬` as `cat_トラック種別消耗戦好走馬`,
@@ -1410,14 +1389,6 @@ with
     race_horses.`連続3着内` as `num_連続3着内`,
 
     -- Competitors before race
-    competitors.`事前_競争相手最高馬体重` as `num_事前_競争相手最高馬体重`,
-    competitors.`事前_競争相手最低馬体重` as `num_事前_競争相手最低馬体重`,
-    competitors.`事前_競争相手平均馬体重` as `num_事前_競争相手平均馬体重`,
-    competitors.`事前_競争相手馬体重標準偏差` as `num_事前_競争相手馬体重標準偏差`,
-    competitors.`事前_競争相手最高馬体重増減` as `num_事前_競争相手最高馬体重増減`,
-    competitors.`事前_競争相手最低馬体重増減` as `num_事前_競争相手最低馬体重増減`,
-    competitors.`事前_競争相手平均馬体重増減` as `num_事前_競争相手平均馬体重増減`,
-    competitors.`事前_競争相手馬体重増減標準偏差` as `num_事前_競争相手馬体重増減標準偏差`,
     competitors.`事前_競争相手最高ＩＤＭ` as `num_事前_競争相手最高ＩＤＭ`,
     competitors.`事前_競争相手最低ＩＤＭ` as `num_事前_競争相手最低ＩＤＭ`,
     competitors.`事前_競争相手平均ＩＤＭ` as `num_事前_競争相手平均ＩＤＭ`,
@@ -1430,10 +1401,6 @@ with
     competitors.`事前_競争相手最低複勝オッズ` as `num_事前_競争相手最低複勝オッズ`,
     competitors.`事前_競争相手平均複勝オッズ` as `num_事前_競争相手平均複勝オッズ`,
     competitors.`事前_競争相手複勝オッズ標準偏差` as `num_事前_競争相手複勝オッズ標準偏差`,
-    competitors.`事前_競争相手最高負担重量` as `num_事前_競争相手最高負担重量`,
-    competitors.`事前_競争相手最低負担重量` as `num_事前_競争相手最低負担重量`,
-    competitors.`事前_競争相手平均負担重量` as `num_事前_競争相手平均負担重量`,
-    competitors.`事前_競争相手負担重量標準偏差` as `num_事前_競争相手負担重量標準偏差`,
     competitors.`事前_競争相手最高テン指数` as `num_事前_競争相手最高テン指数`,
     competitors.`事前_競争相手最低テン指数` as `num_事前_競争相手最低テン指数`,
     competitors.`事前_競争相手平均テン指数` as `num_事前_競争相手平均テン指数`,
@@ -1448,14 +1415,6 @@ with
     competitors.`事前_競争相手上がり指数標準偏差` as `num_事前_競争相手上がり指数標準偏差`,
 
     -- Competitors actual
-    competitors.`実績_競争相手最高馬体重` as `num_実績_競争相手最高馬体重`,
-    competitors.`実績_競争相手最低馬体重` as `num_実績_競争相手最低馬体重`,
-    competitors.`実績_競争相手平均馬体重` as `num_実績_競争相手平均馬体重`,
-    competitors.`実績_競争相手馬体重標準偏差` as `num_実績_競争相手馬体重標準偏差`,
-    competitors.`実績_競争相手最高馬体重増減` as `num_実績_競争相手最高馬体重増減`,
-    competitors.`実績_競争相手最低馬体重増減` as `num_実績_競争相手最低馬体重増減`,
-    competitors.`実績_競争相手平均馬体重増減` as `num_実績_競争相手平均馬体重増減`,
-    competitors.`実績_競争相手馬体重増減標準偏差` as `num_実績_競争相手馬体重増減標準偏差`,
     competitors.`実績_競争相手最高ＩＤＭ` as `num_実績_競争相手最高ＩＤＭ`,
     competitors.`実績_競争相手最低ＩＤＭ` as `num_実績_競争相手最低ＩＤＭ`,
     competitors.`実績_競争相手平均ＩＤＭ` as `num_実績_競争相手平均ＩＤＭ`,
@@ -1468,10 +1427,6 @@ with
     competitors.`実績_競争相手最低複勝オッズ` as `num_実績_競争相手最低複勝オッズ`,
     competitors.`実績_競争相手平均複勝オッズ` as `num_実績_競争相手平均複勝オッズ`,
     competitors.`実績_競争相手複勝オッズ標準偏差` as `num_実績_競争相手複勝オッズ標準偏差`,
-    competitors.`実績_競争相手最高負担重量` as `num_実績_競争相手最高負担重量`,
-    competitors.`実績_競争相手最低負担重量` as `num_実績_競争相手最低負担重量`,
-    competitors.`実績_競争相手平均負担重量` as `num_実績_競争相手平均負担重量`,
-    competitors.`実績_競争相手負担重量標準偏差` as `num_実績_競争相手負担重量標準偏差`,
     competitors.`実績_競争相手最高テン指数` as `num_実績_競争相手最高テン指数`,
     competitors.`実績_競争相手最低テン指数` as `num_実績_競争相手最低テン指数`,
     competitors.`実績_競争相手平均テン指数` as `num_実績_競争相手平均テン指数`,
@@ -1486,6 +1441,18 @@ with
     competitors.`実績_競争相手上がり指数標準偏差` as `num_実績_競争相手上がり指数標準偏差`,
 
     -- Competitors common
+    competitors.`競争相手最高負担重量` as `num_競争相手最高負担重量`,
+    competitors.`競争相手最低負担重量` as `num_競争相手最低負担重量`,
+    competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量`,
+    competitors.`競争相手負担重量標準偏差` as `num_競争相手負担重量標準偏差`,
+    competitors.`競争相手最高馬体重` as `num_競争相手最高馬体重`,
+    competitors.`競争相手最低馬体重` as `num_競争相手最低馬体重`,
+    competitors.`競争相手平均馬体重` as `num_競争相手平均馬体重`,
+    competitors.`競争相手馬体重標準偏差` as `num_競争相手馬体重標準偏差`,
+    competitors.`競争相手最高馬体重増減` as `num_競争相手最高馬体重増減`,
+    competitors.`競争相手最低馬体重増減` as `num_競争相手最低馬体重増減`,
+    competitors.`競争相手平均馬体重増減` as `num_競争相手平均馬体重増減`,
+    competitors.`競争相手馬体重増減標準偏差` as `num_競争相手馬体重増減標準偏差`,
     competitors.`競争相手性別牡割合` as `num_競争相手性別牡割合`,
     competitors.`競争相手性別牝割合` as `num_競争相手性別牝割合`,
     competitors.`競争相手性別セ割合` as `num_競争相手性別セ割合`,
@@ -1746,28 +1713,25 @@ with
     competitors.`競争相手連続3着内標準偏差` as `num_競争相手連続3着内標準偏差`,
 
     -- Relative before race
-    race_horses.`事前_馬体重` - competitors.`事前_競争相手平均馬体重` as `num_事前_競争相手平均馬体重差`,
-    race_horses.`事前_馬体重増減` - competitors.`事前_競争相手平均馬体重増減` as `num_事前_競争相手平均馬体重増減差`,
     race_horses.`事前_ＩＤＭ` - competitors.`事前_競争相手平均ＩＤＭ` as `num_事前_競争相手平均ＩＤＭ差`,
     race_horses.`事前_単勝オッズ` - competitors.`事前_競争相手平均単勝オッズ` as `num_事前_競争相手平均単勝オッズ差`,
     race_horses.`事前_複勝オッズ` - competitors.`事前_競争相手平均複勝オッズ` as `num_事前_競争相手平均複勝オッズ差`,
-    race_horses.`事前_負担重量` - competitors.`事前_競争相手平均負担重量` as `num_事前_競争相手平均負担重量差`,
     race_horses.`事前_テン指数` - competitors.`事前_競争相手平均テン指数` as `num_事前_競争相手平均テン指数差`,
     race_horses.`事前_ペース指数` - competitors.`事前_競争相手平均ペース指数` as `num_事前_競争相手平均ペース指数差`,
     race_horses.`事前_上がり指数` - competitors.`事前_競争相手平均上がり指数` as `num_事前_競争相手平均上がり指数差`,
 
     -- Relative actual
-    race_horses.`実績_馬体重` - competitors.`実績_競争相手平均馬体重` as `num_実績_競争相手平均馬体重差`,
-    race_horses.`実績_馬体重増減` - competitors.`実績_競争相手平均馬体重増減` as `num_実績_競争相手平均馬体重増減差`,
     race_horses.`実績_ＩＤＭ` - competitors.`実績_競争相手平均ＩＤＭ` as `num_実績_競争相手平均ＩＤＭ差`,
     race_horses.`実績_単勝オッズ` - competitors.`実績_競争相手平均単勝オッズ` as `num_実績_競争相手平均単勝オッズ差`,
     race_horses.`実績_複勝オッズ` - competitors.`実績_競争相手平均複勝オッズ` as `num_実績_競争相手平均複勝オッズ差`,
-    race_horses.`実績_負担重量` - competitors.`実績_競争相手平均負担重量` as `num_実績_競争相手平均負担重量差`,
     race_horses.`実績_テン指数` - competitors.`実績_競争相手平均テン指数` as `num_実績_競争相手平均テン指数差`,
     race_horses.`実績_ペース指数` - competitors.`実績_競争相手平均ペース指数` as `num_実績_競争相手平均ペース指数差`,
     race_horses.`実績_上がり指数` - competitors.`実績_競争相手平均上がり指数` as `num_実績_競争相手平均上がり指数差`,
 
     -- Relative common
+    race_horses.`負担重量` - competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量差`,
+    race_horses.`馬体重` - competitors.`競争相手平均馬体重` as `num_競争相手平均馬体重差`,
+    race_horses.`馬体重増減` - competitors.`競争相手平均馬体重増減` as `num_競争相手平均馬体重増減差`,
     race_horses.`一走前不利` - competitors.`競争相手平均一走前不利` as `num_競争相手平均一走前不利差`,
     race_horses.`二走前不利` - competitors.`競争相手平均二走前不利` as `num_競争相手平均二走前不利差`,
     race_horses.`三走前不利` - competitors.`競争相手平均三走前不利` as `num_競争相手平均三走前不利差`,

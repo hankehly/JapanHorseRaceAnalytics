@@ -19,6 +19,10 @@ tensorflow
 tensorflow-metal
 mlflow
 structlog
+gymnasium
+stable-baselines3[extra]
+line_profiler
+japanize-matplotlib
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

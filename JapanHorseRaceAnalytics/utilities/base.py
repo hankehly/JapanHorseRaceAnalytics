@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+from pyspark.sql import SparkSession
 from sqlalchemy import create_engine
 
 from JapanHorseRaceAnalytics.utilities.structured_logger import logger
@@ -25,3 +26,18 @@ def read_sql_table(table_name, schema, use_cache=True):
     data = pd.read_sql_table(table_name, engine, schema=schema)
     data.to_parquet(save_path, index=False, compression="snappy")
     return data
+
+
+def read_hive_table(
+    table_name: str, schema: str, spark_session: SparkSession, use_cache: bool = True
+):
+    save_path = get_data_dir() / "sql_tables" / f"{table_name}.snappy.parquet"
+    if use_cache and save_path.exists():
+        logger.info(f"Read from parquet {save_path} to pandas")
+        return pd.read_parquet(save_path)
+    logger.info(f"Read from hive {schema}.{table_name}")
+    spark_df = spark_session.read.table(f"{schema}.{table_name}")
+    logger.info(f"Write to parquet {save_path}")
+    spark_df.write.mode("overwrite").parquet(str(save_path))
+    logger.info(f"Read from parquet {save_path} to pandas")
+    return pd.read_parquet(save_path)
