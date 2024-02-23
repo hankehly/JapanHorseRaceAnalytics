@@ -23,6 +23,9 @@ gymnasium
 stable-baselines3[extra]
 line_profiler
 japanize-matplotlib
+keras-tuner
+shap
+mlxtend
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

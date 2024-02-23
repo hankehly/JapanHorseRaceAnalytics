@@ -1892,7 +1892,9 @@ models:
         description: 単位（円）
       - name: 払戻データ_複勝
         quote: true
-        description: 単位（円）
+        description: |
+          単位（円）
+          この値はHJCと完全一致する
       - name: 本賞金
         quote: true
         description: 単位（万円）
