@@ -1,3 +1,111 @@
+{%
+  set numeric_competitor_feature_names = [
+      "負担重量",
+      "馬体重",
+      "馬体重増減",
+      "1着馬体重変動率",
+      "3着内馬体重変動率",
+      "馬体重変動率",
+      "一走前不利",
+      "二走前不利",
+      "三走前不利",
+      "一走前着順",
+      "二走前着順",
+      "三走前着順",
+      "四走前着順",
+      "五走前着順",
+      "六走前着順",
+      "1走前上昇度",
+      "2走前上昇度",
+      "3走前上昇度",
+      "4走前上昇度",
+      "5走前上昇度",
+      "騎手指数",
+      "情報指数",
+      "オッズ指数",
+      "パドック指数",
+      "総合指数",
+      "ローテーション",
+      "基準オッズ",
+      "基準複勝オッズ",
+      "人気指数",
+      "調教指数",
+      "厩舎指数",
+      "騎手期待連対率",
+      "激走指数",
+      "展開予想データ_位置指数",
+      "展開予想データ_道中差",
+      "展開予想データ_後３Ｆ差",
+      "展開予想データ_ゴール差",
+      "騎手期待単勝率",
+      "騎手期待３着内率",
+      "展開参考データ_馬スタート指数",
+      "展開参考データ_馬出遅率",
+      "万券指数",
+      "休養日数",
+      "入厩何日前",
+      "前走距離差",
+      "年齢",
+      "レース数",
+      "1位完走",
+      "トップ3完走",
+      "1位完走率",
+      "トップ3完走率",
+      "過去5走勝率",
+      "過去5走トップ3完走率",
+      "場所レース数",
+      "場所1位完走",
+      "場所トップ3完走",
+      "場所1位完走率",
+      "場所トップ3完走率",
+      "トラック種別レース数",
+      "トラック種別1位完走",
+      "トラック種別トップ3完走",
+      "馬場状態レース数",
+      "馬場状態1位完走",
+      "馬場状態トップ3完走",
+      "距離レース数",
+      "距離1位完走",
+      "距離トップ3完走",
+      "四半期レース数",
+      "四半期1位完走",
+      "四半期トップ3完走",
+      "過去3走順位平方和",
+      "本賞金累計",
+      "1位完走平均賞金",
+      "レース数平均賞金",
+      "連続1着",
+      "連続3着内",
+      "1着ＩＤＭ変動率",
+      "3着内ＩＤＭ変動率",
+      "ＩＤＭ変動率",
+      "事前ＩＤＭ",
+      "事前単勝オッズ",
+      "事前複勝オッズ",
+      "事前テン指数",
+      "事前ペース指数",
+      "事前上がり指数",
+      "1着騎手指数変動率",
+      "3着内騎手指数変動率",
+      "騎手指数変動率",
+      "1着単勝オッズ変動率",
+      "3着内単勝オッズ変動率",
+      "単勝オッズ変動率",
+      "1着複勝オッズ変動率",
+      "3着内複勝オッズ変動率",
+      "複勝オッズ変動率",
+      "1着テン指数変動率",
+      "3着内テン指数変動率",
+      "テン指数変動率",
+      "1着ペース指数変動率",
+      "3着内ペース指数変動率",
+      "ペース指数変動率",
+      "1着上がり指数変動率",
+      "3着内上がり指数変動率",
+      "上がり指数変動率",
+  ]
+%}
+
 with
   -- Get the latest data for each horse (scd type 2)
   ukc_latest AS (
@@ -20,34 +128,49 @@ with
     sed.`馬成績_異常区分` as `異常区分`,
 
     -- General before
-    coalesce(tyb.`ＩＤＭ`, kyi.`ＩＤＭ`) as `事前_ＩＤＭ`,
-    run_style_codes_kyi.`name` as `事前_脚質`,
-    coalesce(tyb.`単勝オッズ`, win_odds.`単勝オッズ`) as `事前_単勝オッズ`,
-    coalesce(tyb.`複勝オッズ`, place_odds.`複勝オッズ`) as `事前_複勝オッズ`,
-    horse_form_codes_tyb.`name` as `事前_馬体`,
-    tyb.`気配コード` as `事前_気配コード`,
-    kyi.`上昇度` as `事前_上昇度`,
-    kyi.`クラスコード` as `事前_クラスコード`,
-    kyi.`展開予想データ_テン指数` as `事前_テン指数`,
-    kyi.`展開予想データ_ペース指数` as `事前_ペース指数`,
-    kyi.`展開予想データ_上がり指数` as `事前_上がり指数`,
+    coalesce(tyb.`ＩＤＭ`, kyi.`ＩＤＭ`) as `事前ＩＤＭ`,
+    run_style_codes_kyi.`name` as `事前脚質`,
+    coalesce(tyb.`単勝オッズ`, win_odds.`単勝オッズ`) as `事前単勝オッズ`,
+    coalesce(tyb.`複勝オッズ`, place_odds.`複勝オッズ`) as `事前複勝オッズ`,
+    horse_form_codes_tyb.`name` as `事前馬体`,
+    tyb.`気配コード` as `事前気配コード`,
+    kyi.`上昇度` as `事前上昇度`,
+    kyi.`クラスコード` as `事前クラスコード`,
+    kyi.`展開予想データ_テン指数` as `事前テン指数`,
+    kyi.`展開予想データ_ペース指数` as `事前ペース指数`,
+    kyi.`展開予想データ_上がり指数` as `事前上がり指数`,
 
     -- General actual
-    sed.`ＪＲＤＢデータ_ＩＤＭ` as `実績_ＩＤＭ`,
-    run_style_codes_sed.`name` as `実績_脚質`,
-    sed.`馬成績_確定単勝オッズ` as `実績_単勝オッズ`,
-    sed.`確定複勝オッズ下` as `実績_複勝オッズ`,
-    horse_form_codes_sed.`name` as `実績_馬体`,
-    sed.`ＪＲＤＢデータ_気配コード` as `実績_気配コード`,
-    sed.`ＪＲＤＢデータ_上昇度コード` as `実績_上昇度`,
-    sed.`ＪＲＤＢデータ_クラスコード` as `実績_クラスコード`,
-    sed.`ＪＲＤＢデータ_テン指数` as `実績_テン指数`,
-    sed.`ＪＲＤＢデータ_ペース指数` as `実績_ペース指数`,
-    sed.`ＪＲＤＢデータ_上がり指数` as `実績_上がり指数`,
+    sed.`ＪＲＤＢデータ_ＩＤＭ` as `実績ＩＤＭ`,
+    run_style_codes_sed.`name` as `実績脚質`,
+    sed.`馬成績_確定単勝オッズ` as `実績単勝オッズ`,
+    sed.`確定複勝オッズ下` as `実績複勝オッズ`,
+    horse_form_codes_sed.`name` as `実績馬体`,
+    sed.`ＪＲＤＢデータ_気配コード` as `実績気配コード`,
+    sed.`ＪＲＤＢデータ_上昇度コード` as `実績上昇度`,
+    sed.`ＪＲＤＢデータ_クラスコード` as `実績クラスコード`,
+    sed.`ＪＲＤＢデータ_テン指数` as `実績テン指数`,
+    sed.`ＪＲＤＢデータ_ペース指数` as `実績ペース指数`,
+    sed.`ＪＲＤＢデータ_上がり指数` as `実績上がり指数`,
 
     -- General common
     coalesce(tyb.`負担重量`, kyi.`負担重量`) as `負担重量`,
     tyb.`馬体重` as `馬体重`,
+    coalesce(
+      avg(case when sed.`馬成績_着順` = 1 then tyb.`馬体重` end)
+      over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding),
+      tyb.`馬体重`
+    ) as `1着平均馬体重`,
+    coalesce(
+      avg(case when sed.`馬成績_着順` <= 3 then tyb.`馬体重` end)
+      over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding),
+      tyb.`馬体重`
+    ) as `3着内平均馬体重`,
+    coalesce(
+      avg(tyb.`馬体重`)
+      over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding),
+      tyb.`馬体重`
+    ) as `平均馬体重`,
     sed.`ＪＲＤＢデータ_不利` as `不利`,
     case
       when extract(month from bac.`発走日時`) <= 3 then 1
@@ -122,6 +245,11 @@ with
     lag(sed.`馬成績_着順`, 4) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `四走前着順`,
     lag(sed.`馬成績_着順`, 5) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `五走前着順`,
     lag(sed.`馬成績_着順`, 6) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `六走前着順`,
+    lag(sed.`ＪＲＤＢデータ_上昇度コード`, 1) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `1走前上昇度`,
+    lag(sed.`ＪＲＤＢデータ_上昇度コード`, 2) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `2走前上昇度`,
+    lag(sed.`ＪＲＤＢデータ_上昇度コード`, 3) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `3走前上昇度`,
+    lag(sed.`ＪＲＤＢデータ_上昇度コード`, 4) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `4走前上昇度`,
+    lag(sed.`ＪＲＤＢデータ_上昇度コード`, 5) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `5走前上昇度`,
     row_number() over (partition by kyi.`血統登録番号` order by bac.`発走日時`) - 1 as `レース数`,
     coalesce(
       cast(
@@ -311,36 +439,36 @@ with
     base.`血統登録番号`,
     base.`発走日時`,
     base.`トラック種別`,
-    base.`馬場差` as `実績_馬場差`,
-    base.`着順` as `実績_着順`,
-    base.`本賞金` as `実績_本賞金`,
+    base.`馬場差` as `実績馬場差`,
+    base.`着順` as `実績着順`,
+    base.`本賞金` as `実績本賞金`,
     base.`異常区分`,
 
     -- General before race
-    base.`事前_ＩＤＭ`,
-    base.`事前_脚質`,
-    base.`事前_単勝オッズ`,
-    base.`事前_複勝オッズ`,
-    base.`事前_馬体`,
-    base.`事前_気配コード`,
-    base.`事前_上昇度`,
-    base.`事前_クラスコード`,
-    base.`事前_テン指数`,
-    base.`事前_ペース指数`,
-    base.`事前_上がり指数`,
+    base.`事前ＩＤＭ`,
+    base.`事前脚質`,
+    base.`事前単勝オッズ`,
+    base.`事前複勝オッズ`,
+    base.`事前馬体`,
+    base.`事前気配コード`,
+    base.`事前上昇度`,
+    base.`事前クラスコード`,
+    base.`事前テン指数`,
+    base.`事前ペース指数`,
+    base.`事前上がり指数`,
 
     -- General actual
-    base.`実績_ＩＤＭ`,
-    base.`実績_脚質`,
-    base.`実績_単勝オッズ`,
-    base.`実績_複勝オッズ`,
-    base.`実績_馬体`,
-    base.`実績_気配コード`,
-    base.`実績_上昇度`,
-    base.`実績_クラスコード`,
-    base.`実績_テン指数`,
-    base.`実績_ペース指数`,
-    base.`実績_上がり指数`,
+    base.`実績ＩＤＭ`,
+    base.`実績脚質`,
+    base.`実績単勝オッズ`,
+    base.`実績複勝オッズ`,
+    base.`実績馬体`,
+    base.`実績気配コード`,
+    base.`実績上昇度`,
+    base.`実績クラスコード`,
+    base.`実績テン指数`,
+    base.`実績ペース指数`,
+    base.`実績上がり指数`,
 
     -- General common
     base.`負担重量`,
@@ -365,6 +493,11 @@ with
     base.`四走前着順`,
     base.`五走前着順`,
     base.`六走前着順`,
+    base.`1走前上昇度`,
+    base.`2走前上昇度`,
+    base.`3走前上昇度`,
+    base.`4走前上昇度`,
+    base.`5走前上昇度`,
     base.`騎手指数`,
     base.`情報指数`,
     base.`オッズ指数`,
@@ -692,26 +825,127 @@ with
     -- horse win weight diff
     -- assuming that horses that weigh in at close to their average winning body weight have a higher likelihood of winning
     -- https://nycdatascience.com/blog/student-works/can-machine-learning-make-horse-races-a-winning-proposition/
-    coalesce(`馬体重` - avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) `1着平均馬体重差`,
-    -- horse place weight diff
-    coalesce(`馬体重` - avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) `3着内平均馬体重差`,
+    coalesce(`馬体重` - `1着平均馬体重`, 0) as `1着平均馬体重差`,
+    coalesce(`馬体重` - `3着内平均馬体重`, 0) as `3着内平均馬体重差`,
 
     -- https://nycdatascience.com/blog/student-works/data-analyzing-horse-racing/
     -- (current weight - winning weight) / winning weight
-    coalesce(
-      (`馬体重` - avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
-      / avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
-    0) as `1着馬体重変動率`,
+    coalesce((`馬体重` - `1着平均馬体重`) / `1着平均馬体重`, 0) as `1着馬体重変動率`,
+    coalesce((`馬体重` - `3着内平均馬体重`) / `3着内平均馬体重`, 0) as `3着内馬体重変動率`,
+    coalesce((`馬体重` - `平均馬体重`) / `平均馬体重`, 0) as `馬体重変動率`,
 
+    -- Important: Using 事前 instead of 実績 when calculating the change
+    -- 1着ＩＤＭ変動率
     coalesce(
-      (`馬体重` - avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
-      / avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
-    0) as `3着内馬体重変動率`,
+      (`事前ＩＤＭ` - avg(case when `着順` = 1 then `実績ＩＤＭ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績ＩＤＭ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着ＩＤＭ変動率`,
+    -- 3着内ＩＤＭ変動率
+    coalesce(
+      (`事前ＩＤＭ` - avg(case when `着順` <= 3 then `実績ＩＤＭ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績ＩＤＭ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内ＩＤＭ変動率`,
+    -- ＩＤＭ変動率
+    coalesce(
+      (`事前ＩＤＭ` - avg(`実績ＩＤＭ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績ＩＤＭ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `ＩＤＭ変動率`,
 
+    -- 1着騎手指数変動率
     coalesce(
-      (`馬体重` - avg(`馬体重`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
-      / avg(`馬体重`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
-    0) as `馬体重変動率`
+      (`騎手指数` - avg(case when `着順` = 1 then `騎手指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `騎手指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着騎手指数変動率`,
+    -- 3着内騎手指数変動率
+    coalesce(
+      (`騎手指数` - avg(case when `着順` <= 3 then `騎手指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `騎手指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内騎手指数変動率`,
+    -- 騎手指数変動率
+    coalesce(
+      (`騎手指数` - avg(`騎手指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`騎手指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `騎手指数変動率`,
+
+    -- 1着単勝オッズ変動率
+    coalesce(
+      (`事前単勝オッズ` - avg(case when `着順` = 1 then `実績単勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績単勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着単勝オッズ変動率`,
+    -- 3着内単勝オッズ変動率
+    coalesce(
+      (`事前単勝オッズ` - avg(case when `着順` <= 3 then `実績単勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績単勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内単勝オッズ変動率`,
+    -- 単勝オッズ変動率
+    coalesce(
+      (`事前単勝オッズ` - avg(`実績単勝オッズ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績単勝オッズ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `単勝オッズ変動率`,
+
+    -- 1着複勝オッズ変動率
+    coalesce(
+      (`事前複勝オッズ` - avg(case when `着順` = 1 then `実績複勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績複勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着複勝オッズ変動率`,
+    -- 3着内複勝オッズ変動率
+    coalesce(
+      (`事前複勝オッズ` - avg(case when `着順` <= 3 then `実績複勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績複勝オッズ` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内複勝オッズ変動率`,
+    -- 複勝オッズ変動率
+    coalesce(
+      (`事前複勝オッズ` - avg(`実績複勝オッズ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績複勝オッズ`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `複勝オッズ変動率`,
+
+    -- 1着テン指数変動率
+    coalesce(
+      (`事前テン指数` - avg(case when `着順` = 1 then `実績テン指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績テン指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着テン指数変動率`,
+    -- 3着内テン指数変動率
+    coalesce(
+      (`事前テン指数` - avg(case when `着順` <= 3 then `実績テン指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績テン指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内テン指数変動率`,
+    -- テン指数変動率
+    coalesce(
+      (`事前テン指数` - avg(`実績テン指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績テン指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `テン指数変動率`,
+
+    -- 1着ペース指数変動率
+    coalesce(
+      (`事前ペース指数` - avg(case when `着順` = 1 then `実績ペース指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績ペース指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着ペース指数変動率`,
+    -- 3着内ペース指数変動率
+    coalesce(
+      (`事前ペース指数` - avg(case when `着順` <= 3 then `実績ペース指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績ペース指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内ペース指数変動率`,
+    -- ペース指数変動率
+    coalesce(
+      (`事前ペース指数` - avg(`実績ペース指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績ペース指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `ペース指数変動率`,
+
+    -- 1着上がり指数変動率
+    coalesce(
+      (`事前上がり指数` - avg(case when `着順` = 1 then `実績上がり指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `実績上がり指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着上がり指数変動率`,
+    -- 3着内上がり指数変動率
+    coalesce(
+      (`事前上がり指数` - avg(case when `着順` <= 3 then `実績上がり指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `実績上がり指数` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内上がり指数変動率`,
+    -- 上がり指数変動率
+    coalesce(
+      (`事前上がり指数` - avg(`実績上がり指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`実績上がり指数`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `上がり指数変動率`
 
   from
     race_horses_base base
@@ -727,535 +961,19 @@ with
     a.`レースキー`,
     a.`馬番`,
 
-    -- 事前 ---------------------------------------------------------------------------------------------------------
+    {%- for feature_name in numeric_competitor_feature_names %}
+    max(b.`{{ feature_name }}`) as `競争相手最高{{ feature_name }}`,
+    min(b.`{{ feature_name }}`) as `競争相手最低{{ feature_name }}`,
+    avg(b.`{{ feature_name }}`) as `競争相手平均{{ feature_name }}`,
+    stddev_pop(b.`{{ feature_name }}`) as `競争相手{{ feature_name }}標準偏差`,
+    {% endfor %}
 
-    -- ＩＤＭ
-    max(b.`事前_ＩＤＭ`) as `事前_競争相手最高ＩＤＭ`,
-    min(b.`事前_ＩＤＭ`) as `事前_競争相手最低ＩＤＭ`,
-    avg(b.`事前_ＩＤＭ`) as `事前_競争相手平均ＩＤＭ`,
-    stddev_pop(b.`事前_ＩＤＭ`) as `事前_競争相手ＩＤＭ標準偏差`,
-
-    -- 単勝オッズ
-    max(b.`事前_単勝オッズ`) as `事前_競争相手最高単勝オッズ`,
-    min(b.`事前_単勝オッズ`) as `事前_競争相手最低単勝オッズ`,
-    avg(b.`事前_単勝オッズ`) as `事前_競争相手平均単勝オッズ`,
-    stddev_pop(b.`事前_単勝オッズ`) as `事前_競争相手単勝オッズ標準偏差`,
-
-    -- 複勝オッズ
-    max(b.`事前_複勝オッズ`) as `事前_競争相手最高複勝オッズ`,
-    min(b.`事前_複勝オッズ`) as `事前_競争相手最低複勝オッズ`,
-    avg(b.`事前_複勝オッズ`) as `事前_競争相手平均複勝オッズ`,
-    stddev_pop(b.`事前_複勝オッズ`) as `事前_競争相手複勝オッズ標準偏差`,
-
-    -- テン指数
-    max(b.`事前_テン指数`) as `事前_競争相手最高テン指数`,
-    min(b.`事前_テン指数`) as `事前_競争相手最低テン指数`,
-    avg(b.`事前_テン指数`) as `事前_競争相手平均テン指数`,
-    stddev_pop(b.`事前_テン指数`) as `事前_競争相手テン指数標準偏差`,
-
-    -- ペース指数
-    max(b.`事前_ペース指数`) as `事前_競争相手最高ペース指数`,
-    min(b.`事前_ペース指数`) as `事前_競争相手最低ペース指数`,
-    avg(b.`事前_ペース指数`) as `事前_競争相手平均ペース指数`,
-    stddev_pop(b.`事前_ペース指数`) as `事前_競争相手ペース指数標準偏差`,
-
-    -- 上がり指数
-    max(b.`事前_上がり指数`) as `事前_競争相手最高上がり指数`,
-    min(b.`事前_上がり指数`) as `事前_競争相手最低上がり指数`,
-    avg(b.`事前_上がり指数`) as `事前_競争相手平均上がり指数`,
-    stddev_pop(b.`事前_上がり指数`) as `事前_競争相手上がり指数標準偏差`,
-
-    -- 実績 ---------------------------------------------------------------------------------------------------------
-
-    -- ＩＤＭ
-    max(b.`実績_ＩＤＭ`) as `実績_競争相手最高ＩＤＭ`,
-    min(b.`実績_ＩＤＭ`) as `実績_競争相手最低ＩＤＭ`,
-    avg(b.`実績_ＩＤＭ`) as `実績_競争相手平均ＩＤＭ`,
-    stddev_pop(b.`実績_ＩＤＭ`) as `実績_競争相手ＩＤＭ標準偏差`,
-
-    -- 単勝オッズ
-    max(b.`実績_単勝オッズ`) as `実績_競争相手最高単勝オッズ`,
-    min(b.`実績_単勝オッズ`) as `実績_競争相手最低単勝オッズ`,
-    avg(b.`実績_単勝オッズ`) as `実績_競争相手平均単勝オッズ`,
-    stddev_pop(b.`実績_単勝オッズ`) as `実績_競争相手単勝オッズ標準偏差`,
-
-    -- 複勝オッズ
-    max(b.`実績_複勝オッズ`) as `実績_競争相手最高複勝オッズ`,
-    min(b.`実績_複勝オッズ`) as `実績_競争相手最低複勝オッズ`,
-    avg(b.`実績_複勝オッズ`) as `実績_競争相手平均複勝オッズ`,
-    stddev_pop(b.`実績_複勝オッズ`) as `実績_競争相手複勝オッズ標準偏差`,
-
-    -- テン指数
-    max(b.`実績_テン指数`) as `実績_競争相手最高テン指数`,
-    min(b.`実績_テン指数`) as `実績_競争相手最低テン指数`,
-    avg(b.`実績_テン指数`) as `実績_競争相手平均テン指数`,
-    stddev_pop(b.`実績_テン指数`) as `実績_競争相手テン指数標準偏差`,
-
-    -- ペース指数
-    max(b.`実績_ペース指数`) as `実績_競争相手最高ペース指数`,
-    min(b.`実績_ペース指数`) as `実績_競争相手最低ペース指数`,
-    avg(b.`実績_ペース指数`) as `実績_競争相手平均ペース指数`,
-    stddev_pop(b.`実績_ペース指数`) as `実績_競争相手ペース指数標準偏差`,
-
-    -- 上がり指数
-    max(b.`実績_上がり指数`) as `実績_競争相手最高上がり指数`,
-    min(b.`実績_上がり指数`) as `実績_競争相手最低上がり指数`,
-    avg(b.`実績_上がり指数`) as `実績_競争相手平均上がり指数`,
-    stddev_pop(b.`実績_上がり指数`) as `実績_競争相手上がり指数標準偏差`,
-
-    -- General ---------------------------------------------------------------------------------------------------------
-
-    -- 1着馬体重変動率
-    max(b.`1着馬体重変動率`) as `競争相手最高1着馬体重変動率`,
-    min(b.`1着馬体重変動率`) as `競争相手最低1着馬体重変動率`,
-    avg(b.`1着馬体重変動率`) as `競争相手平均1着馬体重変動率`,
-    stddev_pop(b.`1着馬体重変動率`) as `競争相手1着馬体重変動率標準偏差`,
-
-    -- 3着内馬体重変動率
-    max(b.`3着内馬体重変動率`) as `競争相手最高3着内馬体重変動率`,
-    min(b.`3着内馬体重変動率`) as `競争相手最低3着内馬体重変動率`,
-    avg(b.`3着内馬体重変動率`) as `競争相手平均3着内馬体重変動率`,
-    stddev_pop(b.`3着内馬体重変動率`) as `競争相手3着内馬体重変動率標準偏差`,
-
-    -- 馬体重変動率
-    max(b.`馬体重変動率`) as `競争相手最高馬体重変動率`,
-    min(b.`馬体重変動率`) as `競争相手最低馬体重変動率`,
-    avg(b.`馬体重変動率`) as `競争相手平均馬体重変動率`,
-    stddev_pop(b.`馬体重変動率`) as `競争相手馬体重変動率標準偏差`,
-
-    -- 1着平均馬体重差
-    max(b.`1着平均馬体重差`) as `競争相手最高1着平均馬体重差`,
-    min(b.`1着平均馬体重差`) as `競争相手最低1着平均馬体重差`,
-    avg(b.`1着平均馬体重差`) as `競争相手平均1着平均馬体重差`,
-    stddev_pop(b.`1着平均馬体重差`) as `競争相手1着平均馬体重差標準偏差`,
-
-    -- 3着内平均馬体重差
-    max(b.`3着内平均馬体重差`) as `競争相手最高3着内平均馬体重差`,
-    min(b.`3着内平均馬体重差`) as `競争相手最低3着内平均馬体重差`,
-    avg(b.`3着内平均馬体重差`) as `競争相手平均3着内平均馬体重差`,
-    stddev_pop(b.`3着内平均馬体重差`) as `競争相手3着内平均馬体重差標準偏差`,
-
-    -- 負担重量
-    max(b.`負担重量`) as `競争相手最高負担重量`,
-    min(b.`負担重量`) as `競争相手最低負担重量`,
-    avg(b.`負担重量`) as `競争相手平均負担重量`,
-    stddev_pop(b.`負担重量`) as `競争相手負担重量標準偏差`,
-
-    -- 馬体重
-    max(b.`馬体重`) as `競争相手最高馬体重`,
-    min(b.`馬体重`) as `競争相手最低馬体重`,
-    avg(b.`馬体重`) as `競争相手平均馬体重`,
-    stddev_pop(b.`馬体重`) as `競争相手馬体重標準偏差`,
-
-    -- 馬体重増減
-    max(b.`馬体重増減`) as `競争相手最高馬体重増減`,
-    min(b.`馬体重増減`) as `競争相手最低馬体重増減`,
-    avg(b.`馬体重増減`) as `競争相手平均馬体重増減`,
-    stddev_pop(b.`馬体重増減`) as `競争相手馬体重増減標準偏差`,
-
-    -- 性別
     sum(case when b.`性別` = '牡' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別牡割合`,
     sum(case when b.`性別` = '牝' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別牝割合`,
     sum(case when b.`性別` = 'セン' then 1 else 0 end) / cast(count(*) as double) as `競争相手性別セ割合`,
-
-    -- トラック種別瞬発戦好走馬
     sum(case when b.`トラック種別瞬発戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手トラック種別瞬発戦好走馬割合`,
-
-    -- トラック種別消耗戦好走馬
     sum(case when b.`トラック種別消耗戦好走馬` then 1 else 0 end) / cast(count(*) as double) as `競争相手トラック種別消耗戦好走馬割合`,
-
-    -- 一走前不利
-    max(b.`一走前不利`) as `競争相手最高一走前不利`,
-    min(b.`一走前不利`) as `競争相手最低一走前不利`,
-    avg(b.`一走前不利`) as `競争相手平均一走前不利`,
-    stddev_pop(b.`一走前不利`) as `競争相手一走前不利標準偏差`,
-
-    -- 二走前不利
-    max(b.`二走前不利`) as `競争相手最高二走前不利`,
-    min(b.`二走前不利`) as `競争相手最低二走前不利`,
-    avg(b.`二走前不利`) as `競争相手平均二走前不利`,
-    stddev_pop(b.`二走前不利`) as `競争相手二走前不利標準偏差`,
-
-    -- 三走前不利
-    max(b.`三走前不利`) as `競争相手最高三走前不利`,
-    min(b.`三走前不利`) as `競争相手最低三走前不利`,
-    avg(b.`三走前不利`) as `競争相手平均三走前不利`,
-    stddev_pop(b.`三走前不利`) as `競争相手三走前不利標準偏差`,
-
-    -- 一走前着順
-    max(b.`一走前着順`) as `競争相手最高一走前着順`,
-    min(b.`一走前着順`) as `競争相手最低一走前着順`,
-    avg(b.`一走前着順`) as `競争相手平均一走前着順`,
-    stddev_pop(b.`一走前着順`) as `競争相手一走前着順標準偏差`,
-
-    -- 二走前着順
-    max(b.`二走前着順`) as `競争相手最高二走前着順`,
-    min(b.`二走前着順`) as `競争相手最低二走前着順`,
-    avg(b.`二走前着順`) as `競争相手平均二走前着順`,
-    stddev_pop(b.`二走前着順`) as `競争相手二走前着順標準偏差`,
-
-    -- 三走前着順
-    max(b.`三走前着順`) as `競争相手最高三走前着順`,
-    min(b.`三走前着順`) as `競争相手最低三走前着順`,
-    avg(b.`三走前着順`) as `競争相手平均三走前着順`,
-    stddev_pop(b.`三走前着順`) as `競争相手三走前着順標準偏差`,
-
-    -- 四走前着順
-    max(b.`四走前着順`) as `競争相手最高四走前着順`,
-    min(b.`四走前着順`) as `競争相手最低四走前着順`,
-    avg(b.`四走前着順`) as `競争相手平均四走前着順`,
-    stddev_pop(b.`四走前着順`) as `競争相手四走前着順標準偏差`,
-
-    -- 五走前着順
-    max(b.`五走前着順`) as `競争相手最高五走前着順`,
-    min(b.`五走前着順`) as `競争相手最低五走前着順`,
-    avg(b.`五走前着順`) as `競争相手平均五走前着順`,
-    stddev_pop(b.`五走前着順`) as `競争相手五走前着順標準偏差`,
-
-    -- 六走前着順
-    max(b.`六走前着順`) as `競争相手最高六走前着順`,
-    min(b.`六走前着順`) as `競争相手最低六走前着順`,
-    avg(b.`六走前着順`) as `競争相手平均六走前着順`,
-    stddev_pop(b.`六走前着順`) as `競争相手六走前着順標準偏差`,
-
-    -- 騎手指数
-    max(b.`騎手指数`) as `競争相手最高騎手指数`,
-    min(b.`騎手指数`) as `競争相手最低騎手指数`,
-    avg(b.`騎手指数`) as `競争相手平均騎手指数`,
-    stddev_pop(b.`騎手指数`) as `競争相手騎手指数標準偏差`,
-
-    -- 情報指数
-    max(b.`情報指数`) as `競争相手最高情報指数`,
-    min(b.`情報指数`) as `競争相手最低情報指数`,
-    avg(b.`情報指数`) as `競争相手平均情報指数`,
-    stddev_pop(b.`情報指数`) as `競争相手情報指数標準偏差`,
-
-    -- オッズ指数
-    max(b.`オッズ指数`) as `競争相手最高オッズ指数`,
-    min(b.`オッズ指数`) as `競争相手最低オッズ指数`,
-    avg(b.`オッズ指数`) as `競争相手平均オッズ指数`,
-    stddev_pop(b.`オッズ指数`) as `競争相手オッズ指数標準偏差`,
-
-    -- パドック指数
-    max(b.`パドック指数`) as `競争相手最高パドック指数`,
-    min(b.`パドック指数`) as `競争相手最低パドック指数`,
-    avg(b.`パドック指数`) as `競争相手平均パドック指数`,
-    stddev_pop(b.`パドック指数`) as `競争相手パドック指数標準偏差`,
-
-    -- 総合指数
-    max(b.`総合指数`) as `競争相手最高総合指数`,
-    min(b.`総合指数`) as `競争相手最低総合指数`,
-    avg(b.`総合指数`) as `競争相手平均総合指数`,
-    stddev_pop(b.`総合指数`) as `競争相手総合指数標準偏差`,
-
-    -- ローテーション
-    max(b.`ローテーション`) as `競争相手最高ローテーション`,
-    min(b.`ローテーション`) as `競争相手最低ローテーション`,
-    avg(b.`ローテーション`) as `競争相手平均ローテーション`,
-    stddev_pop(b.`ローテーション`) as `競争相手ローテーション標準偏差`,
-
-    -- 基準オッズ
-    max(b.`基準オッズ`) as `競争相手最高基準オッズ`,
-    min(b.`基準オッズ`) as `競争相手最低基準オッズ`,
-    avg(b.`基準オッズ`) as `競争相手平均基準オッズ`,
-    stddev_pop(b.`基準オッズ`) as `競争相手基準オッズ標準偏差`,
-
-    -- 基準複勝オッズ
-    max(b.`基準複勝オッズ`) as `競争相手最高基準複勝オッズ`,
-    min(b.`基準複勝オッズ`) as `競争相手最低基準複勝オッズ`,
-    avg(b.`基準複勝オッズ`) as `競争相手平均基準複勝オッズ`,
-    stddev_pop(b.`基準複勝オッズ`) as `競争相手基準複勝オッズ標準偏差`,
-
-    -- 人気指数
-    max(b.`人気指数`) as `競争相手最高人気指数`,
-    min(b.`人気指数`) as `競争相手最低人気指数`,
-    avg(b.`人気指数`) as `競争相手平均人気指数`,
-    stddev_pop(b.`人気指数`) as `競争相手人気指数標準偏差`,
-
-    -- 調教指数
-    max(b.`調教指数`) as `競争相手最高調教指数`,
-    min(b.`調教指数`) as `競争相手最低調教指数`,
-    avg(b.`調教指数`) as `競争相手平均調教指数`,
-    stddev_pop(b.`調教指数`) as `競争相手調教指数標準偏差`,
-
-    -- 厩舎指数
-    max(b.`厩舎指数`) as `競争相手最高厩舎指数`,
-    min(b.`厩舎指数`) as `競争相手最低厩舎指数`,
-    avg(b.`厩舎指数`) as `競争相手平均厩舎指数`,
-    stddev_pop(b.`厩舎指数`) as `競争相手厩舎指数標準偏差`,
-
-    -- 騎手期待連対率
-    max(b.`騎手期待連対率`) as `競争相手最高騎手期待連対率`,
-    min(b.`騎手期待連対率`) as `競争相手最低騎手期待連対率`,
-    avg(b.`騎手期待連対率`) as `競争相手平均騎手期待連対率`,
-    stddev_pop(b.`騎手期待連対率`) as `競争相手騎手期待連対率標準偏差`,
-
-    -- 激走指数
-    max(b.`激走指数`) as `競争相手最高激走指数`,
-    min(b.`激走指数`) as `競争相手最低激走指数`,
-    avg(b.`激走指数`) as `競争相手平均激走指数`,
-    stddev_pop(b.`激走指数`) as `競争相手激走指数標準偏差`,
-
-    -- 展開予想データ_位置指数
-    max(b.`展開予想データ_位置指数`) as `競争相手最高展開予想データ_位置指数`,
-    min(b.`展開予想データ_位置指数`) as `競争相手最低展開予想データ_位置指数`,
-    avg(b.`展開予想データ_位置指数`) as `競争相手平均展開予想データ_位置指数`,
-    stddev_pop(b.`展開予想データ_位置指数`) as `競争相手展開予想データ_位置指数標準偏差`,
-
-    -- 展開予想データ_道中差
-    max(b.`展開予想データ_道中差`) as `競争相手最高展開予想データ_道中差`,
-    min(b.`展開予想データ_道中差`) as `競争相手最低展開予想データ_道中差`,
-    avg(b.`展開予想データ_道中差`) as `競争相手平均展開予想データ_道中差`,
-    stddev_pop(b.`展開予想データ_道中差`) as `競争相手展開予想データ_道中差標準偏差`,
-
-    -- 展開予想データ_後３Ｆ差
-    max(b.`展開予想データ_後３Ｆ差`) as `競争相手最高展開予想データ_後３Ｆ差`,
-    min(b.`展開予想データ_後３Ｆ差`) as `競争相手最低展開予想データ_後３Ｆ差`,
-    avg(b.`展開予想データ_後３Ｆ差`) as `競争相手平均展開予想データ_後３Ｆ差`,
-    stddev_pop(b.`展開予想データ_後３Ｆ差`) as `競争相手展開予想データ_後３Ｆ差標準偏差`,
-
-    -- 展開予想データ_ゴール差
-    max(b.`展開予想データ_ゴール差`) as `競争相手最高展開予想データ_ゴール差`,
-    min(b.`展開予想データ_ゴール差`) as `競争相手最低展開予想データ_ゴール差`,
-    avg(b.`展開予想データ_ゴール差`) as `競争相手平均展開予想データ_ゴール差`,
-    stddev_pop(b.`展開予想データ_ゴール差`) as `競争相手展開予想データ_ゴール差標準偏差`,
-
-    -- 騎手期待単勝率
-    max(b.`騎手期待単勝率`) as `競争相手最高騎手期待単勝率`,
-    min(b.`騎手期待単勝率`) as `競争相手最低騎手期待単勝率`,
-    avg(b.`騎手期待単勝率`) as `競争相手平均騎手期待単勝率`,
-    stddev_pop(b.`騎手期待単勝率`) as `競争相手騎手期待単勝率標準偏差`,
-
-    -- 騎手期待３着内率
-    max(b.`騎手期待３着内率`) as `競争相手最高騎手期待３着内率`,
-    min(b.`騎手期待３着内率`) as `競争相手最低騎手期待３着内率`,
-    avg(b.`騎手期待３着内率`) as `競争相手平均騎手期待３着内率`,
-    stddev_pop(b.`騎手期待３着内率`) as `競争相手騎手期待３着内率標準偏差`,
-  
-    -- 展開参考データ_馬スタート指数
-    max(b.`展開参考データ_馬スタート指数`) as `競争相手最高展開参考データ_馬スタート指数`,
-    min(b.`展開参考データ_馬スタート指数`) as `競争相手最低展開参考データ_馬スタート指数`,
-    avg(b.`展開参考データ_馬スタート指数`) as `競争相手平均展開参考データ_馬スタート指数`,
-    stddev_pop(b.`展開参考データ_馬スタート指数`) as `競争相手展開参考データ_馬スタート指数標準偏差`,
-
-    -- 展開参考データ_馬出遅率
-    max(b.`展開参考データ_馬出遅率`) as `競争相手最高展開参考データ_馬出遅率`,
-    min(b.`展開参考データ_馬出遅率`) as `競争相手最低展開参考データ_馬出遅率`,
-    avg(b.`展開参考データ_馬出遅率`) as `競争相手平均展開参考データ_馬出遅率`,
-    stddev_pop(b.`展開参考データ_馬出遅率`) as `競争相手展開参考データ_馬出遅率標準偏差`,
-
-    -- 万券指数
-    max(b.`万券指数`) as `競争相手最高万券指数`,
-    min(b.`万券指数`) as `競争相手最低万券指数`,
-    avg(b.`万券指数`) as `競争相手平均万券指数`,
-    stddev_pop(b.`万券指数`) as `競争相手万券指数標準偏差`,
-
-    -- 前走トップ3
-    sum(case when b.`前走トップ3` then 1 else 0 end) / cast(count(*) as double) as `競争相手前走トップ3割合`,
-
-    -- 休養日数
-    max(b.`休養日数`) as `競争相手最高休養日数`,
-    min(b.`休養日数`) as `競争相手最低休養日数`,
-    avg(b.`休養日数`) as `競争相手平均休養日数`,
-    stddev_pop(b.`休養日数`) as `競争相手休養日数標準偏差`,
-
-    -- 入厩何日前
-    max(b.`入厩何日前`) as `競争相手最高入厩何日前`,
-    min(b.`入厩何日前`) as `競争相手最低入厩何日前`,
-    avg(b.`入厩何日前`) as `競争相手平均入厩何日前`,
-    stddev_pop(b.`入厩何日前`) as `競争相手入厩何日前標準偏差`,
-
-    -- 前走距離差
-    max(b.`前走距離差`) as `競争相手最高前走距離差`,
-    min(b.`前走距離差`) as `競争相手最低前走距離差`,
-    avg(b.`前走距離差`) as `競争相手平均前走距離差`,
-    stddev_pop(b.`前走距離差`) as `競争相手前走距離差標準偏差`,
-
-    -- 年齢
-    max(b.`年齢`) as `競争相手最高年齢`,
-    min(b.`年齢`) as `競争相手最低年齢`,
-    avg(b.`年齢`) as `競争相手平均年齢`,
-    stddev_pop(b.`年齢`) as `競争相手年齢標準偏差`,
-
-    -- レース数
-    max(b.`レース数`) as `競争相手最高レース数`,
-    min(b.`レース数`) as `競争相手最低レース数`,
-    avg(b.`レース数`) as `競争相手平均レース数`,
-    stddev_pop(b.`レース数`) as `競争相手レース数標準偏差`,
-
-    -- 1位完走
-    max(b.`1位完走`) as `競争相手最高1位完走`,
-    min(b.`1位完走`) as `競争相手最低1位完走`,
-    avg(b.`1位完走`) as `競争相手平均1位完走`,
-    stddev_pop(b.`1位完走`) as `競争相手1位完走標準偏差`,
-
-    -- トップ3完走
-    max(b.`トップ3完走`) as `競争相手最高トップ3完走`,
-    min(b.`トップ3完走`) as `競争相手最低トップ3完走`,
-    avg(b.`トップ3完走`) as `競争相手平均トップ3完走`,
-    stddev_pop(b.`トップ3完走`) as `競争相手トップ3完走標準偏差`,
-
-    -- 1位完走率
-    max(b.`1位完走率`) as `競争相手最高1位完走率`,
-    min(b.`1位完走率`) as `競争相手最低1位完走率`,
-    avg(b.`1位完走率`) as `競争相手平均1位完走率`,
-    stddev_pop(b.`1位完走率`) as `競争相手1位完走率標準偏差`,
-
-    -- トップ3完走率
-    max(b.`トップ3完走率`) as `競争相手最高トップ3完走率`,
-    min(b.`トップ3完走率`) as `競争相手最低トップ3完走率`,
-    avg(b.`トップ3完走率`) as `競争相手平均トップ3完走率`,
-    stddev_pop(b.`トップ3完走率`) as `競争相手トップ3完走率標準偏差`,
-
-    -- 過去5走勝率
-    max(b.`過去5走勝率`) as `競争相手最高過去5走勝率`,
-    min(b.`過去5走勝率`) as `競争相手最低過去5走勝率`,
-    avg(b.`過去5走勝率`) as `競争相手平均過去5走勝率`,
-    stddev_pop(b.`過去5走勝率`) as `競争相手過去5走勝率標準偏差`,
-
-    -- 過去5走トップ3完走率
-    max(b.`過去5走トップ3完走率`) as `競争相手最高過去5走トップ3完走率`,
-    min(b.`過去5走トップ3完走率`) as `競争相手最低過去5走トップ3完走率`,
-    avg(b.`過去5走トップ3完走率`) as `競争相手平均過去5走トップ3完走率`,
-    stddev_pop(b.`過去5走トップ3完走率`) as `競争相手過去5走トップ3完走率標準偏差`,
-
-    -- 場所レース数
-    max(b.`場所レース数`) as `競争相手最高場所レース数`,
-    min(b.`場所レース数`) as `競争相手最低場所レース数`,
-    avg(b.`場所レース数`) as `競争相手平均場所レース数`,
-    stddev_pop(b.`場所レース数`) as `競争相手場所レース数標準偏差`,
-
-    -- 場所1位完走
-    max(b.`場所1位完走`) as `競争相手最高場所1位完走`,
-    min(b.`場所1位完走`) as `競争相手最低場所1位完走`,
-    avg(b.`場所1位完走`) as `競争相手平均場所1位完走`,
-    stddev_pop(b.`場所1位完走`) as `競争相手場所1位完走標準偏差`,
-
-    -- 場所トップ3完走
-    max(b.`場所トップ3完走`) as `競争相手最高場所トップ3完走`,
-    min(b.`場所トップ3完走`) as `競争相手最低場所トップ3完走`,
-    avg(b.`場所トップ3完走`) as `競争相手平均場所トップ3完走`,
-    stddev_pop(b.`場所トップ3完走`) as `競争相手場所トップ3完走標準偏差`,
-
-    -- 場所1位完走率
-    max(b.`場所1位完走率`) as `競争相手最高場所1位完走率`,
-    min(b.`場所1位完走率`) as `競争相手最低場所1位完走率`,
-    avg(b.`場所1位完走率`) as `競争相手平均場所1位完走率`,
-    stddev_pop(b.`場所1位完走率`) as `競争相手場所1位完走率標準偏差`,
-
-    -- 場所トップ3完走率
-    max(b.`場所トップ3完走率`) as `競争相手最高場所トップ3完走率`,
-    min(b.`場所トップ3完走率`) as `競争相手最低場所トップ3完走率`,
-    avg(b.`場所トップ3完走率`) as `競争相手平均場所トップ3完走率`,
-    stddev_pop(b.`場所トップ3完走率`) as `競争相手場所トップ3完走率標準偏差`,
-
-    -- トラック種別レース数
-    max(b.`トラック種別レース数`) as `競争相手最高トラック種別レース数`,
-    min(b.`トラック種別レース数`) as `競争相手最低トラック種別レース数`,
-    avg(b.`トラック種別レース数`) as `競争相手平均トラック種別レース数`,
-    stddev_pop(b.`トラック種別レース数`) as `競争相手トラック種別レース数標準偏差`,
-
-    -- トラック種別1位完走
-    max(b.`トラック種別1位完走`) as `競争相手最高トラック種別1位完走`,
-    min(b.`トラック種別1位完走`) as `競争相手最低トラック種別1位完走`,
-    avg(b.`トラック種別1位完走`) as `競争相手平均トラック種別1位完走`,
-    stddev_pop(b.`トラック種別1位完走`) as `競争相手トラック種別1位完走標準偏差`,
-
-    -- トラック種別トップ3完走
-    max(b.`トラック種別トップ3完走`) as `競争相手最高トラック種別トップ3完走`,
-    min(b.`トラック種別トップ3完走`) as `競争相手最低トラック種別トップ3完走`,
-    avg(b.`トラック種別トップ3完走`) as `競争相手平均トラック種別トップ3完走`,
-    stddev_pop(b.`トラック種別トップ3完走`) as `競争相手トラック種別トップ3完走標準偏差`,
-
-    -- 馬場状態レース数
-    max(b.`馬場状態レース数`) as `競争相手最高馬場状態レース数`,
-    min(b.`馬場状態レース数`) as `競争相手最低馬場状態レース数`,
-    avg(b.`馬場状態レース数`) as `競争相手平均馬場状態レース数`,
-    stddev_pop(b.`馬場状態レース数`) as `競争相手馬場状態レース数標準偏差`,
-
-    -- 馬場状態1位完走
-    max(b.`馬場状態1位完走`) as `競争相手最高馬場状態1位完走`,
-    min(b.`馬場状態1位完走`) as `競争相手最低馬場状態1位完走`,
-    avg(b.`馬場状態1位完走`) as `競争相手平均馬場状態1位完走`,
-    stddev_pop(b.`馬場状態1位完走`) as `競争相手馬場状態1位完走標準偏差`,
-
-    -- 馬場状態トップ3完走
-    max(b.`馬場状態トップ3完走`) as `競争相手最高馬場状態トップ3完走`,
-    min(b.`馬場状態トップ3完走`) as `競争相手最低馬場状態トップ3完走`,
-    avg(b.`馬場状態トップ3完走`) as `競争相手平均馬場状態トップ3完走`,
-    stddev_pop(b.`馬場状態トップ3完走`) as `競争相手馬場状態トップ3完走標準偏差`,
-
-    -- 距離レース数
-    max(b.`距離レース数`) as `競争相手最高距離レース数`,
-    min(b.`距離レース数`) as `競争相手最低距離レース数`,
-    avg(b.`距離レース数`) as `競争相手平均距離レース数`,
-    stddev_pop(b.`距離レース数`) as `競争相手距離レース数標準偏差`,
-
-    -- 距離1位完走
-    max(b.`距離1位完走`) as `競争相手最高距離1位完走`,
-    min(b.`距離1位完走`) as `競争相手最低距離1位完走`,
-    avg(b.`距離1位完走`) as `競争相手平均距離1位完走`,
-    stddev_pop(b.`距離1位完走`) as `競争相手距離1位完走標準偏差`,
-
-    -- 距離トップ3完走
-    max(b.`距離トップ3完走`) as `競争相手最高距離トップ3完走`,
-    min(b.`距離トップ3完走`) as `競争相手最低距離トップ3完走`,
-    avg(b.`距離トップ3完走`) as `競争相手平均距離トップ3完走`,
-    stddev_pop(b.`距離トップ3完走`) as `競争相手距離トップ3完走標準偏差`,
-
-    -- 四半期レース数
-    max(b.`四半期レース数`) as `競争相手最高四半期レース数`,
-    min(b.`四半期レース数`) as `競争相手最低四半期レース数`,
-    avg(b.`四半期レース数`) as `競争相手平均四半期レース数`,
-    stddev_pop(b.`四半期レース数`) as `競争相手四半期レース数標準偏差`,
-
-    -- 四半期1位完走
-    max(b.`四半期1位完走`) as `競争相手最高四半期1位完走`,
-    min(b.`四半期1位完走`) as `競争相手最低四半期1位完走`,
-    avg(b.`四半期1位完走`) as `競争相手平均四半期1位完走`,
-    stddev_pop(b.`四半期1位完走`) as `競争相手四半期1位完走標準偏差`,
-
-    -- 四半期トップ3完走
-    max(b.`四半期トップ3完走`) as `競争相手最高四半期トップ3完走`,
-    min(b.`四半期トップ3完走`) as `競争相手最低四半期トップ3完走`,
-    avg(b.`四半期トップ3完走`) as `競争相手平均四半期トップ3完走`,
-    stddev_pop(b.`四半期トップ3完走`) as `競争相手四半期トップ3完走標準偏差`,
-
-    -- 過去3走順位平方和
-    max(b.`過去3走順位平方和`) as `競争相手最高過去3走順位平方和`,
-    min(b.`過去3走順位平方和`) as `競争相手最低過去3走順位平方和`,
-    avg(b.`過去3走順位平方和`) as `競争相手平均過去3走順位平方和`,
-    stddev_pop(b.`過去3走順位平方和`) as `競争相手過去3走順位平方和標準偏差`,
-
-    -- 本賞金累計
-    max(b.`本賞金累計`) as `競争相手最高本賞金累計`,
-    min(b.`本賞金累計`) as `競争相手最低本賞金累計`,
-    avg(b.`本賞金累計`) as `競争相手平均本賞金累計`,
-    stddev_pop(b.`本賞金累計`) as `競争相手本賞金累計標準偏差`,
-
-    -- 1位完走平均賞金
-    max(b.`1位完走平均賞金`) as `競争相手最高1位完走平均賞金`,
-    min(b.`1位完走平均賞金`) as `競争相手最低1位完走平均賞金`,
-    avg(b.`1位完走平均賞金`) as `競争相手平均1位完走平均賞金`,
-    stddev_pop(b.`1位完走平均賞金`) as `競争相手1位完走平均賞金標準偏差`,
-
-    -- レース数平均賞金
-    max(b.`レース数平均賞金`) as `競争相手最高レース数平均賞金`,
-    min(b.`レース数平均賞金`) as `競争相手最低レース数平均賞金`,
-    avg(b.`レース数平均賞金`) as `競争相手平均レース数平均賞金`,
-    stddev_pop(b.`レース数平均賞金`) as `競争相手レース数平均賞金標準偏差`,
-
-    -- 連続1着
-    max(b.`連続1着`) as `競争相手最高連続1着`,
-    min(b.`連続1着`) as `競争相手最低連続1着`,
-    avg(b.`連続1着`) as `競争相手平均連続1着`,
-    stddev_pop(b.`連続1着`) as `競争相手連続1着標準偏差`,
-
-    -- 連続3着内
-    max(b.`連続3着内`) as `競争相手最高連続3着内`,
-    min(b.`連続3着内`) as `競争相手最低連続3着内`,
-    avg(b.`連続3着内`) as `競争相手平均連続3着内`,
-    stddev_pop(b.`連続3着内`) as `競争相手連続3着内標準偏差`
+    sum(case when b.`前走トップ3` then 1 else 0 end) / cast(count(*) as double) as `競争相手前走トップ3割合`
   from
     race_horses a
   inner join
@@ -1278,30 +996,30 @@ with
     race_horses.`異常区分` as `meta_int_race_horses_異常区分`,
 
     -- General known before
-    race_horses.`事前_ＩＤＭ` as `num_事前_ＩＤＭ`,
-    race_horses.`事前_脚質` as `cat_事前_脚質`,
-    race_horses.`事前_単勝オッズ` as `num_事前_単勝オッズ`,
-    race_horses.`事前_複勝オッズ` as `num_事前_複勝オッズ`,
-    race_horses.`事前_馬体` as `cat_事前_馬体`,
-    race_horses.`事前_気配コード` as `cat_事前_気配コード`,
-    race_horses.`事前_上昇度` as `cat_事前_上昇度`,
-    race_horses.`事前_クラスコード` as `cat_事前_クラスコード`, -- you need to understand what this means more
-    race_horses.`事前_テン指数` as `num_事前_テン指数`,
-    race_horses.`事前_ペース指数` as `num_事前_ペース指数`,
-    race_horses.`事前_上がり指数` as `num_事前_上がり指数`,
+    race_horses.`事前ＩＤＭ` as `num_事前ＩＤＭ`,
+    race_horses.`事前脚質` as `cat_事前脚質`,
+    race_horses.`事前単勝オッズ` as `num_事前単勝オッズ`,
+    race_horses.`事前複勝オッズ` as `num_事前複勝オッズ`,
+    race_horses.`事前馬体` as `cat_事前馬体`,
+    race_horses.`事前気配コード` as `cat_事前気配コード`,
+    race_horses.`事前上昇度` as `cat_事前上昇度`,
+    race_horses.`事前クラスコード` as `cat_事前クラスコード`, -- you need to understand what this means more
+    race_horses.`事前テン指数` as `num_事前テン指数`,
+    race_horses.`事前ペース指数` as `num_事前ペース指数`,
+    race_horses.`事前上がり指数` as `num_事前上がり指数`,
 
     -- General actual
-    race_horses.`実績_ＩＤＭ` as `num_実績_ＩＤＭ`,
-    race_horses.`実績_脚質` as `cat_実績_脚質`,
-    race_horses.`実績_単勝オッズ` as `num_実績_単勝オッズ`,
-    race_horses.`実績_複勝オッズ` as `num_実績_複勝オッズ`,
-    race_horses.`実績_馬体` as `cat_実績_馬体`,
-    race_horses.`実績_気配コード` as `cat_実績_気配コード`,
-    race_horses.`実績_上昇度` as `cat_実績_上昇度`,
-    race_horses.`実績_クラスコード` as `cat_実績_クラスコード`,
-    race_horses.`実績_テン指数` as `num_実績_テン指数`,
-    race_horses.`実績_ペース指数` as `num_実績_ペース指数`,
-    race_horses.`実績_上がり指数` as `num_実績_上がり指数`,
+    -- race_horses.`実績ＩＤＭ` as `num_実績ＩＤＭ`,
+    -- race_horses.`実績脚質` as `cat_実績脚質`,
+    -- race_horses.`実績単勝オッズ` as `num_実績単勝オッズ`,
+    -- race_horses.`実績複勝オッズ` as `num_実績複勝オッズ`,
+    -- race_horses.`実績馬体` as `cat_実績馬体`,
+    -- race_horses.`実績気配コード` as `cat_実績気配コード`,
+    -- race_horses.`実績上昇度` as `cat_実績上昇度`,
+    -- race_horses.`実績クラスコード` as `cat_実績クラスコード`,
+    -- race_horses.`実績テン指数` as `num_実績テン指数`,
+    -- race_horses.`実績ペース指数` as `num_実績ペース指数`,
+    -- race_horses.`実績上がり指数` as `num_実績上がり指数`,
 
     -- General common
     race_horses.`負担重量` as `num_負担重量`, -- only 24 or so records with diff between before/actual
@@ -1319,6 +1037,11 @@ with
     race_horses.`四走前着順` as `num_四走前着順`,
     race_horses.`五走前着順` as `num_五走前着順`,
     race_horses.`六走前着順` as `num_六走前着順`,
+    race_horses.`1走前上昇度` as `num_1走前上昇度`,
+    race_horses.`2走前上昇度` as `num_2走前上昇度`,
+    race_horses.`3走前上昇度` as `num_3走前上昇度`,
+    race_horses.`4走前上昇度` as `num_4走前上昇度`,
+    race_horses.`5走前上昇度` as `num_5走前上昇度`,
     race_horses.`騎手指数` as `num_騎手指数`,
     race_horses.`情報指数` as `num_情報指数`,
     race_horses.`オッズ指数` as `num_オッズ指数`,
@@ -1450,450 +1173,56 @@ with
     race_horses.`連続3着内` as `num_連続3着内`,
     race_horses.`1着平均馬体重差` as `num_1着平均馬体重差`,
     race_horses.`3着内平均馬体重差` as `num_3着内平均馬体重差`,
+    race_horses.`1着馬体重変動率` as `num_1着馬体重変動率`,
+    race_horses.`3着内馬体重変動率` as `num_3着内馬体重変動率`,
+    race_horses.`馬体重変動率` as `num_馬体重変動率`,
+    race_horses.`1着ＩＤＭ変動率` as `num_1着ＩＤＭ変動率`,
+    race_horses.`3着内ＩＤＭ変動率` as `num_3着内ＩＤＭ変動率`,
+    race_horses.`ＩＤＭ変動率` as `num_ＩＤＭ変動率`,
+    race_horses.`1着騎手指数変動率` as `num_1着騎手指数変動率`,
+    race_horses.`3着内騎手指数変動率` as `num_3着内騎手指数変動率`,
+    race_horses.`騎手指数変動率` as `num_騎手指数変動率`,
+    race_horses.`1着単勝オッズ変動率` as `num_1着単勝オッズ変動率`,
+    race_horses.`3着内単勝オッズ変動率` as `num_3着内単勝オッズ変動率`,
+    race_horses.`単勝オッズ変動率` as `num_単勝オッズ変動率`,
+    race_horses.`1着複勝オッズ変動率` as `num_1着複勝オッズ変動率`,
+    race_horses.`3着内複勝オッズ変動率` as `num_3着内複勝オッズ変動率`,
+    race_horses.`複勝オッズ変動率` as `num_複勝オッズ変動率`,
+    race_horses.`1着テン指数変動率` as `num_1着テン指数変動率`,
+    race_horses.`3着内テン指数変動率` as `num_3着内テン指数変動率`,
+    race_horses.`テン指数変動率` as `num_テン指数変動率`,
+    race_horses.`1着ペース指数変動率` as `num_1着ペース指数変動率`,
+    race_horses.`3着内ペース指数変動率` as `num_3着内ペース指数変動率`,
+    race_horses.`ペース指数変動率` as `num_ペース指数変動率`,
+    race_horses.`1着上がり指数変動率` as `num_1着上がり指数変動率`,
+    race_horses.`3着内上がり指数変動率` as `num_3着内上がり指数変動率`,
+    race_horses.`上がり指数変動率` as `num_上がり指数変動率`,
 
     -- a composite weighted winning percentage that also considered the recent number of wins.
     -- horse_win_percent_weighted
     (race_horses.`1位完走` + (race_horses.`1位完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き1着完走率`,
     (race_horses.`トップ3完走` + (race_horses.`トップ3完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き3着内完走率`,
 
-    -- Competitors before race
-    competitors.`事前_競争相手最高ＩＤＭ` as `num_事前_競争相手最高ＩＤＭ`,
-    competitors.`事前_競争相手最低ＩＤＭ` as `num_事前_競争相手最低ＩＤＭ`,
-    competitors.`事前_競争相手平均ＩＤＭ` as `num_事前_競争相手平均ＩＤＭ`,
-    competitors.`事前_競争相手ＩＤＭ標準偏差` as `num_事前_競争相手ＩＤＭ標準偏差`,
-    competitors.`事前_競争相手最高単勝オッズ` as `num_事前_競争相手最高単勝オッズ`,
-    competitors.`事前_競争相手最低単勝オッズ` as `num_事前_競争相手最低単勝オッズ`,
-    competitors.`事前_競争相手平均単勝オッズ` as `num_事前_競争相手平均単勝オッズ`,
-    competitors.`事前_競争相手単勝オッズ標準偏差` as `num_事前_競争相手単勝オッズ標準偏差`,
-    competitors.`事前_競争相手最高複勝オッズ` as `num_事前_競争相手最高複勝オッズ`,
-    competitors.`事前_競争相手最低複勝オッズ` as `num_事前_競争相手最低複勝オッズ`,
-    competitors.`事前_競争相手平均複勝オッズ` as `num_事前_競争相手平均複勝オッズ`,
-    competitors.`事前_競争相手複勝オッズ標準偏差` as `num_事前_競争相手複勝オッズ標準偏差`,
-    competitors.`事前_競争相手最高テン指数` as `num_事前_競争相手最高テン指数`,
-    competitors.`事前_競争相手最低テン指数` as `num_事前_競争相手最低テン指数`,
-    competitors.`事前_競争相手平均テン指数` as `num_事前_競争相手平均テン指数`,
-    competitors.`事前_競争相手テン指数標準偏差` as `num_事前_競争相手テン指数標準偏差`,
-    competitors.`事前_競争相手最高ペース指数` as `num_事前_競争相手最高ペース指数`,
-    competitors.`事前_競争相手最低ペース指数` as `num_事前_競争相手最低ペース指数`,
-    competitors.`事前_競争相手平均ペース指数` as `num_事前_競争相手平均ペース指数`,
-    competitors.`事前_競争相手ペース指数標準偏差` as `num_事前_競争相手ペース指数標準偏差`,
-    competitors.`事前_競争相手最高上がり指数` as `num_事前_競争相手最高上がり指数`,
-    competitors.`事前_競争相手最低上がり指数` as `num_事前_競争相手最低上がり指数`,
-    competitors.`事前_競争相手平均上がり指数` as `num_事前_競争相手平均上がり指数`,
-    competitors.`事前_競争相手上がり指数標準偏差` as `num_事前_競争相手上がり指数標準偏差`,
+    -- Competitors
+    {%- for feature_name in numeric_competitor_feature_names %}
+    `競争相手最高{{ feature_name }}` as `num_競争相手最高{{ feature_name }}`,
+    `競争相手最低{{ feature_name }}` as `num_競争相手最低{{ feature_name }}`,
+    `競争相手平均{{ feature_name }}` as `num_競争相手平均{{ feature_name }}`,
+    `競争相手{{ feature_name }}標準偏差` as `num_競争相手{{ feature_name }}標準偏差`,
+    {% endfor %}
 
-    -- Competitors actual
-    competitors.`実績_競争相手最高ＩＤＭ` as `num_実績_競争相手最高ＩＤＭ`,
-    competitors.`実績_競争相手最低ＩＤＭ` as `num_実績_競争相手最低ＩＤＭ`,
-    competitors.`実績_競争相手平均ＩＤＭ` as `num_実績_競争相手平均ＩＤＭ`,
-    competitors.`実績_競争相手ＩＤＭ標準偏差` as `num_実績_競争相手ＩＤＭ標準偏差`,
-    competitors.`実績_競争相手最高単勝オッズ` as `num_実績_競争相手最高単勝オッズ`,
-    competitors.`実績_競争相手最低単勝オッズ` as `num_実績_競争相手最低単勝オッズ`,
-    competitors.`実績_競争相手平均単勝オッズ` as `num_実績_競争相手平均単勝オッズ`,
-    competitors.`実績_競争相手単勝オッズ標準偏差` as `num_実績_競争相手単勝オッズ標準偏差`,
-    competitors.`実績_競争相手最高複勝オッズ` as `num_実績_競争相手最高複勝オッズ`,
-    competitors.`実績_競争相手最低複勝オッズ` as `num_実績_競争相手最低複勝オッズ`,
-    competitors.`実績_競争相手平均複勝オッズ` as `num_実績_競争相手平均複勝オッズ`,
-    competitors.`実績_競争相手複勝オッズ標準偏差` as `num_実績_競争相手複勝オッズ標準偏差`,
-    competitors.`実績_競争相手最高テン指数` as `num_実績_競争相手最高テン指数`,
-    competitors.`実績_競争相手最低テン指数` as `num_実績_競争相手最低テン指数`,
-    competitors.`実績_競争相手平均テン指数` as `num_実績_競争相手平均テン指数`,
-    competitors.`実績_競争相手テン指数標準偏差` as `num_実績_競争相手テン指数標準偏差`,
-    competitors.`実績_競争相手最高ペース指数` as `num_実績_競争相手最高ペース指数`,
-    competitors.`実績_競争相手最低ペース指数` as `num_実績_競争相手最低ペース指数`,
-    competitors.`実績_競争相手平均ペース指数` as `num_実績_競争相手平均ペース指数`,
-    competitors.`実績_競争相手ペース指数標準偏差` as `num_実績_競争相手ペース指数標準偏差`,
-    competitors.`実績_競争相手最高上がり指数` as `num_実績_競争相手最高上がり指数`,
-    competitors.`実績_競争相手最低上がり指数` as `num_実績_競争相手最低上がり指数`,
-    competitors.`実績_競争相手平均上がり指数` as `num_実績_競争相手平均上がり指数`,
-    competitors.`実績_競争相手上がり指数標準偏差` as `num_実績_競争相手上がり指数標準偏差`,
-
-    -- Competitors common
-    competitors.`競争相手最高1着馬体重変動率` as `num_競争相手最高1着馬体重変動率`,
-    competitors.`競争相手最低1着馬体重変動率` as `num_競争相手最低1着馬体重変動率`,
-    competitors.`競争相手平均1着馬体重変動率` as `num_競争相手平均1着馬体重変動率`,
-    competitors.`競争相手1着馬体重変動率標準偏差` as `num_競争相手1着馬体重変動率標準偏差`,
-    competitors.`競争相手最高3着内馬体重変動率` as `num_競争相手最高3着内馬体重変動率`,
-    competitors.`競争相手最低3着内馬体重変動率` as `num_競争相手最低3着内馬体重変動率`,
-    competitors.`競争相手平均3着内馬体重変動率` as `num_競争相手平均3着内馬体重変動率`,
-    competitors.`競争相手3着内馬体重変動率標準偏差` as `num_競争相手3着内馬体重変動率標準偏差`,
-    competitors.`競争相手最高馬体重変動率` as `num_競争相手最高馬体重変動率`,
-    competitors.`競争相手最低馬体重変動率` as `num_競争相手最低馬体重変動率`,
-    competitors.`競争相手平均馬体重変動率` as `num_競争相手平均馬体重変動率`,
-    competitors.`競争相手馬体重変動率標準偏差` as `num_競争相手馬体重変動率標準偏差`,
-    competitors.`競争相手最高1着平均馬体重差` as `num_競争相手最高1着平均馬体重差`,
-    competitors.`競争相手最低1着平均馬体重差` as `num_競争相手最低1着平均馬体重差`,
-    competitors.`競争相手平均1着平均馬体重差` as `num_競争相手平均1着平均馬体重差`,
-    competitors.`競争相手1着平均馬体重差標準偏差` as `num_競争相手1着平均馬体重差標準偏差`,
-    competitors.`競争相手最高3着内平均馬体重差` as `num_競争相手最高3着内平均馬体重差`,
-    competitors.`競争相手最低3着内平均馬体重差` as `num_競争相手最低3着内平均馬体重差`,
-    competitors.`競争相手平均3着内平均馬体重差` as `num_競争相手平均3着内平均馬体重差`,
-    competitors.`競争相手3着内平均馬体重差標準偏差` as `num_競争相手3着内平均馬体重差標準偏差`,
-    competitors.`競争相手最高負担重量` as `num_競争相手最高負担重量`,
-    competitors.`競争相手最低負担重量` as `num_競争相手最低負担重量`,
-    competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量`,
-    competitors.`競争相手負担重量標準偏差` as `num_競争相手負担重量標準偏差`,
-    competitors.`競争相手最高馬体重` as `num_競争相手最高馬体重`,
-    competitors.`競争相手最低馬体重` as `num_競争相手最低馬体重`,
-    competitors.`競争相手平均馬体重` as `num_競争相手平均馬体重`,
-    competitors.`競争相手馬体重標準偏差` as `num_競争相手馬体重標準偏差`,
-    competitors.`競争相手最高馬体重増減` as `num_競争相手最高馬体重増減`,
-    competitors.`競争相手最低馬体重増減` as `num_競争相手最低馬体重増減`,
-    competitors.`競争相手平均馬体重増減` as `num_競争相手平均馬体重増減`,
-    competitors.`競争相手馬体重増減標準偏差` as `num_競争相手馬体重増減標準偏差`,
     competitors.`競争相手性別牡割合` as `num_競争相手性別牡割合`,
     competitors.`競争相手性別牝割合` as `num_競争相手性別牝割合`,
     competitors.`競争相手性別セ割合` as `num_競争相手性別セ割合`,
-    competitors.`競争相手最高一走前不利` as `num_競争相手最高一走前不利`,
-    competitors.`競争相手最低一走前不利` as `num_競争相手最低一走前不利`,
-    competitors.`競争相手平均一走前不利` as `num_競争相手平均一走前不利`,
-    competitors.`競争相手一走前不利標準偏差` as `num_競争相手一走前不利標準偏差`,
-    competitors.`競争相手最高二走前不利` as `num_競争相手最高二走前不利`,
-    competitors.`競争相手最低二走前不利` as `num_競争相手最低二走前不利`,
-    competitors.`競争相手平均二走前不利` as `num_競争相手平均二走前不利`,
-    competitors.`競争相手二走前不利標準偏差` as `num_競争相手二走前不利標準偏差`,
-    competitors.`競争相手最高三走前不利` as `num_競争相手最高三走前不利`,
-    competitors.`競争相手最低三走前不利` as `num_競争相手最低三走前不利`,
-    competitors.`競争相手平均三走前不利` as `num_競争相手平均三走前不利`,
-    competitors.`競争相手三走前不利標準偏差` as `num_競争相手三走前不利標準偏差`,
-    competitors.`競争相手最高一走前着順` as `num_競争相手最高一走前着順`,
-    competitors.`競争相手最低一走前着順` as `num_競争相手最低一走前着順`,
-    competitors.`競争相手平均一走前着順` as `num_競争相手平均一走前着順`,
-    competitors.`競争相手一走前着順標準偏差` as `num_競争相手一走前着順標準偏差`,
-    competitors.`競争相手最高二走前着順` as `num_競争相手最高二走前着順`,
-    competitors.`競争相手最低二走前着順` as `num_競争相手最低二走前着順`,
-    competitors.`競争相手平均二走前着順` as `num_競争相手平均二走前着順`,
-    competitors.`競争相手二走前着順標準偏差` as `num_競争相手二走前着順標準偏差`,
-    competitors.`競争相手最高三走前着順` as `num_競争相手最高三走前着順`,
-    competitors.`競争相手最低三走前着順` as `num_競争相手最低三走前着順`,
-    competitors.`競争相手平均三走前着順` as `num_競争相手平均三走前着順`,
-    competitors.`競争相手三走前着順標準偏差` as `num_競争相手三走前着順標準偏差`,
-    competitors.`競争相手最高四走前着順` as `num_競争相手最高四走前着順`,
-    competitors.`競争相手最低四走前着順` as `num_競争相手最低四走前着順`,
-    competitors.`競争相手平均四走前着順` as `num_競争相手平均四走前着順`,
-    competitors.`競争相手四走前着順標準偏差` as `num_競争相手四走前着順標準偏差`,
-    competitors.`競争相手最高五走前着順` as `num_競争相手最高五走前着順`,
-    competitors.`競争相手最低五走前着順` as `num_競争相手最低五走前着順`,
-    competitors.`競争相手平均五走前着順` as `num_競争相手平均五走前着順`,
-    competitors.`競争相手五走前着順標準偏差` as `num_競争相手五走前着順標準偏差`,
-    competitors.`競争相手最高六走前着順` as `num_競争相手最高六走前着順`,
-    competitors.`競争相手最低六走前着順` as `num_競争相手最低六走前着順`,
-    competitors.`競争相手平均六走前着順` as `num_競争相手平均六走前着順`,
-    competitors.`競争相手六走前着順標準偏差` as `num_競争相手六走前着順標準偏差`,
-    competitors.`競争相手最高騎手指数` as `num_競争相手最高騎手指数`,
-    competitors.`競争相手最低騎手指数` as `num_競争相手最低騎手指数`,
-    competitors.`競争相手平均騎手指数` as `num_競争相手平均騎手指数`,
-    competitors.`競争相手騎手指数標準偏差` as `num_競争相手騎手指数標準偏差`,
-    competitors.`競争相手最高情報指数` as `num_競争相手最高情報指数`,
-    competitors.`競争相手最低情報指数` as `num_競争相手最低情報指数`,
-    competitors.`競争相手平均情報指数` as `num_競争相手平均情報指数`,
-    competitors.`競争相手情報指数標準偏差` as `num_競争相手情報指数標準偏差`,
-    competitors.`競争相手最高オッズ指数` as `num_競争相手最高オッズ指数`,
-    competitors.`競争相手最低オッズ指数` as `num_競争相手最低オッズ指数`,
-    competitors.`競争相手平均オッズ指数` as `num_競争相手平均オッズ指数`,
-    competitors.`競争相手オッズ指数標準偏差` as `num_競争相手オッズ指数標準偏差`,
-    competitors.`競争相手最高パドック指数` as `num_競争相手最高パドック指数`,
-    competitors.`競争相手最低パドック指数` as `num_競争相手最低パドック指数`,
-    competitors.`競争相手平均パドック指数` as `num_競争相手平均パドック指数`,
-    competitors.`競争相手パドック指数標準偏差` as `num_競争相手パドック指数標準偏差`,
-    competitors.`競争相手最高総合指数` as `num_競争相手最高総合指数`,
-    competitors.`競争相手最低総合指数` as `num_競争相手最低総合指数`,
-    competitors.`競争相手平均総合指数` as `num_競争相手平均総合指数`,
-    competitors.`競争相手総合指数標準偏差` as `num_競争相手総合指数標準偏差`,
-    competitors.`競争相手最高ローテーション` as `num_競争相手最高ローテーション`,
-    competitors.`競争相手最低ローテーション` as `num_競争相手最低ローテーション`,
-    competitors.`競争相手平均ローテーション` as `num_競争相手平均ローテーション`,
-    competitors.`競争相手ローテーション標準偏差` as `num_競争相手ローテーション標準偏差`,
-    competitors.`競争相手最高基準オッズ` as `num_競争相手最高基準オッズ`,
-    competitors.`競争相手最低基準オッズ` as `num_競争相手最低基準オッズ`,
-    competitors.`競争相手平均基準オッズ` as `num_競争相手平均基準オッズ`,
-    competitors.`競争相手基準オッズ標準偏差` as `num_競争相手基準オッズ標準偏差`,
-    competitors.`競争相手最高基準複勝オッズ` as `num_競争相手最高基準複勝オッズ`,
-    competitors.`競争相手最低基準複勝オッズ` as `num_競争相手最低基準複勝オッズ`,
-    competitors.`競争相手平均基準複勝オッズ` as `num_競争相手平均基準複勝オッズ`,
-    competitors.`競争相手基準複勝オッズ標準偏差` as `num_競争相手基準複勝オッズ標準偏差`,
-    competitors.`競争相手最高人気指数` as `num_競争相手最高人気指数`,
-    competitors.`競争相手最低人気指数` as `num_競争相手最低人気指数`,
-    competitors.`競争相手平均人気指数` as `num_競争相手平均人気指数`,
-    competitors.`競争相手人気指数標準偏差` as `num_競争相手人気指数標準偏差`,
-    competitors.`競争相手最高調教指数` as `num_競争相手最高調教指数`,
-    competitors.`競争相手最低調教指数` as `num_競争相手最低調教指数`,
-    competitors.`競争相手平均調教指数` as `num_競争相手平均調教指数`,
-    competitors.`競争相手調教指数標準偏差` as `num_競争相手調教指数標準偏差`,
-    competitors.`競争相手最高厩舎指数` as `num_競争相手最高厩舎指数`,
-    competitors.`競争相手最低厩舎指数` as `num_競争相手最低厩舎指数`,
-    competitors.`競争相手平均厩舎指数` as `num_競争相手平均厩舎指数`,
-    competitors.`競争相手厩舎指数標準偏差` as `num_競争相手厩舎指数標準偏差`,
-    competitors.`競争相手最高騎手期待連対率` as `num_競争相手最高騎手期待連対率`,
-    competitors.`競争相手最低騎手期待連対率` as `num_競争相手最低騎手期待連対率`,
-    competitors.`競争相手平均騎手期待連対率` as `num_競争相手平均騎手期待連対率`,
-    competitors.`競争相手騎手期待連対率標準偏差` as `num_競争相手騎手期待連対率標準偏差`,
-    competitors.`競争相手最高激走指数` as `num_競争相手最高激走指数`,
-    competitors.`競争相手最低激走指数` as `num_競争相手最低激走指数`,
-    competitors.`競争相手平均激走指数` as `num_競争相手平均激走指数`,
-    competitors.`競争相手激走指数標準偏差` as `num_競争相手激走指数標準偏差`,
-    competitors.`競争相手最高展開予想データ_位置指数` as `num_競争相手最高展開予想データ_位置指数`,
-    competitors.`競争相手最低展開予想データ_位置指数` as `num_競争相手最低展開予想データ_位置指数`,
-    competitors.`競争相手平均展開予想データ_位置指数` as `num_競争相手平均展開予想データ_位置指数`,
-    competitors.`競争相手展開予想データ_位置指数標準偏差` as `num_競争相手展開予想データ_位置指数標準偏差`,
-    competitors.`競争相手最高展開予想データ_道中差` as `num_競争相手最高展開予想データ_道中差`,
-    competitors.`競争相手最低展開予想データ_道中差` as `num_競争相手最低展開予想データ_道中差`,
-    competitors.`競争相手平均展開予想データ_道中差` as `num_競争相手平均展開予想データ_道中差`,
-    competitors.`競争相手展開予想データ_道中差標準偏差` as `num_競争相手展開予想データ_道中差標準偏差`,
-    competitors.`競争相手最高展開予想データ_後３Ｆ差` as `num_競争相手最高展開予想データ_後３Ｆ差`,
-    competitors.`競争相手最低展開予想データ_後３Ｆ差` as `num_競争相手最低展開予想データ_後３Ｆ差`,
-    competitors.`競争相手平均展開予想データ_後３Ｆ差` as `num_競争相手平均展開予想データ_後３Ｆ差`,
-    competitors.`競争相手展開予想データ_後３Ｆ差標準偏差` as `num_競争相手展開予想データ_後３Ｆ差標準偏差`,
-    competitors.`競争相手最高展開予想データ_ゴール差` as `num_競争相手最高展開予想データ_ゴール差`,
-    competitors.`競争相手最低展開予想データ_ゴール差` as `num_競争相手最低展開予想データ_ゴール差`,
-    competitors.`競争相手平均展開予想データ_ゴール差` as `num_競争相手平均展開予想データ_ゴール差`,
-    competitors.`競争相手展開予想データ_ゴール差標準偏差` as `num_競争相手展開予想データ_ゴール差標準偏差`,
-    competitors.`競争相手最高騎手期待単勝率` as `num_競争相手最高騎手期待単勝率`,
-    competitors.`競争相手最低騎手期待単勝率` as `num_競争相手最低騎手期待単勝率`,
-    competitors.`競争相手平均騎手期待単勝率` as `num_競争相手平均騎手期待単勝率`,
-    competitors.`競争相手騎手期待単勝率標準偏差` as `num_競争相手騎手期待単勝率標準偏差`,
-    competitors.`競争相手最高騎手期待３着内率` as `num_競争相手最高騎手期待３着内率`,
-    competitors.`競争相手最低騎手期待３着内率` as `num_競争相手最低騎手期待３着内率`,
-    competitors.`競争相手平均騎手期待３着内率` as `num_競争相手平均騎手期待３着内率`,
-    competitors.`競争相手騎手期待３着内率標準偏差` as `num_競争相手騎手期待３着内率標準偏差`,
-    competitors.`競争相手最高展開参考データ_馬スタート指数` as `num_競争相手最高展開参考データ_馬スタート指数`,
-    competitors.`競争相手最低展開参考データ_馬スタート指数` as `num_競争相手最低展開参考データ_馬スタート指数`,
-    competitors.`競争相手平均展開参考データ_馬スタート指数` as `num_競争相手平均展開参考データ_馬スタート指数`,
-    competitors.`競争相手展開参考データ_馬スタート指数標準偏差` as `num_競争相手展開参考データ_馬スタート指数標準偏差`,
-    competitors.`競争相手最高展開参考データ_馬出遅率` as `num_競争相手最高展開参考データ_馬出遅率`,
-    competitors.`競争相手最低展開参考データ_馬出遅率` as `num_競争相手最低展開参考データ_馬出遅率`,
-    competitors.`競争相手平均展開参考データ_馬出遅率` as `num_競争相手平均展開参考データ_馬出遅率`,
-    competitors.`競争相手展開参考データ_馬出遅率標準偏差` as `num_競争相手展開参考データ_馬出遅率標準偏差`,
-    competitors.`競争相手最高万券指数` as `num_競争相手最高万券指数`,
-    competitors.`競争相手最低万券指数` as `num_競争相手最低万券指数`,
-    competitors.`競争相手平均万券指数` as `num_競争相手平均万券指数`,
-    competitors.`競争相手万券指数標準偏差` as `num_競争相手万券指数標準偏差`,
     competitors.`競争相手前走トップ3割合` as `num_競争相手前走トップ3割合`,
-    competitors.`競争相手最高休養日数` as `num_競争相手最高休養日数`,
-    competitors.`競争相手最低休養日数` as `num_競争相手最低休養日数`,
-    competitors.`競争相手平均休養日数` as `num_競争相手平均休養日数`,
-    competitors.`競争相手休養日数標準偏差` as `num_競争相手休養日数標準偏差`,
-    competitors.`競争相手最高入厩何日前` as `num_競争相手最高入厩何日前`,
-    competitors.`競争相手最低入厩何日前` as `num_競争相手最低入厩何日前`,
-    competitors.`競争相手平均入厩何日前` as `num_競争相手平均入厩何日前`,
-    competitors.`競争相手入厩何日前標準偏差` as `num_競争相手入厩何日前標準偏差`,
-    competitors.`競争相手最高年齢` as `num_競争相手最高年齢`,
-    competitors.`競争相手最低年齢` as `num_競争相手最低年齢`,
-    competitors.`競争相手平均年齢` as `num_競争相手平均年齢`,
-    competitors.`競争相手年齢標準偏差` as `num_競争相手年齢標準偏差`,
-    competitors.`競争相手最高レース数` as `num_競争相手最高レース数`,
-    competitors.`競争相手最低レース数` as `num_競争相手最低レース数`,
-    competitors.`競争相手平均レース数` as `num_競争相手平均レース数`,
-    competitors.`競争相手レース数標準偏差` as `num_競争相手レース数標準偏差`,
-    competitors.`競争相手最高1位完走` as `num_競争相手最高1位完走`,
-    competitors.`競争相手最低1位完走` as `num_競争相手最低1位完走`,
-    competitors.`競争相手平均1位完走` as `num_競争相手平均1位完走`,
-    competitors.`競争相手1位完走標準偏差` as `num_競争相手1位完走標準偏差`,
-    competitors.`競争相手最高トップ3完走` as `num_競争相手最高トップ3完走`,
-    competitors.`競争相手最低トップ3完走` as `num_競争相手最低トップ3完走`,
-    competitors.`競争相手平均トップ3完走` as `num_競争相手平均トップ3完走`,
-    competitors.`競争相手トップ3完走標準偏差` as `num_競争相手トップ3完走標準偏差`,
-    competitors.`競争相手最高1位完走率` as `num_競争相手最高1位完走率`,
-    competitors.`競争相手最低1位完走率` as `num_競争相手最低1位完走率`,
-    competitors.`競争相手平均1位完走率` as `num_競争相手平均1位完走率`,
-    competitors.`競争相手1位完走率標準偏差` as `num_競争相手1位完走率標準偏差`,
-    competitors.`競争相手最高トップ3完走率` as `num_競争相手最高トップ3完走率`,
-    competitors.`競争相手最低トップ3完走率` as `num_競争相手最低トップ3完走率`,
-    competitors.`競争相手平均トップ3完走率` as `num_競争相手平均トップ3完走率`,
-    competitors.`競争相手トップ3完走率標準偏差` as `num_競争相手トップ3完走率標準偏差`,
-    competitors.`競争相手最高過去5走勝率` as `num_競争相手最高過去5走勝率`,
-    competitors.`競争相手最低過去5走勝率` as `num_競争相手最低過去5走勝率`,
-    competitors.`競争相手平均過去5走勝率` as `num_競争相手平均過去5走勝率`,
-    competitors.`競争相手過去5走勝率標準偏差` as `num_競争相手過去5走勝率標準偏差`,
-    competitors.`競争相手最高過去5走トップ3完走率` as `num_競争相手最高過去5走トップ3完走率`,
-    competitors.`競争相手最低過去5走トップ3完走率` as `num_競争相手最低過去5走トップ3完走率`,
-    competitors.`競争相手平均過去5走トップ3完走率` as `num_競争相手平均過去5走トップ3完走率`,
-    competitors.`競争相手過去5走トップ3完走率標準偏差` as `num_競争相手過去5走トップ3完走率標準偏差`,
-    competitors.`競争相手最高場所レース数` as `num_競争相手最高場所レース数`,
-    competitors.`競争相手最低場所レース数` as `num_競争相手最低場所レース数`,
-    competitors.`競争相手平均場所レース数` as `num_競争相手平均場所レース数`,
-    competitors.`競争相手場所レース数標準偏差` as `num_競争相手場所レース数標準偏差`,
-    competitors.`競争相手最高場所1位完走` as `num_競争相手最高場所1位完走`,
-    competitors.`競争相手最低場所1位完走` as `num_競争相手最低場所1位完走`,
-    competitors.`競争相手平均場所1位完走` as `num_競争相手平均場所1位完走`,
-    competitors.`競争相手場所1位完走標準偏差` as `num_競争相手場所1位完走標準偏差`,
-    competitors.`競争相手最高場所トップ3完走` as `num_競争相手最高場所トップ3完走`,
-    competitors.`競争相手最低場所トップ3完走` as `num_競争相手最低場所トップ3完走`,
-    competitors.`競争相手平均場所トップ3完走` as `num_競争相手平均場所トップ3完走`,
-    competitors.`競争相手場所トップ3完走標準偏差` as `num_競争相手場所トップ3完走標準偏差`,
-    competitors.`競争相手最高場所1位完走率` as `num_競争相手最高場所1位完走率`,
-    competitors.`競争相手最低場所1位完走率` as `num_競争相手最低場所1位完走率`,
-    competitors.`競争相手平均場所1位完走率` as `num_競争相手平均場所1位完走率`,
-    competitors.`競争相手場所1位完走率標準偏差` as `num_競争相手場所1位完走率標準偏差`,
-    competitors.`競争相手最高場所トップ3完走率` as `num_競争相手最高場所トップ3完走率`,
-    competitors.`競争相手最低場所トップ3完走率` as `num_競争相手最低場所トップ3完走率`,
-    competitors.`競争相手平均場所トップ3完走率` as `num_競争相手平均場所トップ3完走率`,
-    competitors.`競争相手場所トップ3完走率標準偏差` as `num_競争相手場所トップ3完走率標準偏差`,
-    competitors.`競争相手最高トラック種別レース数` as `num_競争相手最高トラック種別レース数`,
-    competitors.`競争相手最低トラック種別レース数` as `num_競争相手最低トラック種別レース数`,
-    competitors.`競争相手平均トラック種別レース数` as `num_競争相手平均トラック種別レース数`,
-    competitors.`競争相手トラック種別レース数標準偏差` as `num_競争相手トラック種別レース数標準偏差`,
-    competitors.`競争相手最高トラック種別1位完走` as `num_競争相手最高トラック種別1位完走`,
-    competitors.`競争相手最低トラック種別1位完走` as `num_競争相手最低トラック種別1位完走`,
-    competitors.`競争相手平均トラック種別1位完走` as `num_競争相手平均トラック種別1位完走`,
-    competitors.`競争相手トラック種別1位完走標準偏差` as `num_競争相手トラック種別1位完走標準偏差`,
-    competitors.`競争相手最高トラック種別トップ3完走` as `num_競争相手最高トラック種別トップ3完走`,
-    competitors.`競争相手最低トラック種別トップ3完走` as `num_競争相手最低トラック種別トップ3完走`,
-    competitors.`競争相手平均トラック種別トップ3完走` as `num_競争相手平均トラック種別トップ3完走`,
-    competitors.`競争相手トラック種別トップ3完走標準偏差` as `num_競争相手トラック種別トップ3完走標準偏差`,
-    competitors.`競争相手最高馬場状態レース数` as `num_競争相手最高馬場状態レース数`,
-    competitors.`競争相手最低馬場状態レース数` as `num_競争相手最低馬場状態レース数`,
-    competitors.`競争相手平均馬場状態レース数` as `num_競争相手平均馬場状態レース数`,
-    competitors.`競争相手馬場状態レース数標準偏差` as `num_競争相手馬場状態レース数標準偏差`,
-    competitors.`競争相手最高馬場状態1位完走` as `num_競争相手最高馬場状態1位完走`,
-    competitors.`競争相手最低馬場状態1位完走` as `num_競争相手最低馬場状態1位完走`,
-    competitors.`競争相手平均馬場状態1位完走` as `num_競争相手平均馬場状態1位完走`,
-    competitors.`競争相手馬場状態1位完走標準偏差` as `num_競争相手馬場状態1位完走標準偏差`,
-    competitors.`競争相手最高馬場状態トップ3完走` as `num_競争相手最高馬場状態トップ3完走`,
-    competitors.`競争相手最低馬場状態トップ3完走` as `num_競争相手最低馬場状態トップ3完走`,
-    competitors.`競争相手平均馬場状態トップ3完走` as `num_競争相手平均馬場状態トップ3完走`,
-    competitors.`競争相手馬場状態トップ3完走標準偏差` as `num_競争相手馬場状態トップ3完走標準偏差`,
-    competitors.`競争相手最高距離レース数` as `num_競争相手最高距離レース数`,
-    competitors.`競争相手最低距離レース数` as `num_競争相手最低距離レース数`,
-    competitors.`競争相手平均距離レース数` as `num_競争相手平均距離レース数`,
-    competitors.`競争相手距離レース数標準偏差` as `num_競争相手距離レース数標準偏差`,
-    competitors.`競争相手最高距離1位完走` as `num_競争相手最高距離1位完走`,
-    competitors.`競争相手最低距離1位完走` as `num_競争相手最低距離1位完走`,
-    competitors.`競争相手平均距離1位完走` as `num_競争相手平均距離1位完走`,
-    competitors.`競争相手距離1位完走標準偏差` as `num_競争相手距離1位完走標準偏差`,
-    competitors.`競争相手最高距離トップ3完走` as `num_競争相手最高距離トップ3完走`,
-    competitors.`競争相手最低距離トップ3完走` as `num_競争相手最低距離トップ3完走`,
-    competitors.`競争相手平均距離トップ3完走` as `num_競争相手平均距離トップ3完走`,
-    competitors.`競争相手距離トップ3完走標準偏差` as `num_競争相手距離トップ3完走標準偏差`,
-    competitors.`競争相手最高四半期レース数` as `num_競争相手最高四半期レース数`,
-    competitors.`競争相手最低四半期レース数` as `num_競争相手最低四半期レース数`,
-    competitors.`競争相手平均四半期レース数` as `num_競争相手平均四半期レース数`,
-    competitors.`競争相手四半期レース数標準偏差` as `num_競争相手四半期レース数標準偏差`,
-    competitors.`競争相手最高四半期1位完走` as `num_競争相手最高四半期1位完走`,
-    competitors.`競争相手最低四半期1位完走` as `num_競争相手最低四半期1位完走`,
-    competitors.`競争相手平均四半期1位完走` as `num_競争相手平均四半期1位完走`,
-    competitors.`競争相手四半期1位完走標準偏差` as `num_競争相手四半期1位完走標準偏差`,
-    competitors.`競争相手最高四半期トップ3完走` as `num_競争相手最高四半期トップ3完走`,
-    competitors.`競争相手最低四半期トップ3完走` as `num_競争相手最低四半期トップ3完走`,
-    competitors.`競争相手平均四半期トップ3完走` as `num_競争相手平均四半期トップ3完走`,
-    competitors.`競争相手四半期トップ3完走標準偏差` as `num_競争相手四半期トップ3完走標準偏差`,
-    competitors.`競争相手最高過去3走順位平方和` as `num_競争相手最高過去3走順位平方和`,
-    competitors.`競争相手最低過去3走順位平方和` as `num_競争相手最低過去3走順位平方和`,
-    competitors.`競争相手平均過去3走順位平方和` as `num_競争相手平均過去3走順位平方和`,
-    competitors.`競争相手過去3走順位平方和標準偏差` as `num_競争相手過去3走順位平方和標準偏差`,
-    competitors.`競争相手最高本賞金累計` as `num_競争相手最高本賞金累計`,
-    competitors.`競争相手最低本賞金累計` as `num_競争相手最低本賞金累計`,
-    competitors.`競争相手平均本賞金累計` as `num_競争相手平均本賞金累計`,
-    competitors.`競争相手本賞金累計標準偏差` as `num_競争相手本賞金累計標準偏差`,
-    competitors.`競争相手最高1位完走平均賞金` as `num_競争相手最高1位完走平均賞金`,
-    competitors.`競争相手最低1位完走平均賞金` as `num_競争相手最低1位完走平均賞金`,
-    competitors.`競争相手平均1位完走平均賞金` as `num_競争相手平均1位完走平均賞金`,
-    competitors.`競争相手1位完走平均賞金標準偏差` as `num_競争相手1位完走平均賞金標準偏差`,
-    competitors.`競争相手最高レース数平均賞金` as `num_競争相手最高レース数平均賞金`,
-    competitors.`競争相手最低レース数平均賞金` as `num_競争相手最低レース数平均賞金`,
-    competitors.`競争相手平均レース数平均賞金` as `num_競争相手平均レース数平均賞金`,
-    competitors.`競争相手レース数平均賞金標準偏差` as `num_競争相手レース数平均賞金標準偏差`,
     competitors.`競争相手トラック種別瞬発戦好走馬割合` as `num_競争相手トラック種別瞬発戦好走馬割合`,
     competitors.`競争相手トラック種別消耗戦好走馬割合` as `num_競争相手トラック種別消耗戦好走馬割合`,
-    competitors.`競争相手最高連続1着` as `num_競争相手最高連続1着`,
-    competitors.`競争相手最低連続1着` as `num_競争相手最低連続1着`,
-    competitors.`競争相手平均連続1着` as `num_競争相手平均連続1着`,
-    competitors.`競争相手連続1着標準偏差` as `num_競争相手連続1着標準偏差`,
-    competitors.`競争相手最高連続3着内` as `num_競争相手最高連続3着内`,
-    competitors.`競争相手最低連続3着内` as `num_競争相手最低連続3着内`,
-    competitors.`競争相手平均連続3着内` as `num_競争相手平均連続3着内`,
-    competitors.`競争相手連続3着内標準偏差` as `num_競争相手連続3着内標準偏差`,
-
-    -- Relative before race
-    race_horses.`事前_ＩＤＭ` - competitors.`事前_競争相手平均ＩＤＭ` as `num_事前_競争相手平均ＩＤＭ差`,
-    race_horses.`事前_単勝オッズ` - competitors.`事前_競争相手平均単勝オッズ` as `num_事前_競争相手平均単勝オッズ差`,
-    race_horses.`事前_複勝オッズ` - competitors.`事前_競争相手平均複勝オッズ` as `num_事前_競争相手平均複勝オッズ差`,
-    race_horses.`事前_テン指数` - competitors.`事前_競争相手平均テン指数` as `num_事前_競争相手平均テン指数差`,
-    race_horses.`事前_ペース指数` - competitors.`事前_競争相手平均ペース指数` as `num_事前_競争相手平均ペース指数差`,
-    race_horses.`事前_上がり指数` - competitors.`事前_競争相手平均上がり指数` as `num_事前_競争相手平均上がり指数差`,
-
-    -- Relative actual
-    race_horses.`実績_ＩＤＭ` - competitors.`実績_競争相手平均ＩＤＭ` as `num_実績_競争相手平均ＩＤＭ差`,
-    race_horses.`実績_単勝オッズ` - competitors.`実績_競争相手平均単勝オッズ` as `num_実績_競争相手平均単勝オッズ差`,
-    race_horses.`実績_複勝オッズ` - competitors.`実績_競争相手平均複勝オッズ` as `num_実績_競争相手平均複勝オッズ差`,
-    race_horses.`実績_テン指数` - competitors.`実績_競争相手平均テン指数` as `num_実績_競争相手平均テン指数差`,
-    race_horses.`実績_ペース指数` - competitors.`実績_競争相手平均ペース指数` as `num_実績_競争相手平均ペース指数差`,
-    race_horses.`実績_上がり指数` - competitors.`実績_競争相手平均上がり指数` as `num_実績_競争相手平均上がり指数差`,
 
     -- Relative common
-    race_horses.`1着馬体重変動率` - competitors.`競争相手平均1着馬体重変動率` as `num_競争相手平均1着馬体重変動率差`,
-    race_horses.`3着内馬体重変動率` - competitors.`競争相手平均3着内馬体重変動率` as `num_競争相手平均3着内馬体重変動率差`,
-    race_horses.`馬体重変動率` - competitors.`競争相手平均馬体重変動率` as `num_競争相手平均馬体重変動率差`,
-    race_horses.`1着平均馬体重差` - competitors.`競争相手平均1着平均馬体重差` as `num_競争相手平均1着平均馬体重差差`,
-    race_horses.`3着内平均馬体重差` - competitors.`競争相手平均3着内平均馬体重差` as `num_競争相手平均3着内平均馬体重差差`,
-    race_horses.`負担重量` - competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量差`,
-    race_horses.`馬体重` - competitors.`競争相手平均馬体重` as `num_競争相手平均馬体重差`,
-    race_horses.`馬体重増減` - competitors.`競争相手平均馬体重増減` as `num_競争相手平均馬体重増減差`,
-    race_horses.`一走前不利` - competitors.`競争相手平均一走前不利` as `num_競争相手平均一走前不利差`,
-    race_horses.`二走前不利` - competitors.`競争相手平均二走前不利` as `num_競争相手平均二走前不利差`,
-    race_horses.`三走前不利` - competitors.`競争相手平均三走前不利` as `num_競争相手平均三走前不利差`,
-    race_horses.`一走前着順` - competitors.`競争相手平均一走前着順` as `num_競争相手平均一走前着順差`,
-    race_horses.`二走前着順` - competitors.`競争相手平均二走前着順` as `num_競争相手平均二走前着順差`,
-    race_horses.`三走前着順` - competitors.`競争相手平均三走前着順` as `num_競争相手平均三走前着順差`,
-    race_horses.`四走前着順` - competitors.`競争相手平均四走前着順` as `num_競争相手平均四走前着順差`,
-    race_horses.`五走前着順` - competitors.`競争相手平均五走前着順` as `num_競争相手平均五走前着順差`,
-    race_horses.`六走前着順` - competitors.`競争相手平均六走前着順` as `num_競争相手平均六走前着順差`,
-    race_horses.`騎手指数` - competitors.`競争相手平均騎手指数` as `num_競争相手平均騎手指数差`,
-    race_horses.`情報指数` - competitors.`競争相手平均情報指数` as `num_競争相手平均情報指数差`,
-    race_horses.`オッズ指数` - competitors.`競争相手平均オッズ指数` as `num_競争相手平均オッズ指数差`,
-    race_horses.`パドック指数` - competitors.`競争相手平均パドック指数` as `num_競争相手平均パドック指数差`,
-    race_horses.`総合指数` - competitors.`競争相手平均総合指数` as `num_競争相手平均総合指数差`,
-    race_horses.`ローテーション` - competitors.`競争相手平均ローテーション` as `num_競争相手平均ローテーション差`,
-    race_horses.`基準オッズ` - competitors.`競争相手平均基準オッズ` as `num_競争相手平均基準オッズ差`,
-    race_horses.`基準複勝オッズ` - competitors.`競争相手平均基準複勝オッズ` as `num_競争相手平均基準複勝オッズ差`,
-    race_horses.`人気指数` - competitors.`競争相手平均人気指数` as `num_競争相手平均人気指数差`,
-    race_horses.`調教指数` - competitors.`競争相手平均調教指数` as `num_競争相手平均調教指数差`,
-    race_horses.`厩舎指数` - competitors.`競争相手平均厩舎指数` as `num_競争相手平均厩舎指数差`,
-    race_horses.`騎手期待連対率` - competitors.`競争相手平均騎手期待連対率` as `num_競争相手平均騎手期待連対率差`,
-    race_horses.`激走指数` - competitors.`競争相手平均激走指数` as `num_競争相手平均激走指数差`,
-    race_horses.`展開予想データ_位置指数` - competitors.`競争相手平均展開予想データ_位置指数` as `num_競争相手平均展開予想データ_位置指数差`,
-    race_horses.`展開予想データ_道中差` - competitors.`競争相手平均展開予想データ_道中差` as `num_競争相手平均展開予想データ_道中差差`,
-    race_horses.`展開予想データ_後３Ｆ差` - competitors.`競争相手平均展開予想データ_後３Ｆ差` as `num_競争相手平均展開予想データ_後３Ｆ差差`,
-    race_horses.`展開予想データ_ゴール差` - competitors.`競争相手平均展開予想データ_ゴール差` as `num_競争相手平均展開予想データ_ゴール差差`,
-    race_horses.`騎手期待単勝率` - competitors.`競争相手平均騎手期待単勝率` as `num_競争相手平均騎手期待単勝率差`,
-    race_horses.`騎手期待３着内率` - competitors.`競争相手平均騎手期待３着内率` as `num_競争相手平均騎手期待３着内率差`,
-    race_horses.`展開参考データ_馬スタート指数` - competitors.`競争相手平均展開参考データ_馬スタート指数` as `num_競争相手平均展開参考データ_馬スタート指数差`,
-    race_horses.`展開参考データ_馬出遅率` - competitors.`競争相手平均展開参考データ_馬出遅率` as `num_競争相手平均展開参考データ_馬出遅率差`,
-    race_horses.`万券指数` - competitors.`競争相手平均万券指数` as `num_競争相手平均万券指数差`,
-    race_horses.`休養日数` - competitors.`競争相手平均休養日数` as `num_競争相手平均休養日数差`,
-    race_horses.`入厩何日前` - competitors.`競争相手平均入厩何日前` as `num_競争相手平均入厩何日前差`,
-    race_horses.`前走距離差` - competitors.`競争相手平均前走距離差` as `num_競争相手平均前走距離差差`,
-    race_horses.`年齢` - competitors.`競争相手平均年齢` as `num_競争相手平均年齢差`,
-    race_horses.`レース数` - competitors.`競争相手平均レース数` as `num_競争相手平均レース数差`,
-    race_horses.`1位完走` - competitors.`競争相手平均1位完走` as `num_競争相手平均1位完走差`,
-    race_horses.`トップ3完走` - competitors.`競争相手平均トップ3完走` as `num_競争相手平均トップ3完走差`,
-    race_horses.`1位完走率` - competitors.`競争相手平均1位完走率` as `num_競争相手平均1位完走率差`,
-    race_horses.`トップ3完走率` - competitors.`競争相手平均トップ3完走率` as `num_競争相手平均トップ3完走率差`,
-    race_horses.`過去5走勝率` - competitors.`競争相手平均過去5走勝率` as `num_競争相手平均過去5走勝率差`,
-    race_horses.`過去5走トップ3完走率` - competitors.`競争相手平均過去5走トップ3完走率` as `num_競争相手平均過去5走トップ3完走率差`,
-    race_horses.`場所レース数` - competitors.`競争相手平均場所レース数` as `num_競争相手平均場所レース数差`,
-    race_horses.`場所1位完走` - competitors.`競争相手平均場所1位完走` as `num_競争相手平均場所1位完走差`,
-    race_horses.`場所トップ3完走` - competitors.`競争相手平均場所トップ3完走` as `num_競争相手平均場所トップ3完走差`,
-    race_horses.`場所1位完走率` - competitors.`競争相手平均場所1位完走率` as `num_競争相手平均場所1位完走率差`,
-    race_horses.`場所トップ3完走率` - competitors.`競争相手平均場所トップ3完走率` as `num_競争相手平均場所トップ3完走率差`,
-    race_horses.`トラック種別レース数` - competitors.`競争相手平均トラック種別レース数` as `num_競争相手平均トラック種別レース数差`,
-    race_horses.`トラック種別1位完走` - competitors.`競争相手平均トラック種別1位完走` as `num_競争相手平均トラック種別1位完走差`,
-    race_horses.`トラック種別トップ3完走` - competitors.`競争相手平均トラック種別トップ3完走` as `num_競争相手平均トラック種別トップ3完走差`,
-    race_horses.`馬場状態レース数` - competitors.`競争相手平均馬場状態レース数` as `num_競争相手平均馬場状態レース数差`,
-    race_horses.`馬場状態1位完走` - competitors.`競争相手平均馬場状態1位完走` as `num_競争相手平均馬場状態1位完走差`,
-    race_horses.`馬場状態トップ3完走` - competitors.`競争相手平均馬場状態トップ3完走` as `num_競争相手平均馬場状態トップ3完走差`,
-    race_horses.`距離レース数` - competitors.`競争相手平均距離レース数` as `num_競争相手平均距離レース数差`,
-    race_horses.`距離1位完走` - competitors.`競争相手平均距離1位完走` as `num_競争相手平均距離1位完走差`,
-    race_horses.`距離トップ3完走` - competitors.`競争相手平均距離トップ3完走` as `num_競争相手平均距離トップ3完走差`,
-    race_horses.`四半期レース数` - competitors.`競争相手平均四半期レース数` as `num_競争相手平均四半期レース数差`,
-    race_horses.`四半期1位完走` - competitors.`競争相手平均四半期1位完走` as `num_競争相手平均四半期1位完走差`,
-    race_horses.`四半期トップ3完走` - competitors.`競争相手平均四半期トップ3完走` as `num_競争相手平均四半期トップ3完走差`,
-    race_horses.`過去3走順位平方和` - competitors.`競争相手平均過去3走順位平方和` as `num_競争相手平均過去3走順位平方和差`,
-    race_horses.`本賞金累計` - competitors.`競争相手平均本賞金累計` as `num_競争相手平均本賞金累計差`,
-    race_horses.`1位完走平均賞金` - competitors.`競争相手平均1位完走平均賞金` as `num_競争相手平均1位完走平均賞金差`,
-    race_horses.`レース数平均賞金` - competitors.`競争相手平均レース数平均賞金` as `num_競争相手平均レース数平均賞金差`,
-    race_horses.`連続1着` - competitors.`競争相手平均連続1着` as `num_競争相手平均連続1着差`,
-    race_horses.`連続3着内` - competitors.`競争相手平均連続3着内` as `num_競争相手平均連続3着内差`
+    {%- for feature_name in numeric_competitor_feature_names %}
+    race_horses.`{{ feature_name }}` - competitors.`競争相手平均{{ feature_name }}` as `num_競争相手平均{{ feature_name }}差`
+    {%- if not loop.last %},{% endif -%}
+    {% endfor %}
 
   from
     race_horses
