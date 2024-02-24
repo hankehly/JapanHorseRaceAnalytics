@@ -457,16 +457,16 @@ with
     -- previous race draw
     lag(`枠番`) over (partition by base.`血統登録番号` order by `発走日時`) as `前走枠番`, -- last_draw
 
+    -- days_since_last_race
+    date_diff(`発走日時`, lag(`発走日時`) over (partition by base.`血統登録番号` order by `発走日時`)) as `休養日数`,
+
     -- horse_rest_time
-    -- 発走日時` - `入厩年月日` as `入厩何日前`
     date_diff(`発走日時`, `入厩年月日`) as `入厩何日前`,
 
     -- horse_rest_lest14
-    -- 発走日時` - `入厩年月日` < 15 as `入厩15日未満`
     date_diff(`発走日時`, `入厩年月日`) < 15 as `入厩15日未満`,
 
     -- horse_rest_over35
-    -- 発走日時` - `入厩年月日` >= 35 as `入厩35日以上`
     date_diff(`発走日時`, `入厩年月日`) >= 35 as `入厩35日以上`,
 
     -- distance
@@ -687,7 +687,31 @@ with
     }}, 0) as `レース数平均賞金`,
 
     lag(race_horses_streaks.`連続1着`, 1, 0) over (partition by base.`血統登録番号` order by `発走日時`) as `連続1着`,
-    lag(race_horses_streaks.`連続3着内`, 1, 0) over (partition by base.`血統登録番号` order by `発走日時`) as `連続3着内`
+    lag(race_horses_streaks.`連続3着内`, 1, 0) over (partition by base.`血統登録番号` order by `発走日時`) as `連続3着内`,
+
+    -- horse win weight diff
+    -- assuming that horses that weigh in at close to their average winning body weight have a higher likelihood of winning
+    -- https://nycdatascience.com/blog/student-works/can-machine-learning-make-horse-races-a-winning-proposition/
+    coalesce(`馬体重` - avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) `1着平均馬体重差`,
+    -- horse place weight diff
+    coalesce(`馬体重` - avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding), 0) `3着内平均馬体重差`,
+
+    -- https://nycdatascience.com/blog/student-works/data-analyzing-horse-racing/
+    -- (current weight - winning weight) / winning weight
+    coalesce(
+      (`馬体重` - avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` = 1 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `1着馬体重変動率`,
+
+    coalesce(
+      (`馬体重` - avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(case when `着順` <= 3 then `馬体重` end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `3着内馬体重変動率`,
+
+    coalesce(
+      (`馬体重` - avg(`馬体重`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding))
+      / avg(`馬体重`) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding),
+    0) as `馬体重変動率`
 
   from
     race_horses_base base
@@ -780,6 +804,36 @@ with
     stddev_pop(b.`実績_上がり指数`) as `実績_競争相手上がり指数標準偏差`,
 
     -- General ---------------------------------------------------------------------------------------------------------
+
+    -- 1着馬体重変動率
+    max(b.`1着馬体重変動率`) as `競争相手最高1着馬体重変動率`,
+    min(b.`1着馬体重変動率`) as `競争相手最低1着馬体重変動率`,
+    avg(b.`1着馬体重変動率`) as `競争相手平均1着馬体重変動率`,
+    stddev_pop(b.`1着馬体重変動率`) as `競争相手1着馬体重変動率標準偏差`,
+
+    -- 3着内馬体重変動率
+    max(b.`3着内馬体重変動率`) as `競争相手最高3着内馬体重変動率`,
+    min(b.`3着内馬体重変動率`) as `競争相手最低3着内馬体重変動率`,
+    avg(b.`3着内馬体重変動率`) as `競争相手平均3着内馬体重変動率`,
+    stddev_pop(b.`3着内馬体重変動率`) as `競争相手3着内馬体重変動率標準偏差`,
+
+    -- 馬体重変動率
+    max(b.`馬体重変動率`) as `競争相手最高馬体重変動率`,
+    min(b.`馬体重変動率`) as `競争相手最低馬体重変動率`,
+    avg(b.`馬体重変動率`) as `競争相手平均馬体重変動率`,
+    stddev_pop(b.`馬体重変動率`) as `競争相手馬体重変動率標準偏差`,
+
+    -- 1着平均馬体重差
+    max(b.`1着平均馬体重差`) as `競争相手最高1着平均馬体重差`,
+    min(b.`1着平均馬体重差`) as `競争相手最低1着平均馬体重差`,
+    avg(b.`1着平均馬体重差`) as `競争相手平均1着平均馬体重差`,
+    stddev_pop(b.`1着平均馬体重差`) as `競争相手1着平均馬体重差標準偏差`,
+
+    -- 3着内平均馬体重差
+    max(b.`3着内平均馬体重差`) as `競争相手最高3着内平均馬体重差`,
+    min(b.`3着内平均馬体重差`) as `競争相手最低3着内平均馬体重差`,
+    avg(b.`3着内平均馬体重差`) as `競争相手平均3着内平均馬体重差`,
+    stddev_pop(b.`3着内平均馬体重差`) as `競争相手3着内平均馬体重差標準偏差`,
 
     -- 負担重量
     max(b.`負担重量`) as `競争相手最高負担重量`,
@@ -998,6 +1052,12 @@ with
 
     -- 前走トップ3
     sum(case when b.`前走トップ3` then 1 else 0 end) / cast(count(*) as double) as `競争相手前走トップ3割合`,
+
+    -- 休養日数
+    max(b.`休養日数`) as `競争相手最高休養日数`,
+    min(b.`休養日数`) as `競争相手最低休養日数`,
+    avg(b.`休養日数`) as `競争相手平均休養日数`,
+    stddev_pop(b.`休養日数`) as `競争相手休養日数標準偏差`,
 
     -- 入厩何日前
     max(b.`入厩何日前`) as `競争相手最高入厩何日前`,
@@ -1341,6 +1401,7 @@ with
     race_horses.`前走トップ3` as `cat_前走トップ3`,
     race_horses.`枠番` as `cat_枠番`,
     race_horses.`前走枠番` as `cat_前走枠番`,
+    race_horses.`休養日数` as `num_休養日数`,
     race_horses.`入厩何日前` as `num_入厩何日前`, -- horse_rest_time
     race_horses.`入厩15日未満` as `cat_入厩15日未満`, -- horse_rest_lest14
     race_horses.`入厩35日以上` as `cat_入厩35日以上`, -- horse_rest_over35
@@ -1387,6 +1448,13 @@ with
     race_horses.`レース数平均賞金` as `num_レース数平均賞金`,
     race_horses.`連続1着` as `num_連続1着`,
     race_horses.`連続3着内` as `num_連続3着内`,
+    race_horses.`1着平均馬体重差` as `num_1着平均馬体重差`,
+    race_horses.`3着内平均馬体重差` as `num_3着内平均馬体重差`,
+
+    -- a composite weighted winning percentage that also considered the recent number of wins.
+    -- horse_win_percent_weighted
+    (race_horses.`1位完走` + (race_horses.`1位完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き1着完走率`,
+    (race_horses.`トップ3完走` + (race_horses.`トップ3完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き3着内完走率`,
 
     -- Competitors before race
     competitors.`事前_競争相手最高ＩＤＭ` as `num_事前_競争相手最高ＩＤＭ`,
@@ -1441,6 +1509,26 @@ with
     competitors.`実績_競争相手上がり指数標準偏差` as `num_実績_競争相手上がり指数標準偏差`,
 
     -- Competitors common
+    competitors.`競争相手最高1着馬体重変動率` as `num_競争相手最高1着馬体重変動率`,
+    competitors.`競争相手最低1着馬体重変動率` as `num_競争相手最低1着馬体重変動率`,
+    competitors.`競争相手平均1着馬体重変動率` as `num_競争相手平均1着馬体重変動率`,
+    competitors.`競争相手1着馬体重変動率標準偏差` as `num_競争相手1着馬体重変動率標準偏差`,
+    competitors.`競争相手最高3着内馬体重変動率` as `num_競争相手最高3着内馬体重変動率`,
+    competitors.`競争相手最低3着内馬体重変動率` as `num_競争相手最低3着内馬体重変動率`,
+    competitors.`競争相手平均3着内馬体重変動率` as `num_競争相手平均3着内馬体重変動率`,
+    competitors.`競争相手3着内馬体重変動率標準偏差` as `num_競争相手3着内馬体重変動率標準偏差`,
+    competitors.`競争相手最高馬体重変動率` as `num_競争相手最高馬体重変動率`,
+    competitors.`競争相手最低馬体重変動率` as `num_競争相手最低馬体重変動率`,
+    competitors.`競争相手平均馬体重変動率` as `num_競争相手平均馬体重変動率`,
+    competitors.`競争相手馬体重変動率標準偏差` as `num_競争相手馬体重変動率標準偏差`,
+    competitors.`競争相手最高1着平均馬体重差` as `num_競争相手最高1着平均馬体重差`,
+    competitors.`競争相手最低1着平均馬体重差` as `num_競争相手最低1着平均馬体重差`,
+    competitors.`競争相手平均1着平均馬体重差` as `num_競争相手平均1着平均馬体重差`,
+    competitors.`競争相手1着平均馬体重差標準偏差` as `num_競争相手1着平均馬体重差標準偏差`,
+    competitors.`競争相手最高3着内平均馬体重差` as `num_競争相手最高3着内平均馬体重差`,
+    competitors.`競争相手最低3着内平均馬体重差` as `num_競争相手最低3着内平均馬体重差`,
+    competitors.`競争相手平均3着内平均馬体重差` as `num_競争相手平均3着内平均馬体重差`,
+    competitors.`競争相手3着内平均馬体重差標準偏差` as `num_競争相手3着内平均馬体重差標準偏差`,
     competitors.`競争相手最高負担重量` as `num_競争相手最高負担重量`,
     competitors.`競争相手最低負担重量` as `num_競争相手最低負担重量`,
     competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量`,
@@ -1581,6 +1669,10 @@ with
     competitors.`競争相手平均万券指数` as `num_競争相手平均万券指数`,
     competitors.`競争相手万券指数標準偏差` as `num_競争相手万券指数標準偏差`,
     competitors.`競争相手前走トップ3割合` as `num_競争相手前走トップ3割合`,
+    competitors.`競争相手最高休養日数` as `num_競争相手最高休養日数`,
+    competitors.`競争相手最低休養日数` as `num_競争相手最低休養日数`,
+    competitors.`競争相手平均休養日数` as `num_競争相手平均休養日数`,
+    competitors.`競争相手休養日数標準偏差` as `num_競争相手休養日数標準偏差`,
     competitors.`競争相手最高入厩何日前` as `num_競争相手最高入厩何日前`,
     competitors.`競争相手最低入厩何日前` as `num_競争相手最低入厩何日前`,
     competitors.`競争相手平均入厩何日前` as `num_競争相手平均入厩何日前`,
@@ -1729,6 +1821,11 @@ with
     race_horses.`実績_上がり指数` - competitors.`実績_競争相手平均上がり指数` as `num_実績_競争相手平均上がり指数差`,
 
     -- Relative common
+    race_horses.`1着馬体重変動率` - competitors.`競争相手平均1着馬体重変動率` as `num_競争相手平均1着馬体重変動率差`,
+    race_horses.`3着内馬体重変動率` - competitors.`競争相手平均3着内馬体重変動率` as `num_競争相手平均3着内馬体重変動率差`,
+    race_horses.`馬体重変動率` - competitors.`競争相手平均馬体重変動率` as `num_競争相手平均馬体重変動率差`,
+    race_horses.`1着平均馬体重差` - competitors.`競争相手平均1着平均馬体重差` as `num_競争相手平均1着平均馬体重差差`,
+    race_horses.`3着内平均馬体重差` - competitors.`競争相手平均3着内平均馬体重差` as `num_競争相手平均3着内平均馬体重差差`,
     race_horses.`負担重量` - competitors.`競争相手平均負担重量` as `num_競争相手平均負担重量差`,
     race_horses.`馬体重` - competitors.`競争相手平均馬体重` as `num_競争相手平均馬体重差`,
     race_horses.`馬体重増減` - competitors.`競争相手平均馬体重増減` as `num_競争相手平均馬体重増減差`,
@@ -1763,6 +1860,7 @@ with
     race_horses.`展開参考データ_馬スタート指数` - competitors.`競争相手平均展開参考データ_馬スタート指数` as `num_競争相手平均展開参考データ_馬スタート指数差`,
     race_horses.`展開参考データ_馬出遅率` - competitors.`競争相手平均展開参考データ_馬出遅率` as `num_競争相手平均展開参考データ_馬出遅率差`,
     race_horses.`万券指数` - competitors.`競争相手平均万券指数` as `num_競争相手平均万券指数差`,
+    race_horses.`休養日数` - competitors.`競争相手平均休養日数` as `num_競争相手平均休養日数差`,
     race_horses.`入厩何日前` - competitors.`競争相手平均入厩何日前` as `num_競争相手平均入厩何日前差`,
     race_horses.`前走距離差` - competitors.`競争相手平均前走距離差` as `num_競争相手平均前走距離差差`,
     race_horses.`年齢` - competitors.`競争相手平均年齢` as `num_競争相手平均年齢差`,
