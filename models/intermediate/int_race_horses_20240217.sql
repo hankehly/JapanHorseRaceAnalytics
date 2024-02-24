@@ -227,6 +227,11 @@ with
       rows between unbounded preceding and 1 preceding
     ), 0) > 0 `ダート消耗戦好走馬`,
     bac.`レース条件_距離` as `距離`,
+    case
+      when bac.`レース条件_距離` <= 1400 then 'short'
+      when bac.`レース条件_距離` <= 1800 then 'mid'
+      else 'long'
+    end as `距離区分`,
     sed.`本賞金`,
     coalesce(
       tyb.`馬場状態コード`,
@@ -604,6 +609,8 @@ with
 
     -- distance
     `距離`,
+    -- distance category
+    `距離区分`,
 
     -- diff_distance from previous race
     coalesce(`距離` - lag(`距離`) over (partition by base.`血統登録番号` order by `発走日時`), 0) as `前走距離差`,
@@ -748,27 +755,27 @@ with
     }}, 0) as `馬場状態トップ3完走率`,
 
     -- horse_distance_runs
-    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as integer), 0) as `距離レース数`,
+    coalesce(cast(count(*) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時`) - 1 as integer), 0) as `距離レース数`,
 
     -- horse_distance_wins
-    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離1位完走`,
+    coalesce(cast(sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離1位完走`,
 
     -- horse_distance_places
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離トップ3完走`,
+    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `距離トップ3完走`,
 
     -- ratio_win_horse_distance
     coalesce({{
       dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as double)'
+        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `距離1位完走率`,
 
     -- ratio_place_horse_distance
     coalesce({{ 
       dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号`, `距離` order by `発走日時`) - 1 as double)'
+        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時` rows between unbounded preceding and 1 preceding)',
+        'cast(count(*) over (partition by base.`血統登録番号`, `距離区分` order by `発走日時`) - 1 as double)'
       )
     }}, 0) as `距離トップ3完走率`,
 
@@ -1200,8 +1207,8 @@ with
 
     -- a composite weighted winning percentage that also considered the recent number of wins.
     -- horse_win_percent_weighted
-    (race_horses.`1位完走` + (race_horses.`1位完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き1着完走率`,
-    (race_horses.`トップ3完走` + (race_horses.`トップ3完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `重み付き3着内完走率`,
+    (race_horses.`1位完走` + (race_horses.`1位完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `num_重み付き1着完走率`,
+    (race_horses.`トップ3完走` + (race_horses.`トップ3完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `num_重み付き3着内完走率`,
 
     -- Competitors
     {%- for feature_name in numeric_competitor_feature_names %}
