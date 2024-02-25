@@ -157,6 +157,10 @@ See `sed_bac_distance_diff.sql` analysis.
 
 The horse track condition is usually the same or 1 off between SED and KAB.
 
+*同着*
+
+同じレースで着順が同じの場合がある。
+
 
 ## Modeling methodology
 

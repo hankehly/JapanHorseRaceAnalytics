@@ -1740,11 +1740,6 @@ models:
         description: 1byte_length:分, 2-4byte_length:秒(0.1秒単位)
         tests:
           - not_null
-      - name: 走破タイム
-        quote: true
-        description: 馬成績_タイムを秒に変換したもの
-        tests:
-          - not_null
       - name: 馬成績_斤量
         quote: true
         description: 0.1Kg単位

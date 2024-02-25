@@ -26,6 +26,7 @@ japanize-matplotlib
 keras-tuner
 shap
 mlxtend
+imbalanced-learn
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

@@ -51,8 +51,12 @@
       "トップ3完走",
       "1位完走率",
       "トップ3完走率",
-      "過去5走勝率",
-      "過去5走トップ3完走率",
+      "過去5走1着率",
+      "過去5走3着内率",
+      "1走前1着タイム差",
+      "1走前3着内タイム差",
+      "重み付き1着率",
+      "重み付き3着内率",
       "場所レース数",
       "場所1位完走",
       "場所トップ3完走",
@@ -258,13 +262,40 @@ with
     row_number() over (partition by kyi.`血統登録番号` order by bac.`発走日時`) - 1 as `レース数`,
     coalesce(
       cast(
-        sum(
-          case
-            when sed.`馬成績_着順` = 1 then 1
-            else 0
-          end
-        ) over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding) as integer
-      ), 0) as `1位完走`,
+        sum(case when sed.`馬成績_着順` = 1 then 1 else 0 end)
+        over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between unbounded preceding and 1 preceding)
+        as integer
+      ),
+    0) as `1位完走`,
+    coalesce(
+      cast(
+        sum(case when sed.`馬成績_着順` <= 3 then 1 else 0 end)
+        over (partition by kyi.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)
+        as integer
+      ),
+    0) as `トップ3完走`,
+
+    -- Calculate Recent Winning Performance
+    -- Recent Winning Percentage (RWP) = Recent Wins / Recent Races
+    coalesce(
+      cast(
+        sum(case when sed.`馬成績_着順` = 1 then 1 else 0 end)
+        over (partition by kyi.`血統登録番号` order by bac.`発走日時` rows between 5 preceding and 1 preceding)
+        as integer
+      ),
+    0) / 5.0 as `過去5走1着率`,
+
+    -- Calculate Recent Top 3 Performance
+    -- Recent Top 3 Percentage (RTP) = Recent Top 3 / Recent
+    coalesce(
+      cast(
+        sum(case when sed.`馬成績_着順` <= 3 then 1 else 0 end)
+        over (partition by kyi.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)
+        as integer
+      ),
+    0) / 5.0 as `過去5走3着内率`,
+
+    sed.`馬成績_タイム` as `タイム`,
     case when sed.`馬成績_着順` = 1 then 1 else 0 end as `単勝的中`,
     case when sed.`馬成績_着順` <= 3 then 1 else 0 end as `複勝的中`,
     coalesce(tyb.`騎手指数`, kyi.`騎手指数`) as `騎手指数`,
@@ -434,6 +465,30 @@ with
     )
   ),
 
+  -- 同着があるためgroup byする
+  race_1st_placers as (
+  select
+    `レースキー`,
+    min(`タイム`) as `タイム`
+  from
+    race_horses_base
+  where
+    `着順` = 1
+  group by
+    `レースキー`
+  ),
+  race_3rd_placers as (
+  select
+    `レースキー`,
+    min(`タイム`) as `タイム`
+  from
+    race_horses_base
+  where
+    `着順` = 3
+  group by
+    `レースキー`
+  ),
+
   -- 参考:
   -- https://github.com/codeworks-data/mvp-horse-racing-prediction/blob/master/extract_features.py#L73
   -- https://medium.com/codeworksparis/horse-racing-prediction-a-machine-learning-approach-part-2-e9f5eb9a92e9
@@ -448,6 +503,7 @@ with
     base.`着順` as `実績着順`,
     base.`本賞金` as `実績本賞金`,
     base.`異常区分`,
+    base.`タイム` as `実績タイム`,
 
     -- General before race
     base.`事前ＩＤＭ`,
@@ -624,60 +680,39 @@ with
     -- age(`発走日時`, `生年月日`) < '5 years' as `4歳以下`,
     (months_between(`発走日時`, `生年月日`) / 12) < 5 as `4歳以下`,
 
-    cast(sum(
-      case
-        when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
-        else 0
-      end
-    ) over (partition by base.`レースキー`) as integer) as `4歳以下頭数`,
+    cast(
+      sum(case when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1 else 0 end)
+      over (partition by base.`レースキー`)
+      as integer
+    ) as `4歳以下頭数`,
 
     coalesce(
-      sum(
-        case
-          when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1
-          else 0
-        end
-      ) over (partition by base.`レースキー`) / cast(`頭数` as double), 0) as `4歳以下割合`,
+      sum(case when (months_between(`発走日時`, `生年月日`) / 12) < 5 then 1 else 0 end)
+      over (partition by base.`レースキー`)
+      / cast(`頭数` as double),
+    0) as `4歳以下割合`,
 
     `レース数`, -- horse_runs
     `1位完走`, -- horse_wins
+    `トップ3完走`, -- horse_placed
+    `過去5走1着率`,
+    `過去5走3着内率`,
 
-    -- how many races this horse has placed in until now (incremented by one on the following race)
-    -- horse_placed
-    coalesce(cast(sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding) as integer), 0) as `トップ3完走`,
+    lag(race_1st_placers.`タイム` - base.`タイム`) over (partition by base.`血統登録番号` order by `発走日時`) as `1走前1着タイム差`,
+    lag(race_3rd_placers.`タイム` - base.`タイム`) over (partition by base.`血統登録番号` order by `発走日時`) as `1走前3着内タイム差`,
+
+    -- Compute the Composite Weighted Winning Percentage
+    -- CWWP=(W_WP×WP)+(W_RWP​×RWP)
+    -- where W_WP and W_RWP are the weights for the winning percentage and recent winning percentage, respectively.
+    -- W_WP=0.4 and W_RWP=0.6
+    0.4 * coalesce({{ dbt_utils.safe_divide('`1位完走`', '`レース数`') }}, 0) + 0.6 * `過去5走1着率` as `重み付き1着率`,
+    0.4 * coalesce({{ dbt_utils.safe_divide('`トップ3完走`', '`レース数`') }}, 0) + 0.6 * `過去5走3着内率` as `重み付き3着内率`,
 
     -- ratio_win_horse
-    coalesce({{
-      dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as double)'
-      )
-    }}, 0) as `1位完走率`,
+    coalesce({{ dbt_utils.safe_divide('`1位完走`', '`レース数`') }}, 0) as `1位完走率`,
 
     -- ratio_place_horse
-    coalesce({{ 
-      dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between unbounded preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時`) - 1 as double)'
-      )
-    }}, 0) as `トップ3完走率`,
-
-    -- Horse Win Percent: Horse’s win percent over the past 5 races.
-    -- horse_win_percent_past_5_races
-    coalesce({{
-      dbt_utils.safe_divide(
-        'sum(case when `着順` = 1 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
-      )
-    }}, 0) as `過去5走勝率`,
-
-    -- horse_place_percent_past_5_races
-    coalesce({{
-      dbt_utils.safe_divide(
-        'sum(case when `着順` <= 3 then 1 else 0 end) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding)',
-        'cast(count(*) over (partition by base.`血統登録番号` order by `発走日時` rows between 5 preceding and 1 preceding) - 1 as double)'
-      )
-    }}, 0) as `過去5走トップ3完走率`,
+    coalesce({{ dbt_utils.safe_divide('`トップ3完走`', '`レース数`') }}, 0) as `トップ3完走率`,
 
     -- horse_venue_runs
     coalesce(cast(count(*) over (partition by base.`血統登録番号`, `場コード` order by `発走日時`) - 1 as integer), 0) as `場所レース数`,
@@ -956,11 +991,19 @@ with
 
   from
     race_horses_base base
-  inner join
+  left join
     race_horses_streaks
   on
     race_horses_streaks.`レースキー` = base.`レースキー`
     and race_horses_streaks.`馬番` = base.`馬番`
+  left join
+    race_1st_placers
+  on
+    race_1st_placers.`レースキー` = base.`レースキー`
+  left join
+    race_3rd_placers
+  on
+    race_3rd_placers.`レースキー` = base.`レースキー`
   ),
 
   competitors as (
@@ -1145,8 +1188,12 @@ with
     race_horses.`トップ3完走` as `num_トップ3完走`, -- horse_places
     race_horses.`1位完走率` as `num_1位完走率`,
     race_horses.`トップ3完走率` as `num_トップ3完走率`,
-    race_horses.`過去5走勝率` as `num_過去5走勝率`,
-    race_horses.`過去5走トップ3完走率` as `num_過去5走トップ3完走率`,
+    race_horses.`過去5走1着率` as `num_過去5走1着率`,
+    race_horses.`過去5走3着内率` as `num_過去5走3着内率`,
+    race_horses.`1走前1着タイム差` as `num_1走前1着タイム差`,
+    race_horses.`1走前3着内タイム差` as `num_1走前3着内タイム差`,
+    race_horses.`重み付き1着率` as `num_重み付き1着率`,
+    race_horses.`重み付き3着内率` as `num_重み付き3着内率`,
     race_horses.`場所レース数` as `num_場所レース数`, -- horse_venue_runs
     race_horses.`場所1位完走` as `num_場所1位完走`, -- horse_venue_wins
     race_horses.`場所トップ3完走` as `num_場所トップ3完走`, -- horse_venue_places
@@ -1204,11 +1251,6 @@ with
     race_horses.`1着上がり指数変動率` as `num_1着上がり指数変動率`,
     race_horses.`3着内上がり指数変動率` as `num_3着内上がり指数変動率`,
     race_horses.`上がり指数変動率` as `num_上がり指数変動率`,
-
-    -- a composite weighted winning percentage that also considered the recent number of wins.
-    -- horse_win_percent_weighted
-    (race_horses.`1位完走` + (race_horses.`1位完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `num_重み付き1着完走率`,
-    (race_horses.`トップ3完走` + (race_horses.`トップ3完走` * 0.5)) / (race_horses.`レース数` + (race_horses.`レース数` * 0.5)) as `num_重み付き3着内完走率`,
 
     -- Competitors
     {%- for feature_name in numeric_competitor_feature_names %}

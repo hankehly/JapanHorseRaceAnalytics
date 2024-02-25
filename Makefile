@@ -8,8 +8,8 @@ start_mlflow_server:
 start_hive_server:
 	source .venv/bin/activate && spark-submit \
 		--master 'local[*]' \
-		--executor-memory 6g \
-		--driver-memory 6g \
+		--executor-memory 7g \
+		--driver-memory 7g \
 		--conf "spark.dynamicAllocation.enabled=true" \
 		--conf "spark.dynamicAllocation.initialExecutors=2" \
 		--conf "spark.dynamicAllocation.minExecutors=1" \
