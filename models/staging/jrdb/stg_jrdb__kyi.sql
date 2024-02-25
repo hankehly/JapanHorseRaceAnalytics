@@ -95,7 +95,7 @@ with
     nullif(`他データリンク用キー_前走３レースキー`, '') as `他データリンク用キー_前走３レースキー`,
     nullif(`他データリンク用キー_前走４レースキー`, '') as `他データリンク用キー_前走４レースキー`,
     nullif(`他データリンク用キー_前走５レースキー`, '') as `他データリンク用キー_前走５レースキー`,
-    nullif(`枠番`, '') as `枠番`,
+    cast(nullif(`枠番`, '') as integer) as `枠番`,
     -- The code 7 is included in the data pretty frequently, but not in the schema.
     -- Adding 7 to schema as `undefined_value` rather than throwing away the information.
     nullif(`印コード_総合印`, '') as `印コード_総合印`,
