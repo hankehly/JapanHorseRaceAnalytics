@@ -23,25 +23,39 @@ with
         else kab.`芝馬場状態コード`
       end
     ) as `事前_馬場状態コード`,
-
     sed.`レース条件_馬場状態` as `実績_馬場状態コード`,
 
-    bac.`レース条件_トラック情報_右左` as `事前_レース条件_トラック情報_右左`,
-    bac.`レース条件_トラック情報_内外` as `事前_レース条件_トラック情報_内外`,
-    bac.`レース条件_種別` as `事前_レース条件_種別`,
-    bac.`レース条件_条件` as `事前_レース条件_条件`,
-    bac.`レース条件_記号` as `事前_レース条件_記号`,
-    bac.`レース条件_重量` as `事前_レース条件_重量`,
-    bac.`レース条件_グレード` as `事前_レース条件_グレード`,
+    -- Only 26 records where sed/bac diff exists from 1999 to 2011
+    case
+      when year(bac.`発走日時`) >= 2012 then sed.`レース条件_記号`
+      else sed.`レース条件_記号`
+    end `レース条件_記号`,
 
-    sed.`レース条件_トラック情報_右左` as `実績_レース条件_トラック情報_右左`,
-    sed.`レース条件_トラック情報_内外` as `実績_レース条件_トラック情報_内外`,
-    sed.`レース条件_種別` as `実績_レース条件_種別`,
-    sed.`レース条件_条件` as `実績_レース条件_条件`,
-    sed.`レース条件_記号` as `実績_レース条件_記号`,
-    sed.`レース条件_重量` as `実績_レース条件_重量`,
-    sed.`レース条件_グレード` as `実績_レース条件_グレード`,
+    -- Always the same between sed/bac
+    bac.`レース条件_条件`,
 
+    -- Only 2 records where sed/bac diff exists (one in 2001 and another in 2009)
+    case
+      when year(bac.`発走日時`) >= 2010 then bac.`レース条件_重量`
+      else sed.`レース条件_重量`
+    end `レース条件_重量`,
+
+    -- Always the same between sed/bac
+    bac.`レース条件_トラック情報_内外`,
+
+    -- Only 2 records where sed/bac diff exists and none after 2001
+    case
+      when year(bac.`発走日時`) >= 2002 then bac.`レース条件_トラック情報_右左`
+      else sed.`レース条件_トラック情報_右左`
+    end `レース条件_トラック情報_右左`,
+
+    -- Only 26 records where sed/bac diff exists and none after 2011
+    case
+      when year(bac.`発走日時`) >= 2012 then bac.`レース条件_種別`
+      else sed.`レース条件_種別`
+    end `レース条件_種別`,
+
+    bac.`レース条件_グレード` as `レース条件_グレード`,
     bac.`頭数`,
     bac.`レース条件_トラック情報_芝ダ障害コード` as `トラック種別`,
 
@@ -111,7 +125,7 @@ with
     and bac.`年月日` = kab.`年月日`
   ),
 
-  -- There are 3 or so cases where the track condition is different by 1
+  -- There are about 3 cases where the track condition is different by 1
   -- between horses, which doesn't make sense. We'll just take the average.
   base_going_actual as (
   select
@@ -136,27 +150,20 @@ with
 
     -- Known before race
     base.`事前_馬場状態コード` as `cat_事前_馬場状態コード`,
-    base.`事前_レース条件_トラック情報_右左` as `cat_事前_レース条件_トラック情報_右左`,
-    base.`事前_レース条件_トラック情報_内外` as `cat_事前_レース条件_トラック情報_内外`,
-    base.`事前_レース条件_種別` as `cat_事前_レース条件_種別`,
-    base.`事前_レース条件_条件` as `cat_事前_レース条件_条件`,
-    base.`事前_レース条件_記号` as `cat_事前_レース条件_記号`,
-    base.`事前_レース条件_重量` as `cat_事前_レース条件_重量`,
-    base.`事前_レース条件_グレード` as `cat_事前_レース条件_グレード`,
     base.`事前_馬場差` as `num_事前_馬場差`,
 
     -- Known after race
-    -- base.`実績_馬場状態コード` as `cat_実績_馬場状態コード`,
-    -- base.`実績_レース条件_トラック情報_右左` as `cat_実績_レース条件_トラック情報_右左`,
-    -- base.`実績_レース条件_トラック情報_内外` as `cat_実績_レース条件_トラック情報_内外`,
-    -- base.`実績_レース条件_種別` as `cat_実績_レース条件_種別`,
-    -- base.`実績_レース条件_条件` as `cat_実績_レース条件_条件`,
-    -- base.`実績_レース条件_記号` as `cat_実績_レース条件_記号`,
-    -- base.`実績_レース条件_重量` as `cat_実績_レース条件_重量`,
-    -- base.`実績_レース条件_グレード` as `cat_実績_レース条件_グレード`,
-    -- base_going_actual.`実績_馬場差` as `num_実績_馬場差`,
+    base.`実績_馬場状態コード` as `cat_実績_馬場状態コード`,
+    base_going_actual.`実績_馬場差` as `num_実績_馬場差`,
 
     -- Common
+    base.`レース条件_記号` as `cat_レース条件_記号`,
+    base.`レース条件_条件` as `cat_レース条件_条件`,
+    base.`レース条件_重量` as `cat_レース条件_重量`,
+    base.`レース条件_トラック情報_内外` as `cat_レース条件_トラック情報_内外`,
+    base.`レース条件_トラック情報_右左` as `cat_レース条件_トラック情報_右左`,
+    base.`レース条件_種別` as `cat_レース条件_種別`,
+    base.`レース条件_グレード` as `cat_レース条件_グレード`, -- sed/bac always the same
     base.`頭数` as `num_頭数`, -- only 4 records where before/actual diff exists (and only by 1)
     base.`トラック種別` as `cat_トラック種別`,
     base.`馬場状態内` as `cat_馬場状態内`,
