@@ -175,7 +175,7 @@ with
     base.`直線馬場差外` as `num_直線馬場差外`,
     base.`直線馬場差大外` as `num_直線馬場差大外`,
     base.`芝種類` as `cat_芝種類`,
-    base.`草丈` as `cat_草丈`,
+    base.`草丈` as `num_草丈`,
     base.`転圧` as `cat_転圧`,
     base.`凍結防止剤` as `cat_凍結防止剤`,
     base.`中間降水量` as `num_中間降水量`
