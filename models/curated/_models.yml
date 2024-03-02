@@ -36,7 +36,7 @@ models:
 
   - name: features_20240202_v1
     config:
-      enabled: true
+      enabled: false
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:

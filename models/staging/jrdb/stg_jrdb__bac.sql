@@ -57,13 +57,11 @@ with
     nullif(`レースキー_Ｒ`, '') as `レースキー_Ｒ`,
     to_date(nullif(`年月日`, ''), 'yyyyMMdd') as `年月日`,
     concat(substr(`発走時間`, 1, 2), ':', substr(`発走時間`, -2)) as `発走時間`,
-    to_timestamp(
-      concat(
-        to_date(nullif(`年月日`, ''), 'yyyyMMdd'),
-        ' ',
-        concat(substr(`発走時間`, 1, 2), ':', substr(`発走時間`, -2))
-      ),
-      'yyyy-MM-dd HH:mm'
+    concat(
+      to_date(nullif(`年月日`, ''), 'yyyyMMdd'),
+      ' ',
+      concat(substr(`発走時間`, 1, 2), ':', substr(`発走時間`, -2)),
+      ':00+09:00'
     ) as `発走日時`,
     cast(nullif(`レース条件_距離`, '') as integer) as `レース条件_距離`,
     case

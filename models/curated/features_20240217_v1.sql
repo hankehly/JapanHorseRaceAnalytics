@@ -61,7 +61,7 @@ with
     kyi.`レースキー` = races.`meta_int_races_レースキー`
 
   inner join
-    {{ ref('int_race_horses_20240217') }} race_horses
+    {{ ref('int_race_horses') }} race_horses
   on
     kyi.`レースキー` = race_horses.`meta_int_race_horses_レースキー`
     and kyi.`馬番` = race_horses.`meta_int_race_horses_馬番`

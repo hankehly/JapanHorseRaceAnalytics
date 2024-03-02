@@ -41,3 +41,19 @@ def read_hive_table(
     spark_df.write.mode("overwrite").parquet(str(save_path))
     logger.info(f"Read from parquet {save_path} to pandas")
     return pd.read_parquet(save_path)
+
+
+def get_spark_session() -> SparkSession:
+    warehouse_dir = f"{get_base_dir()}/spark-warehouse"
+    postgres_driver_path = f"{get_base_dir()}/jars/postgresql-42.7.1.jar"
+    result = (
+        SparkSession.builder.appName("JapanHorseRaceAnalytics")
+        .config("spark.driver.memory", "20g")
+        .config("spark.sql.warehouse.dir", warehouse_dir)
+        .config("spark.jars", postgres_driver_path)
+        .config("spark.executor.extraClassPath", postgres_driver_path)
+        .config("spark.driver.extraClassPath", postgres_driver_path)
+        .enableHiveSupport()
+        .getOrCreate()
+    )
+    return result

@@ -14,7 +14,8 @@ start_hive_server:
 		--conf "spark.dynamicAllocation.initialExecutors=2" \
 		--conf "spark.dynamicAllocation.minExecutors=1" \
 		--conf "spark.dynamicAllocation.maxExecutors=3" \
-		--conf 'spark.executor.extraJavaOptions=-Duser.timezone=Etc/UTC' \
+		--conf 'spark.executor.extraJavaOptions=-Duser.timezone=UTC' \
+		--conf 'spark.driver.extraJavaOptions=-Duser.timezone=UTC' \
 		--conf 'spark.eventLog.enabled=false' \
 		--conf 'spark.sql.warehouse.dir=/Users/hankehly/Projects/JapanHorseRaceAnalytics/spark-warehouse' \
 		--conf "spark.executor.extraClassPath=/Users/hankehly/Projects/JapanHorseRaceAnalytics/jars/postgresql-42.7.1.jar" \
