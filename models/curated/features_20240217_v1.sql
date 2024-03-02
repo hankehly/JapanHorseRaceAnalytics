@@ -5,6 +5,7 @@ with
     kyi.`レースキー` as `meta_レースキー`,
     kyi.`馬番` as `meta_馬番`,
     sed.`馬成績_着順` as `meta_着順`,
+    races.`meta_int_races_発走日時` as `meta_発走日時`,
     sed.`本賞金` as `meta_本賞金`,
     case
       when sed.`馬成績_着順` = 1 then TRUE

@@ -143,8 +143,8 @@ with
   final as (
   select distinct
     base.`レースキー` as `meta_int_races_レースキー`,
-    base.`発走日時` as `meta_発走日時`,
-    base.`場コード` as `meta_場コード`,
+    base.`発走日時` as `meta_int_races_発走日時`,
+    base.`場コード` as `meta_int_races_場コード`,
     base.`四半期` as `cat_四半期`,
     base.`距離` as `cat_距離`,
 

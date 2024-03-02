@@ -318,7 +318,7 @@ with
     -- Metadata fields (not used for prediction)
     race_jockeys.`レースキー` as `meta_int_race_jockeys_レースキー`,
     race_jockeys.`馬番` as `meta_int_race_jockeys_馬番`,
-    race_jockeys.`騎手コード` as `meta_騎手コード`,
+    race_jockeys.`騎手コード` as `meta_int_race_jockeys_騎手コード`,
 
     -- Base features
     race_jockeys.`騎手レース数` as `num_騎手レース数`, -- jockey_runs

@@ -27,6 +27,7 @@ keras-tuner
 shap
 mlxtend
 imbalanced-learn
+bokeh
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

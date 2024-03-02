@@ -235,7 +235,7 @@ with
     -- Metadata fields (not used for prediction)
     race_trainers.`レースキー` as `meta_int_race_trainers_レースキー`,
     race_trainers.`馬番` as `meta_int_race_trainers_馬番`,
-    race_trainers.`調教師コード` as `meta_調教師コード`,
+    race_trainers.`調教師コード` as `meta_int_race_trainers_調教師コード`,
 
     -- Base features
     race_trainers.`調教師レース数` as `num_調教師レース数`,
