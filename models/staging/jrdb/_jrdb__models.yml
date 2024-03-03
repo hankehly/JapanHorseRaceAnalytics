@@ -54,6 +54,7 @@ models:
         quote: true
         tests:
           - not_null
+          - is_timestamp_with_timezone
       - name: レース条件_距離
         quote: true
         tests:

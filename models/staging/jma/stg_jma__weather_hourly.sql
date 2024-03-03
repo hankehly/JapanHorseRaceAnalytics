@@ -9,9 +9,9 @@ with
   final as (
   select
     weather_hourly_sk,
-    to_timestamp(`download_timestamp`, 'yyyy-MM-dd HH:mm:ssXXX') AS `download_timestamp`,
+    nullif(`download_timestamp`, '') as `download_timestamp`,
     nullif(`station_name`, '') as `station_name`,
-    to_timestamp(`年月日時`, 'yyyy-MM-dd HH:mm:ss') at time zone `年月日時`,
+    nullif(`年月日時`, '') || '+09:00' as `年月日時`,
     cast(nullif(`気温`, '') as double) as `気温`,
     nullif(`気温_品質情報`, '') as `気温_品質情報`,
     nullif(`気温_均質番号`, '') as `気温_均質番号`,

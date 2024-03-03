@@ -113,24 +113,17 @@ with
   on
     bac.`レースキー_場コード` = jrdb_racetrack_jma_station_mapping.jrdb_racetrack_code
 
-  left join 
+  left join
     weather_hourly w1
   on
-    w1.`年月日時` = to_timestamp(
-      bac.`年月日` || ' ' || LPAD(
-        cast(cast(extract(hour from bac.`発走日時`) as integer) as string), 2, '0'
-      ) || ':00:00', 'yyyy-MM-dd HH:mm:ss'
-    )
+    -- Extract hour from ISO8601 string using string manipulation to prevent timezone conversion issues
+    w1.`年月日時` = bac.`年月日` || ' ' || {{ extract_hour_from_iso8601_string('bac.`発走日時`') }} || ':00:00'
     and w1.station_name = jrdb_racetrack_jma_station_mapping.jma_station_name
 
-  left join 
+  left join
     weather_hourly w2
   on
-    w2.`年月日時` = to_timestamp(
-      bac.`年月日` || ' ' || LPAD(
-        cast(cast(extract(hour from bac.`発走日時`) as integer) + 1 as string), 2, '0'
-      ) || ':00:00', 'yyyy-MM-dd HH:mm:ss'
-    )
+    w2.`年月日時` = bac.`年月日` || ' ' || {{ extract_hour_from_iso8601_string('bac.`発走日時`') }} || ':00:00'
     and w2.station_name = jrdb_racetrack_jma_station_mapping.jma_station_name
   ),
 

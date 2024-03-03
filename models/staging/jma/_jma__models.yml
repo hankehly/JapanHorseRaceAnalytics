@@ -11,6 +11,7 @@ models:
         quote: true
         tests:
           - not_null
+          - is_timestamp_with_timezone
       - name: station_name
         quote: true
         tests:
@@ -19,6 +20,7 @@ models:
         quote: true
         tests:
           - not_null
+          - is_timestamp_with_timezone
       - name: 気温
         quote: true
         description: |
