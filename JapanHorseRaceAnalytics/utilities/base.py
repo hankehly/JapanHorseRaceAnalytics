@@ -29,7 +29,11 @@ def read_sql_table(table_name, schema, use_cache=True):
 
 
 def read_hive_table(
-    table_name: str, schema: str, spark_session: SparkSession, use_cache: bool = True
+    table_name: str,
+    schema: str,
+    spark_session: SparkSession,
+    use_cache: bool = True,
+    parse_dates: list = None,
 ):
     save_path = get_data_dir() / "sql_tables" / f"{table_name}.snappy.parquet"
     if use_cache and save_path.exists():
@@ -40,7 +44,11 @@ def read_hive_table(
     logger.info(f"Write to parquet {save_path}")
     spark_df.write.mode("overwrite").parquet(str(save_path))
     logger.info(f"Read from parquet {save_path} to pandas")
-    return pd.read_parquet(save_path)
+    data = pd.read_parquet(save_path)
+    if parse_dates:
+        for col in parse_dates:
+            data[col] = pd.to_datetime(data[col])
+    return data
 
 
 def get_spark_session() -> SparkSession:
