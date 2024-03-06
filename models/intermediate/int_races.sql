@@ -164,7 +164,6 @@ with
     base.`レース条件_トラック情報_右左` as `cat_レース条件_トラック情報_右左`,
     base.`レース条件_種別` as `cat_レース条件_種別`,
     base.`レース条件_グレード` as `cat_レース条件_グレード`, -- sed/bac always the same
-    base.`頭数` as `num_頭数`, -- only 4 records where before/actual diff exists (and only by 1)
     base.`トラック種別` as `cat_トラック種別`,
     base.`馬場状態内` as `cat_馬場状態内`,
     base.`馬場状態中` as `cat_馬場状態中`,

@@ -532,6 +532,10 @@ with
     base.`実績上がり指数`,
 
     -- General common
+    base.`頭数`,
+    lag(base.`頭数`, 1) over (partition by base.`血統登録番号` order by base.`発走日時`) as `1走前頭数`,
+    lag(base.`頭数`, 2) over (partition by base.`血統登録番号` order by base.`発走日時`) as `2走前頭数`,
+    lag(base.`頭数`, 3) over (partition by base.`血統登録番号` order by base.`発走日時`) as `3走前頭数`,
     base.`負担重量`,
     base.`馬体重`,
     -- The first race will always be 0
@@ -630,6 +634,9 @@ with
     base.`万券印`,
     base.`激走タイプ`,
     base.`休養理由分類コード`,
+    lag(base.`休養理由分類コード`, 1) over (partition by base.`血統登録番号` order by base.`発走日時`) as `1走前休養理由分類コード`,
+    lag(base.`休養理由分類コード`, 2) over (partition by base.`血統登録番号` order by base.`発走日時`) as `2走前休養理由分類コード`,
+    lag(base.`休養理由分類コード`, 3) over (partition by base.`血統登録番号` order by base.`発走日時`) as `3走前休養理由分類コード`,
     base.`芝ダ障害フラグ`,
     base.`距離フラグ`,
     base.`クラスフラグ`,
@@ -1062,7 +1069,7 @@ with
     -- race_horses.`実績ＩＤＭ` as `num_実績ＩＤＭ`,
     -- race_horses.`実績脚質` as `cat_実績脚質`,
     -- race_horses.`実績単勝オッズ` as `num_実績単勝オッズ`,
-    -- race_horses.`実績複勝オッズ` as `num_実績複勝オッズ`,
+    race_horses.`実績複勝オッズ` as `num_実績複勝オッズ`,
     -- race_horses.`実績馬体` as `cat_実績馬体`,
     -- race_horses.`実績気配コード` as `cat_実績気配コード`,
     -- race_horses.`実績上昇度` as `cat_実績上昇度`,
@@ -1163,6 +1170,9 @@ with
     race_horses.`万券印` as `cat_万券印`,
     race_horses.`激走タイプ` as `cat_激走タイプ`,
     race_horses.`休養理由分類コード` as `cat_休養理由分類コード`,
+    race_horses.`1走前休養理由分類コード` as `cat_1走前休養理由分類コード`,
+    race_horses.`2走前休養理由分類コード` as `cat_2走前休養理由分類コード`,
+    race_horses.`3走前休養理由分類コード` as `cat_3走前休養理由分類コード`,
     race_horses.`芝ダ障害フラグ` as `cat_芝ダ障害フラグ`,
     race_horses.`距離フラグ` as `cat_距離フラグ`,
     race_horses.`クラスフラグ` as `cat_クラスフラグ`,
@@ -1183,6 +1193,10 @@ with
     race_horses.`4歳以下` as `cat_4歳以下`,
     race_horses.`4歳以下頭数` as `num_4歳以下頭数`,
     race_horses.`4歳以下割合` as `num_4歳以下割合`,
+    race_horses.`頭数` as `num_頭数`, -- only 4 records where before/actual diff exists (and only by 1)
+    race_horses.`1走前頭数` as `num_1走前頭数`,
+    race_horses.`2走前頭数` as `num_2走前頭数`,
+    race_horses.`3走前頭数` as `num_3走前頭数`,
     race_horses.`レース数` as `num_レース数`, -- horse_runs
     race_horses.`1位完走` as `num_1位完走`, -- horse_wins
     race_horses.`トップ3完走` as `num_トップ3完走`, -- horse_places
