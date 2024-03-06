@@ -1,17 +1,17 @@
-import pandas as pd
-from sklearn.metrics import (
-    precision_score,
-    recall_score,
-    f1_score,
-    confusion_matrix,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_curve,
-    auc,
-)
+from typing import Any, List, Tuple
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+from sklearn.metrics import (
+    auc,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_curve,
+)
 
 
 def calculate_binary_classifier_statistics(
@@ -27,7 +27,7 @@ def calculate_binary_classifier_statistics(
     ----------
     df : pd.DataFrame
         A dataframe containing the predictions and actual values.
-        Expected columns: "actual", "pred", "pred_proba_true"
+        Expected columns: "actual", "proba_true"
     group_by : str, optional
         The name of a column to group by, by default None
     probability_threshold : float, optional
@@ -43,9 +43,6 @@ def calculate_binary_classifier_statistics(
     >>> calculate_binary_classifier_statistics(results, group_by="場所距離芝ダ")
     {'payout_rate': 0.0,
      'hit_rate': 0.0,
-     'precision': 0.0,
-     'recall': 0.0,
-     'f1_score': 0.0,
      'total_bets': 0,
      'total_hits': 0,
      'bet_rate': 0.0,
@@ -62,10 +59,8 @@ def calculate_binary_classifier_statistics(
         if len(group) == 0:
             print(f"Skipping {name} because it has no data")
             continue
-        bets = group[group["pred_proba_true"] >= probability_threshold]
-        hits = group[
-            (group["pred_proba_true"] >= probability_threshold) & group["actual"]
-        ]
+        bets = group[group["proba_true"] >= probability_threshold]
+        hits = group[(group["proba_true"] >= probability_threshold) & group["actual"]]
         total_hits = len(hits)
         total_payout_amount = hits[payout_column_name].sum() * (bet_amount / 100)
         total_bets = len(bets)
@@ -75,15 +70,9 @@ def calculate_binary_classifier_statistics(
         payout_rate = (
             total_payout_amount / total_bet_amount * 100 if total_bet_amount > 0 else 0
         )
-        precision = precision_score(group["actual"], group["pred"], zero_division=0)
-        recall = recall_score(group["actual"], group["pred"], zero_division=0)
-        f1 = f1_score(group["actual"], group["pred"], zero_division=0)
         results[name] = {
             "payout_rate": payout_rate,
             "hit_rate": hit_rate,
-            "precision": precision,
-            "recall": recall,
-            "f1_score": f1,
             "total_bets": total_bets,
             "total_hits": total_hits,
             "bet_rate": bet_rate,
@@ -135,3 +124,40 @@ def plot_binary_classifier_metrics(y_true, y_pred):
     ax2.legend(loc="lower right")
 
     plt.show()
+
+
+def calculate_payout_rate(
+    payouts,
+    y_test,
+    y_proba,
+    groupby: List[Tuple[str, Any]] = None,
+    payout_column_name: str = "payout",
+):
+    if groupby is None:
+        groupby = [("all", None)]
+    results = pd.concat(
+        [
+            payouts,
+            pd.DataFrame(
+                np.c_[y_test, y_proba[:, 1]], columns=["actual", "proba_true"]
+            ),
+        ],
+        axis=1,
+    )
+    dfs = []
+    for name, cond in groupby:
+        payout_rate = calculate_binary_classifier_statistics(
+            results, group_by=cond, payout_column_name=payout_column_name
+        )
+        payout_rate = pd.DataFrame(payout_rate).T.assign(group=name)
+        dfs.append(payout_rate)
+    payout = pd.concat(dfs, axis=0).rename_axis(index="part").reset_index()
+    # Move "group" and "part" columns to the first position in this dataframe
+    payout = payout[
+        ["group", "part"] + [c for c in payout.columns if c not in ["group", "part"]]
+    ]
+    return payout
+
+
+def kelly_criterion(b, p, q):
+    return (b * p - q) / b

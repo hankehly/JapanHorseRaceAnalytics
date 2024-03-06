@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from pyspark.sql import SparkSession
 from sqlalchemy import create_engine
@@ -65,3 +66,15 @@ def get_spark_session() -> SparkSession:
         .getOrCreate()
     )
     return result
+
+
+def get_random_sample(arr, sample_size=None):
+    if sample_size is None:
+        sample_size = len(arr)
+    if isinstance(arr, pd.DataFrame):
+        arr = arr.values
+    if len(arr) > sample_size:
+        sample_indices = np.random.choice(len(arr), size=sample_size, replace=False)
+    else:
+        sample_indices = np.arange(len(arr))
+    return arr[sample_indices], sample_indices
