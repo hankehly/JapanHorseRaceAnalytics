@@ -129,7 +129,7 @@ def plot_binary_classifier_metrics(y_true, y_pred):
 def calculate_payout_rate(
     payouts,
     y_test,
-    y_proba,
+    y_proba_true,
     groupby: List[Tuple[str, Any]] = None,
     payout_column_name: str = "payout",
 ):
@@ -139,7 +139,7 @@ def calculate_payout_rate(
         [
             payouts,
             pd.DataFrame(
-                np.c_[y_test, y_proba[:, 1]], columns=["actual", "proba_true"]
+                np.c_[y_test, y_proba_true], columns=["actual", "proba_true"]
             ),
         ],
         axis=1,

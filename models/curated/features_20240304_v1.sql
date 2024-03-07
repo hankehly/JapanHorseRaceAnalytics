@@ -21,19 +21,23 @@ with
     -- Horse features
     --
 
+    -- Keepers --
+    race_horses.`num_休養日数`,
+    -- 20240302_eda
+      ((race_horses.`num_一走前着順` - 1) / (race_horses.`num_1走前頭数` - 1) * 0.2927557)
+    + ((race_horses.`num_二走前不利` - 1) / (race_horses.`num_2走前頭数` - 1) * 0.1465141)
+    + ((race_horses.`num_三走前着順` - 1) / (race_horses.`num_3走前頭数` - 1) * 0.1004372) as `num_過去3走重み付き着順成績`,
+    race_horses.`num_トップ3完走率` as `num_複勝率`,
+    -------------
+
     race_horses.`num_一走前着順` as `num_1走前着順`,
     race_horses.`num_二走前着順` as `num_2走前着順`,
     race_horses.`num_三走前着順` as `num_3走前着順`,
-    race_horses.`num_トップ3完走率` as `num_複勝率`,
     race_horses.`num_入厩何日前`,
 
     -- 20240302_eda
     1 / coalesce(race_horses.`num_入厩何日前`, 1) as `num_入厩何日前逆数`,
 
-    -- 20240302_eda
-      ((race_horses.`num_一走前着順` - 1) / (race_horses.`num_1走前頭数` - 1) * 0.2927557)
-    + ((race_horses.`num_二走前不利` - 1) / (race_horses.`num_2走前頭数` - 1) * 0.1465141)
-    + ((race_horses.`num_三走前着順` - 1) / (race_horses.`num_3走前頭数` - 1) * 0.1004372) as `num_過去3走重み付き着順成績`,
 
     -- 20240302_eda
     race_horses.`num_レース数` >= 5 and race_horses.`num_トップ3完走率` >= 0.8 as `cat_堅実な馬`,
