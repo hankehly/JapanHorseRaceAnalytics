@@ -33,9 +33,20 @@ with
     race_horses.`num_一走前着順` as `num_1走前着順`,
     race_horses.`num_二走前着順` as `num_2走前着順`,
     race_horses.`num_三走前着順` as `num_3走前着順`,
-    race_horses.`num_入厩何日前`,
+    race_horses.`num_四走前着順` as `num_4走前着順`,
+    race_horses.`num_五走前着順` as `num_5走前着順`,
+    race_horses.`num_1走前経過日数`,
+    race_horses.`num_2走前経過日数`,
+    race_horses.`num_3走前経過日数`,
+    race_horses.`num_4走前経過日数`,
+    race_horses.`num_5走前経過日数`,
+    race_horses.`num_頭数`,
+    race_horses.`num_1走前頭数`,
+    race_horses.`num_2走前頭数`,
+    race_horses.`num_3走前頭数`,
 
     -- 20240302_eda
+    race_horses.`num_入厩何日前`,
     1 / coalesce(race_horses.`num_入厩何日前`, 1) as `num_入厩何日前逆数`,
 
 

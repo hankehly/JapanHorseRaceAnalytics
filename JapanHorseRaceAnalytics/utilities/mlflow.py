@@ -56,7 +56,7 @@ def no_progress_loss(iteration_stop_count=10, absolute_increase=0.0):
         else:
             iteration_no_progress += 1
             logger.info(
-                f"No progress made: {iteration_no_progress} iteration on {iteration_stop_count}. best_loss={best_loss:.2f}, best_loss_threshold={best_loss_threshold:.2f}, new_loss={new_loss:.2f}"
+                f"No progress made: {iteration_no_progress} iteration on {iteration_stop_count}. best_loss={best_loss:.5f}, best_loss_threshold={best_loss_threshold:.5f}, new_loss={new_loss:.5f}"
             )
 
         return (

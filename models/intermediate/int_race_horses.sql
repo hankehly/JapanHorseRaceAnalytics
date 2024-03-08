@@ -536,6 +536,8 @@ with
     lag(base.`頭数`, 1) over (partition by base.`血統登録番号` order by base.`発走日時`) as `1走前頭数`,
     lag(base.`頭数`, 2) over (partition by base.`血統登録番号` order by base.`発走日時`) as `2走前頭数`,
     lag(base.`頭数`, 3) over (partition by base.`血統登録番号` order by base.`発走日時`) as `3走前頭数`,
+    lag(base.`頭数`, 4) over (partition by base.`血統登録番号` order by base.`発走日時`) as `4走前頭数`,
+    lag(base.`頭数`, 5) over (partition by base.`血統登録番号` order by base.`発走日時`) as `5走前頭数`,
     base.`負担重量`,
     base.`馬体重`,
     -- The first race will always be 0
@@ -660,6 +662,12 @@ with
 
     -- days_since_last_race
     date_diff(`発走日時`, lag(`発走日時`) over (partition by base.`血統登録番号` order by `発走日時`)) as `休養日数`,
+
+    date_diff(`発走日時`, lag(`発走日時`, 1) over (partition by base.`血統登録番号` order by `発走日時`)) as `1走前経過日数`,
+    date_diff(`発走日時`, lag(`発走日時`, 2) over (partition by base.`血統登録番号` order by `発走日時`)) as `2走前経過日数`,
+    date_diff(`発走日時`, lag(`発走日時`, 3) over (partition by base.`血統登録番号` order by `発走日時`)) as `3走前経過日数`,
+    date_diff(`発走日時`, lag(`発走日時`, 4) over (partition by base.`血統登録番号` order by `発走日時`)) as `4走前経過日数`,
+    date_diff(`発走日時`, lag(`発走日時`, 5) over (partition by base.`血統登録番号` order by `発走日時`)) as `5走前経過日数`,
 
     -- horse_rest_time
     date_diff(`発走日時`, `入厩年月日`) as `入厩何日前`,
@@ -1185,6 +1193,11 @@ with
     race_horses.`枠番` as `cat_枠番`,
     race_horses.`前走枠番` as `cat_前走枠番`,
     race_horses.`休養日数` as `num_休養日数`,
+    race_horses.`1走前経過日数` as `num_1走前経過日数`,
+    race_horses.`2走前経過日数` as `num_2走前経過日数`,
+    race_horses.`3走前経過日数` as `num_3走前経過日数`,
+    race_horses.`4走前経過日数` as `num_4走前経過日数`,
+    race_horses.`5走前経過日数` as `num_5走前経過日数`,
     race_horses.`入厩何日前` as `num_入厩何日前`, -- horse_rest_time
     race_horses.`入厩15日未満` as `cat_入厩15日未満`, -- horse_rest_lest14
     race_horses.`入厩35日以上` as `cat_入厩35日以上`, -- horse_rest_over35
@@ -1197,6 +1210,8 @@ with
     race_horses.`1走前頭数` as `num_1走前頭数`,
     race_horses.`2走前頭数` as `num_2走前頭数`,
     race_horses.`3走前頭数` as `num_3走前頭数`,
+    race_horses.`4走前頭数` as `num_4走前頭数`,
+    race_horses.`5走前頭数` as `num_5走前頭数`,
     race_horses.`レース数` as `num_レース数`, -- horse_runs
     race_horses.`1位完走` as `num_1位完走`, -- horse_wins
     race_horses.`トップ3完走` as `num_トップ3完走`, -- horse_places
