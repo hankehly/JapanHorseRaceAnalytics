@@ -160,6 +160,23 @@ models:
         tests:
           - not_null
 
+  - name: int_race_horses_v2
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - meta_レースキー
+            - meta_馬番
+          quote_columns: true
+    columns:
+      - name: meta_レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: meta_馬番
+        quote: true
+        tests:
+          - not_null
+
   - name: int_race_weather
     columns:
       - name: meta_int_race_weather_レースキー

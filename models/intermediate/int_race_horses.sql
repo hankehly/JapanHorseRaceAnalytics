@@ -296,6 +296,18 @@ with
     0) / 5.0 as `過去5走3着内率`,
 
     sed.`馬成績_タイム` as `タイム`,
+
+    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, 1) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬1タイム差`,
+    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, 2) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬2タイム差`,
+    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, 3) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬3タイム差`,
+    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, 4) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬4タイム差`,
+    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, 5) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬5タイム差`,
+    sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, 1) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬1タイム差`,
+    sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, 2) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬2タイム差`,
+    sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, 3) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬3タイム差`,
+    sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, 4) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬4タイム差`,
+    sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, 5) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬5タイム差`,
+
     case when sed.`馬成績_着順` = 1 then 1 else 0 end as `単勝的中`,
     case when sed.`馬成績_着順` <= 3 then 1 else 0 end as `複勝的中`,
     coalesce(tyb.`騎手指数`, kyi.`騎手指数`) as `騎手指数`,
@@ -716,6 +728,13 @@ with
     lag(race_1st_placers.`タイム` - base.`タイム`) over (partition by base.`血統登録番号` order by `発走日時`) as `1走前1着タイム差`,
     lag(race_3rd_placers.`タイム` - base.`タイム`) over (partition by base.`血統登録番号` order by `発走日時`) as `1走前3着内タイム差`,
 
+    {% for i in range(1, 6) %}
+    {% for j in range(1, 6) %}
+    lag(`先行馬{{ j }}タイム差`, {{ i }}) over (partition by base.`血統登録番号` order by `発走日時`) as `{{ i }}走前先行馬{{ j }}タイム差`,
+    lag(`後続馬{{ j }}タイム差`, {{ i }}) over (partition by base.`血統登録番号` order by `発走日時`) as `{{ i }}走前後続馬{{ j }}タイム差`,
+    {% endfor %}
+    {% endfor %}
+
     -- Compute the Composite Weighted Winning Percentage
     -- CWWP=(W_WP×WP)+(W_RWP​×RWP)
     -- where W_WP and W_RWP are the weights for the winning percentage and recent winning percentage, respectively.
@@ -1078,6 +1097,7 @@ with
     -- race_horses.`実績脚質` as `cat_実績脚質`,
     -- race_horses.`実績単勝オッズ` as `num_実績単勝オッズ`,
     race_horses.`実績複勝オッズ` as `num_実績複勝オッズ`,
+    race_horses.`実績タイム` as `num_実績タイム`,
     -- race_horses.`実績馬体` as `cat_実績馬体`,
     -- race_horses.`実績気配コード` as `cat_実績気配コード`,
     -- race_horses.`実績上昇度` as `cat_実績上昇度`,
@@ -1221,6 +1241,12 @@ with
     race_horses.`過去5走3着内率` as `num_過去5走3着内率`,
     race_horses.`1走前1着タイム差` as `num_1走前1着タイム差`,
     race_horses.`1走前3着内タイム差` as `num_1走前3着内タイム差`,
+    {% for i in range(1, 6) %}
+    {% for j in range(1, 6) %}
+    race_horses.`{{ i }}走前先行馬{{ j }}タイム差` as `num_{{ i }}走前先行馬{{ j }}タイム差`,
+    race_horses.`{{ i }}走前後続馬{{ j }}タイム差` as `num_{{ i }}走前後続馬{{ j }}タイム差`,
+    {% endfor %}
+    {% endfor %}
     race_horses.`重み付き1着率` as `num_重み付き1着率`,
     race_horses.`重み付き3着内率` as `num_重み付き3着内率`,
     race_horses.`場所レース数` as `num_場所レース数`, -- horse_venue_runs

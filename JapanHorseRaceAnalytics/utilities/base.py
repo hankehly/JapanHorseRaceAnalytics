@@ -16,6 +16,14 @@ def get_data_dir() -> Path:
     return get_base_dir() / "data"
 
 
+def get_spark_sql_warehouse_dir() -> Path:
+    return get_base_dir() / "spark-warehouse"
+
+
+def get_spark_postgresql_jar_path() -> Path:
+    return get_base_dir() / "jars/postgresql-42.7.1.jar"
+
+
 def read_sql_table(table_name, schema, use_cache=True):
     save_path = get_data_dir() / "sql_tables" / f"{table_name}.snappy.parquet"
     save_path.parent.mkdir(exist_ok=True, parents=True)
@@ -52,16 +60,14 @@ def read_hive_table(
     return data
 
 
-def get_spark_session() -> SparkSession:
-    warehouse_dir = f"{get_base_dir()}/spark-warehouse"
-    postgres_driver_path = f"{get_base_dir()}/jars/postgresql-42.7.1.jar"
+def get_spark_session(driver_memory="20g") -> SparkSession:
     result = (
         SparkSession.builder.appName("JapanHorseRaceAnalytics")
-        .config("spark.driver.memory", "20g")
-        .config("spark.sql.warehouse.dir", warehouse_dir)
-        .config("spark.jars", postgres_driver_path)
-        .config("spark.executor.extraClassPath", postgres_driver_path)
-        .config("spark.driver.extraClassPath", postgres_driver_path)
+        .config("spark.driver.memory", driver_memory)
+        .config("spark.sql.warehouse.dir", str(get_spark_sql_warehouse_dir()))
+        .config("spark.jars", str(get_spark_postgresql_jar_path()))
+        .config("spark.executor.extraClassPath", str(get_spark_postgresql_jar_path()))
+        .config("spark.driver.extraClassPath", str(get_spark_postgresql_jar_path()))
         .enableHiveSupport()
         .getOrCreate()
     )
