@@ -2100,7 +2100,21 @@ models:
         quote: true
         description: HHMM
 
+  - name: stg_jrdb__ukc_latest
+    columns:
+      - name: 血統登録番号
+        quote: true
+        tests:
+          - unique
+          - not_null
+
   - name: stg_jrdb__ukc
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - 血統登録番号
+            - データ年月日
+          quote_columns: true
     columns:
       - name: ukc_sk
         # https://docs.getdbt.com/reference/resource-properties/quote

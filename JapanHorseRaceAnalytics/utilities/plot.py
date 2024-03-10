@@ -1,5 +1,6 @@
 import japanize_matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.metrics import auc, confusion_matrix, roc_curve
@@ -69,5 +70,33 @@ def plot_feature_importances(
     ax.set_title("Feature Importances")
     ax.set_xlabel("Importance")
     ax.set_ylabel("Features")
+    plt.tight_layout()
+    return fig, ax
+
+
+def plot_shap_interaction_values(
+    shap_interaction_values, feature_names, figsize=(15, 10)
+):
+    mean_shap = np.abs(shap_interaction_values).mean(0)
+    df_mean_shap = pd.DataFrame(mean_shap, index=feature_names, columns=feature_names)
+    df_mean_shap.where(
+        df_mean_shap.values == np.diagonal(df_mean_shap),
+        df_mean_shap.values * 2,
+        inplace=True,
+    )
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.heatmap(
+        df_mean_shap.round(decimals=3), cmap="coolwarm", annot=True, cbar=False, ax=ax
+    )
+    ax.set_title("SHAP Interaction Values")
+    plt.tight_layout()
+    return fig, ax
+
+
+def plot_correlation_matrix(data, columns, figsize=(15, 10)):
+    fig, ax = plt.subplots(figsize=figsize)
+    df_corr = pd.DataFrame(data, columns=columns).corr()
+    sns.heatmap(df_corr, cmap="coolwarm", annot=True, cbar=False, ax=ax)
+    ax.set_title("Correlation Matrix")
     plt.tight_layout()
     return fig, ax
