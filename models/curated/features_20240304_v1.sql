@@ -33,7 +33,6 @@ with
     race_horses.`num_{{ i }}走前頭数`,
     race_horses.`num_{{ i }}走前着順`,
     {% for j in range(1, 6) %}
-    `num_{{ i }}走前先行馬{{ j }}タイム差`,
     `num_{{ i }}走前後続馬{{ j }}タイム差`,
     {% endfor %}
     race_horses.`cat_{{ i }}走前休養理由分類コード`,

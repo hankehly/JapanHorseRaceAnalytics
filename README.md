@@ -186,30 +186,21 @@ The horse track condition is usually the same or 1 off between SED and KAB.
 
 ### What to optimize for (according to ChatGPT)
 
+In theory, we should optimize for precision, because we are looking for quality over quantity. In practice, precision seems to lead to higher payout rates. We may not bet on as many horses, but the quality of the bets should be higher.
+
 In the context of predicting winning horses where your goal is to maximize the identification of true winners while minimizing bets on losing horses, the choice between loss, recall, precision, or the F1 score for your optimization function depends on your specific objectives and the trade-offs you are willing to make. Let's consider each option:
+
+#### Precision
+* **Minimizing False Positives is Critical:** In scenarios where the cost of a false positive is high, precision becomes more important. For example, in spam detection, a high precision rate means that fewer legitimate emails are incorrectly marked as spam, avoiding potential inconvenience or loss of important information.
+* **Quality Over Quantity:** In applications like search engines or recommendation systems, where user experience can be significantly affected by the relevance of the results, optimizing for precision ensures that the results presented to the user are more likely to be relevant, enhancing user satisfaction.
 
 #### Loss
 - The loss function quantifies the model's prediction errors and is crucial during the training phase to guide the model towards better performance. However, loss functions like cross-entropy don't directly correspond to business objectives like maximizing recall or precision.
 - Use loss for initial model training, but you might need additional metrics (like recall, precision, or F1 score) to fine-tune your model according to your specific objectives.
 
 #### Recall
-- Optimizing for recall makes sense if your primary goal is not to miss any winning horses. High recall ensures that you capture as many winners as possible.
-- However, focusing solely on recall might lead to many false positives—betting on horses that will not win—because the model prioritizes not missing any winners over the accuracy of its positive predictions.
-
-#### Precision
-- If minimizing the risk of betting on losing horses is paramount, optimizing for precision is more appropriate. High precision means that when your model predicts a horse as a winner, it is very likely correct.
-- Prioritizing precision could result in missing some actual winners (lower recall) because the model becomes more conservative in its predictions to ensure high accuracy.
-
-#### F1 Score
-- The F1 score provides a balance between precision and recall by taking their harmonic mean. It is a suitable metric when you need a balance between finding as many winners as possible (recall) and ensuring that the horses you bet on have a high chance of winning (precision).
-- Optimizing for the F1 score helps to manage the trade-off between recall and precision, making it a good choice when both metrics are important to your betting strategy.
-
-#### Decision
-Given your objectives, you might start by focusing on the **F1 score** as your optimization function because it seeks a balance between recall and precision, aligning with your dual goals. However, if after evaluating the results you find that one aspect (either minimizing missed winners or minimizing incorrect bets) is more important than initially thought, you could adjust your focus towards optimizing specifically for **recall** or **precision**.
-
-It's also useful to consider the **business impact** of false positives (betting on a losing horse) versus false negatives (missing a winning horse). If the cost or impact of one is significantly higher than the other, this should influence your choice. In some cases, **custom metrics** that weight recall and precision differently can be developed to more closely align the optimization function with your specific goals and constraints.
-
-
+* **Minimizing False Negatives is Critical:** In applications where missing a positive instance is more costly than falsely labeling a negative instance as positive, recall is the priority. For example, in medical diagnostics for serious diseases, it's crucial to identify as many true cases (positive instances) as possible, even at the risk of some false positives. A high recall ensures that fewer actual cases of the disease go undetected.
+* **Comprehensive Coverage is Required:** In information retrieval or legal discovery (e-discovery), where the goal is to find all relevant documents or information, optimizing for recall might be more important to ensure no critical information is overlooked.
 
 ### When to not bet
 

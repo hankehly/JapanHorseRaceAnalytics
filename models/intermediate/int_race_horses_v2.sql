@@ -61,7 +61,6 @@ with
     {% endfor %}
 
     {% for i in range(1, 6) %}
-    sed.`馬成績_タイム` - lag(sed.`馬成績_タイム`, {{ i }}) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `先行馬{{ i }}タイム差`,
     sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, {{ i }}) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬{{ i }}タイム差`
     {%- if not loop.last %},{% endif -%}
     {% endfor %}
@@ -127,7 +126,6 @@ with
     `{{ i }}走前頭数` as `num_{{ i }}走前頭数`,
     `{{ i }}走前着順` as `num_{{ i }}走前着順`,
     {% for j in range(1, 6) %}
-    lag(`先行馬{{ j }}タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前先行馬{{ j }}タイム差`,
     lag(`後続馬{{ j }}タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前後続馬{{ j }}タイム差`,
     {% endfor %}
     `{{ i }}走前休養理由分類コード` as `cat_{{ i }}走前休養理由分類コード`
