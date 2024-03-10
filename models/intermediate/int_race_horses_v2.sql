@@ -2,13 +2,21 @@ with
   race_3rd_placers as (
   select
     `レースキー`,
-    min(`馬成績_タイム`) as `タイム`
-  from
-    {{ ref('stg_jrdb__sed') }}
+    `タイム`
+  from (
+    select
+      `レースキー`,
+      `馬成績_タイム` as `タイム`,
+      -- See rank_race_positions.sql for an example of why we must determine order like this
+      row_number() over (partition by `レースキー` order by `馬成績_着順` asc) as race_rank
+    from
+      {{ ref('stg_jrdb__sed') }}
+    where
+      -- row_number will count nulls, so we must filter them out
+      `馬成績_着順` is not null
+    )
   where
-    `馬成績_着順` = 3
-  group by
-    `レースキー`
+    race_rank = 3
   ),
 
   base as (
@@ -24,6 +32,8 @@ with
     sed.`馬成績_タイム` as `タイム`,
     sed.`ＪＲＤＢデータ_不利` as `不利`,
     sed.`馬成績_異常区分` as `異常区分`,
+    sed.`馬成績_タイム` - race_3rd_placers.`タイム` as `3着タイム差`,
+    race_3rd_placers.`タイム` as `3着タイム`,
     kyi.`レースキー_場コード` as `場コード`,
     date_diff(bac.`発走日時`, kyi.`入厩年月日`) as `入厩何日前`,
     bac.`頭数`,
@@ -57,7 +67,7 @@ with
     lag(bac.`頭数`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前頭数`,
     lag(sed.`馬成績_着順`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前着順`,
     lag(kyi.`休養理由分類コード`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前休養理由分類コード`,
-    lag(race_3rd_placers.`タイム` - sed.`馬成績_タイム`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前3着タイム差`,
+    lag(sed.`馬成績_タイム` - race_3rd_placers.`タイム`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前3着タイム差`,
     {% endfor %}
 
     {% for i in range(1, 6) %}
@@ -107,6 +117,8 @@ with
     `タイム` as `meta_タイム`,
     `不利` as `meta_不利`,
     `異常区分` as `meta_異常区分`,
+    `3着タイム差` as `meta_3着タイム差`,
+    `3着タイム` as `meta_3着タイム`,
     `場コード` as `cat_場コード`,
     `入厩何日前` as `num_入厩何日前`,
     `頭数` as `num_頭数`,
@@ -128,7 +140,8 @@ with
     {% for j in range(1, 6) %}
     lag(`後続馬{{ j }}タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前後続馬{{ j }}タイム差`,
     {% endfor %}
-    `{{ i }}走前休養理由分類コード` as `cat_{{ i }}走前休養理由分類コード`
+    `{{ i }}走前休養理由分類コード` as `cat_{{ i }}走前休養理由分類コード`,
+    `{{ i }}走前3着タイム差` as `num_{{ i }}走前3着タイム差`
     {%- if not loop.last %},{% endif -%}
     {% endfor %}
 

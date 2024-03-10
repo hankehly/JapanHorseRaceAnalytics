@@ -14,6 +14,8 @@ with
     race_horses.`meta_タイム`,
     race_horses.`meta_不利`,
     race_horses.`meta_異常区分`,
+    race_horses.`meta_3着タイム差`,
+    race_horses.`meta_3着タイム`,
     race_horses.`cat_場コード`,
     race_horses.`num_入厩何日前`,
     race_horses.`num_頭数`,
@@ -36,6 +38,7 @@ with
     `num_{{ i }}走前後続馬{{ j }}タイム差`,
     {% endfor %}
     race_horses.`cat_{{ i }}走前休養理由分類コード`,
+    race_horses.`num_{{ i }}走前3着タイム差`,
     {% endfor %}
 
     races.`cat_トラック種別`,
