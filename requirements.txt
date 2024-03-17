@@ -28,6 +28,7 @@ shap
 mlxtend
 imbalanced-learn
 bokeh
+trueskill
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

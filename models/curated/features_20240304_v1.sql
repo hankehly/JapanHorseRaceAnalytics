@@ -14,6 +14,7 @@ with
     race_horses.`meta_タイム`,
     race_horses.`meta_不利`,
     race_horses.`meta_異常区分`,
+    race_horses.`meta_後３Ｆタイム`,
     race_horses.`meta_3着タイム差`,
     race_horses.`meta_3着タイム`,
     race_horses.`cat_場コード`,
