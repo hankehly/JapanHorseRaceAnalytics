@@ -15,6 +15,14 @@ with
 
     -- Base features
     bac.`レース条件_距離` as `距離`,
+    case
+      when bac.`レース条件_距離` < 1400 then '短距離'
+      when bac.`レース条件_距離` < 1800 then 'マイル'
+      when bac.`レース条件_距離` < 2200 then '中距離'
+      when bac.`レース条件_距離` < 2800 then '中長距離'
+      else '長距離'
+    end `距離区分`,
+
     coalesce(
       tyb.`馬場状態コード`,
       case
@@ -147,6 +155,7 @@ with
     base.`場コード` as `meta_int_races_場コード`,
     base.`四半期` as `cat_四半期`,
     base.`距離` as `num_距離`,
+    base.`距離区分` as `cat_距離区分`,
 
     -- Known before race
     base.`事前_馬場状態コード` as `cat_事前_馬場状態コード`,

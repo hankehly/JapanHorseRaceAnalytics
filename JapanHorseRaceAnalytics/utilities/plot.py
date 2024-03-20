@@ -46,9 +46,10 @@ def plot_roc_curve(y_test, y_pred, figsize=(10, 10)):
 
 
 def plot_feature_importances(
-    feature_names,
-    feature_importances,
+    feature_names: list[str],
+    feature_importances: list[float],
     figsize=(10, 12),
+    title: str = "Feature Importances",
     top_n: int = None,
 ):
     if top_n is None:
@@ -67,7 +68,7 @@ def plot_feature_importances(
         x="importance", y="feature", data=feature_importances_df.iloc[:top_n], ax=ax
     )
     ax.grid(axis="x")
-    ax.set_title("Feature Importances")
+    ax.set_title(title)
     ax.set_xlabel("Importance")
     ax.set_ylabel("Features")
     plt.tight_layout()

@@ -8,6 +8,7 @@ with
     race_horses.`meta_血統登録番号`,
     race_horses.`meta_発走日時`,
     race_horses.`meta_単勝的中`,
+    race_horses.`meta_単勝オッズ`,
     race_horses.`meta_複勝的中`,
     race_horses.`meta_複勝オッズ`,
     race_horses.`meta_着順`,
@@ -17,6 +18,7 @@ with
     race_horses.`meta_後３Ｆタイム`,
     race_horses.`meta_3着タイム差`,
     race_horses.`meta_3着タイム`,
+    race_horses.`cat_馬場状態`,
     race_horses.`cat_場コード`,
     race_horses.`num_入厩何日前`,
     race_horses.`num_頭数`,
@@ -30,6 +32,7 @@ with
     race_horses.`num_複勝回数`,
     race_horses.`num_複勝率`,
     {% for i in range(1, 7) %}
+    race_horses.`num_{{ i }}走前ＩＤＭ`,
     race_horses.`num_{{ i }}走前距離`,
     race_horses.`num_{{ i }}走前不利`,
     race_horses.`num_{{ i }}走前経過日数`,
@@ -44,6 +47,7 @@ with
 
     races.`cat_トラック種別`,
     races.`num_距離`,
+    races.`cat_距離区分`,
 
     -- 20240302_eda
       ((race_horses.`num_1走前着順` - 1) / (race_horses.`num_1走前頭数` - 1) * 0.2927557)

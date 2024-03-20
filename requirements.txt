@@ -29,6 +29,7 @@ mlxtend
 imbalanced-learn
 bokeh
 trueskill
+graphviz
 
 # Install tensorforce manually
 # pip install tensorforce --no-deps

@@ -24,6 +24,10 @@ def get_spark_postgresql_jar_path() -> Path:
     return get_base_dir() / "jars/postgresql-42.7.1.jar"
 
 
+def get_random_seed() -> int:
+    return 42
+
+
 def read_sql_table(table_name, schema, use_cache=True):
     save_path = get_data_dir() / "sql_tables" / f"{table_name}.snappy.parquet"
     save_path.parent.mkdir(exist_ok=True, parents=True)
