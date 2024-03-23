@@ -8,6 +8,7 @@ from sklearn.metrics import (
     auc,
     confusion_matrix,
     f1_score,
+    ndcg_score,
     precision_score,
     recall_score,
     roc_curve,
@@ -138,9 +139,7 @@ def calculate_payout_rate(
     results = pd.concat(
         [
             payouts,
-            pd.DataFrame(
-                np.c_[y_test, y_proba_true], columns=["actual", "proba_true"]
-            ),
+            pd.DataFrame(np.c_[y_test, y_proba_true], columns=["actual", "proba_true"]),
         ],
         axis=1,
     )
@@ -161,3 +160,24 @@ def calculate_payout_rate(
 
 def kelly_criterion(b, p, q):
     return (b * p - q) / b
+
+
+def calculate_average_ndcg(model, valid_dataset) -> float:
+    y_pred = model.predict(valid_dataset.data)
+    # Initialize an empty list to store the NDCG scores of each group
+    ndcg_scores = []
+    # The starting index of the first item in the current group
+    start_idx = 0
+    for group_size in valid_dataset.group:
+        end_idx = start_idx + group_size
+        # Slice the true labels and predictions according to the current group
+        true_labels = valid_dataset.label[start_idx:end_idx]
+        predictions = y_pred[start_idx:end_idx]
+        # Calculate the NDCG score for the current group.
+        # ndcg_score expects 2D arrays, so we add an extra dimension
+        ndcg = ndcg_score([true_labels], [predictions])
+        ndcg_scores.append(ndcg)
+        # Update the start index for the next group
+        start_idx = end_idx
+    # Calculate the average NDCG score across all groups
+    return np.mean(ndcg_scores)
