@@ -12,7 +12,9 @@ with
     race_horses.`meta_複勝的中`,
     race_horses.`meta_複勝オッズ`,
     race_horses.`meta_着順`,
+    race_horses.`meta_標準化着順`,
     race_horses.`meta_タイム`,
+    race_horses.`meta_標準化タイム`,
     race_horses.`meta_不利`,
     race_horses.`meta_異常区分`,
     race_horses.`meta_後３Ｆタイム`,
@@ -31,12 +33,11 @@ with
     race_horses.`num_レース数`,
     race_horses.`num_複勝回数`,
     race_horses.`num_複勝率`,
-    {% for i in range(1, 7) %}
+    {% for i in range(1, 4) %}
     race_horses.`num_{{ i }}走前ＩＤＭ`,
     race_horses.`num_{{ i }}走前距離`,
     race_horses.`num_{{ i }}走前不利`,
     race_horses.`num_{{ i }}走前経過日数`,
-    race_horses.`num_{{ i }}走前頭数`,
     race_horses.`num_{{ i }}走前着順`,
     {% for j in range(1, 6) %}
     `num_{{ i }}走前後続馬{{ j }}タイム差`,
@@ -50,9 +51,9 @@ with
     races.`cat_距離区分`,
 
     -- 20240302_eda
-      ((race_horses.`num_1走前着順` - 1) / (race_horses.`num_1走前頭数` - 1) * 0.2927557)
-    + ((race_horses.`num_2走前着順` - 1) / (race_horses.`num_2走前頭数` - 1) * 0.1465141)
-    + ((race_horses.`num_3走前着順` - 1) / (race_horses.`num_3走前頭数` - 1) * 0.1004372) as `num_過去3走重み付き着順成績`,
+    --   ((race_horses.`num_1走前着順` - 1) / (race_horses.`num_1走前頭数` - 1) * 0.2927557)
+    -- + ((race_horses.`num_2走前着順` - 1) / (race_horses.`num_2走前頭数` - 1) * 0.1465141)
+    -- + ((race_horses.`num_3走前着順` - 1) / (race_horses.`num_3走前頭数` - 1) * 0.1004372) as `num_過去3走重み付き着順成績`,
 
     -- 20240302_eda
     1 / coalesce(race_horses.`num_入厩何日前`, 1) as `num_入厩何日前逆数`,

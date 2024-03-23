@@ -30,7 +30,10 @@ with
     case when sed.`馬成績_着順` <= 3 then 1 else 0 end as `複勝的中`,
     sed.`確定複勝オッズ下` as `複勝オッズ`,
     sed.`馬成績_着順` as `着順`,
+    (sed.`馬成績_着順` - 1) / (bac.`頭数` - 1) as `標準化着順`,
     sed.`馬成績_タイム` as `タイム`,
+    -- Normalized Time = (Finish Time − Fastest Time) / (Slowest Time − Fastest Time)
+    (sed.`馬成績_タイム` - min(sed.`馬成績_タイム`) over (partition by kyi.`レースキー`)) / (max(sed.`馬成績_タイム`) over (partition by kyi.`レースキー`) - min(sed.`馬成績_タイム`) over (partition by kyi.`レースキー`)) as `標準化タイム`,
     sed.`ＪＲＤＢデータ_不利` as `不利`,
     sed.`馬成績_異常区分` as `異常区分`,
     sed.`ＪＲＤＢデータ_後３Ｆタイム` as `後３Ｆタイム`,
@@ -68,17 +71,9 @@ with
         as integer
       ),
     0) as `複勝回数`,
-
-    {% for i in range(1, 7) %}
-    lag(sed.`ＪＲＤＢデータ_ＩＤＭ`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前ＩＤＭ`,
-    lag(bac.`レース条件_距離`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前距離`,
-    lag(sed.`ＪＲＤＢデータ_不利`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前不利`,
-    date_diff(bac.`発走日時`, lag(bac.`発走日時`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`)) as `{{ i }}走前経過日数`,
-    lag(bac.`頭数`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前頭数`,
-    lag(sed.`馬成績_着順`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前着順`,
-    lag(kyi.`休養理由分類コード`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前休養理由分類コード`,
-    lag(sed.`馬成績_タイム` - race_3rd_placers.`タイム`, {{ i }}) over (partition by kyi.`血統登録番号` order by bac.`発走日時`) as `{{ i }}走前3着タイム差`,
-    {% endfor %}
+    sed.`ＪＲＤＢデータ_ＩＤＭ` as `ＩＤＭ`,
+    sed.`レース条件_距離` as `距離`,
+    kyi.`休養理由分類コード` as `休養理由分類コード`,
 
     {% for i in range(1, 6) %}
     sed.`馬成績_タイム` - lead(sed.`馬成績_タイム`, {{ i }}) over (partition by kyi.`レースキー` order by sed.`馬成績_着順`) as `後続馬{{ i }}タイム差`
@@ -130,7 +125,9 @@ with
     `複勝的中` as `meta_複勝的中`,
     `複勝オッズ` as `meta_複勝オッズ`,
     `着順` as `meta_着順`,
+    `標準化着順` as `meta_標準化着順`,
     `タイム` as `meta_タイム`,
+    `標準化タイム` as `meta_標準化タイム`,
     `不利` as `meta_不利`,
     `異常区分` as `meta_異常区分`,
     `後３Ｆタイム` as `meta_後３Ｆタイム`,
@@ -148,24 +145,27 @@ with
     `平均馬体重差` as `num_平均馬体重差`,
     `レース数` as `num_レース数`,
     `複勝回数` as `num_複勝回数`,
-    base.`複勝回数` / base.`レース数` as `num_複勝率`,
-    {% for i in range(1, 7) %}
-    `{{ i }}走前ＩＤＭ` as `num_{{ i }}走前ＩＤＭ`,
-    `{{ i }}走前距離` as `num_{{ i }}走前距離`,
-    `{{ i }}走前不利` as `num_{{ i }}走前不利`,
-    `{{ i }}走前経過日数` as `num_{{ i }}走前経過日数`,
-    `{{ i }}走前頭数` as `num_{{ i }}走前頭数`,
-    `{{ i }}走前着順` as `num_{{ i }}走前着順`,
+    `複勝回数` / `レース数` as `num_複勝率`,
+    {% for i in range(1, 4) %}
+    lag(`着順`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前着順`,
+    lag(`標準化着順`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前標準化着順`,
+    lag(`標準化タイム`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前標準化タイム`,
+    lag(`ＩＤＭ`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前ＩＤＭ`,
+    lag(`距離`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前距離`,
+    lag(`不利`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前不利`,
+    lag(`休養理由分類コード`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `cat_{{ i }}走前休養理由分類コード`,
+    date_diff(`発走日時`, lag(`発走日時`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`)) as `num_{{ i }}走前経過日数`,
+    lag(`3着タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前3着タイム差`,
+
     {% for j in range(1, 6) %}
-    lag(`後続馬{{ j }}タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前後続馬{{ j }}タイム差`,
+    lag(`後続馬{{ j }}タイム差`, {{ i }}) over (partition by `血統登録番号` order by `発走日時`) as `num_{{ i }}走前後続馬{{ j }}タイム差`
+    {%- if not loop.last %},{% endif -%}
     {% endfor %}
-    `{{ i }}走前休養理由分類コード` as `cat_{{ i }}走前休養理由分類コード`,
-    `{{ i }}走前3着タイム差` as `num_{{ i }}走前3着タイム差`
     {%- if not loop.last %},{% endif -%}
     {% endfor %}
 
   from
-    base base
+    base
   )
 
 select
