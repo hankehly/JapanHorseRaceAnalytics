@@ -2268,6 +2268,59 @@ models:
         tests:
           - not_null
 
+  - name: stg_jrdb__ow
+    description: 基準オッズワイドデータ
+    columns:
+      - name: ow_sk
+        quote: true
+        tests:
+          - unique
+          - not_null
+      - name: ow_bk
+        quote: true
+        tests:
+          - unique
+          - not_null
+      - name: レースキー
+        quote: true
+        tests:
+          - not_null
+      - name: 開催キー
+        quote: true
+        tests:
+          - not_null
+      - name: レースキー_場コード
+        quote: true
+        tests:
+          - not_null
+          - relationships:
+              to: ref('jrdb__racetrack_codes')
+              field: code
+      - name: レースキー_年
+        quote: true
+        tests:
+          - not_null
+      - name: レースキー_回
+        quote: true
+        tests:
+          - not_null
+      - name: レースキー_日
+        quote: true
+        tests:
+          - not_null
+      - name: レースキー_Ｒ
+        quote: true
+        tests:
+          - not_null
+      - name: 登録頭数
+        quote: true
+        tests:
+          - not_null
+      - name: ワイドオッズ
+        quote: true
+        tests:
+          - not_null
+
   - name: stg_jrdb__skb
     columns:
       - name: skb_sk
