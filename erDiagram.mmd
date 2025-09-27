@@ -1,0 +1,361 @@
+%% Japan Horse Race Analytics ER Diagram
+erDiagram
+    direction LR
+    BAC["BAC 番組データ（１レース／１レコード）"] {
+        int レースキー_場コード PK
+        int レースキー_年 PK
+        int レースキー_回 PK
+        hex レースキー_日 PK "F=hex digit"
+        int レースキー_Ｒ PK
+        int 年月日 "yyyyMMdd (9=digits)"
+        string 発走時間 "HHMM (X=char)"
+        int レース条件_距離
+        int レース条件_トラック情報_芝ダ障害コード "1:芝 2:ダート 3:障害 (9=digits)"
+        int レース条件_トラック情報_右左 "1:右 2:左 3:直 9:他"
+        int レース条件_トラック情報_内外 "1:通常(内) 2:外 3:直ダ 9:他"
+        int レース条件_種別 "→JRDBデータコード表 (99)"
+        string レース条件_条件 "→JRDBデータコード表 (XX=chars)"
+        int レース条件_記号 "→JRDBデータコード表 (999)"
+        int レース条件_重量 "→JRDBデータコード表 (9)"
+        int レース条件_グレード "→JRDBデータコード表 (9)"
+        string レース名
+        string 回数 "第ZZ9回 (X)"
+        int 頭数
+        string コース "1:A 2:A1 3:A2 4:B 5:C 6:D"
+        string 開催区分 "1:関東 2:関西 3:ローカル"
+        string レース名短縮
+        string レース名９文字
+        string データ区分 "1:特別登録 2:想定確定 3:前日"
+        int １着賞金 "Z=blank if 0"
+        int ２着賞金 "Z=blank if 0"
+        int ３着賞金 "Z=blank if 0"
+        int ４着賞金 "Z=blank if 0"
+        int ５着賞金 "Z=blank if 0"
+        int １着算入賞金 "Z=blank if 0"
+        int ２着算入賞金 "Z=blank if 0"
+        int 馬券発売フラグ_単勝 "9 (0/1)"
+        int 馬券発売フラグ_複勝 "9 (0/1)"
+        int 馬券発売フラグ_枠連 "9 (0/1)"
+        int 馬券発売フラグ_馬連 "9 (0/1)"
+        int 馬券発売フラグ_馬単 "9 (0/1)"
+        int 馬券発売フラグ_ワイド "9 (0/1)"
+        int 馬券発売フラグ_３連複 "9 (0/1)"
+        int 馬券発売フラグ_３連単 "9 (0/1)"
+        int WIN5フラグ "Z (blank if 0)"
+    }
+
+    SRB["SRB 成績レースデータ（１レース／１レコード：ラップ・バイアス・レースコメント）"] {
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        %% ハロン毎(先頭馬)タイム 0.1秒単位 (距離により1ハロン目短縮可)
+        int ハロンタイム1
+        int ハロンタイム2
+        int ハロンタイム3
+        int ハロンタイム4
+        int ハロンタイム5
+        int ハロンタイム6
+        int ハロンタイム7
+        int ハロンタイム8
+        int ハロンタイム9
+        int ハロンタイム10
+        int ハロンタイム11
+        int ハロンタイム12
+        int ハロンタイム13
+        int ハロンタイム14
+        int ハロンタイム15
+        int ハロンタイム16
+        int ハロンタイム17
+        int ハロンタイム18
+        string コーナー位置取り_１コーナー "文字列(最大64)"
+        string コーナー位置取り_２コーナー
+        string コーナー位置取り_３コーナー
+        string コーナー位置取り_４コーナー
+        int ペースアップ位置 "残りハロン数"
+        string トラックバイアス_１角 "内/中/外"
+        string トラックバイアス_２角
+        string トラックバイアス_向正
+        string トラックバイアス_３角
+        string トラックバイアス_４角 "最内/内/中/外/大外"
+        string トラックバイアス_直線 "最内/内/中/外/大外"
+        string レースコメント
+    }
+
+    UKC["UKC 馬基本データ（１馬／１レコード：血統登録番号+データ年月日）"] {
+        string 血統登録番号 PK
+        string 馬名 "全角18文字"
+        int 性別コード "1:牡 2:牝 3:セン"
+        int 毛色コード "コード表"
+        int 馬記号コード "コード表"
+        string 血統情報_父馬名
+        string 血統情報_母馬名
+        string 血統情報_母父馬名
+        int 生年月日 "yyyyMMdd"
+        int 父馬生年 "YYYY"
+        int 母馬生年 "YYYY"
+        int 母父馬生年 "YYYY"
+        string 馬主名
+        int 馬主会コード "場コードと同じ"
+        string 生産者名
+        string 産地名 "全角4文字"
+        int 登録抹消フラグ "0:現役 1:抹消"
+        int データ年月日 PK "yyyyMMdd"
+        int 父系統コード
+        int 母父系統コード
+    }
+
+    KYI["KYI 競走馬データ（１レース出走馬／１レコード）"] {
+        %% Primary / Foreign Keys
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        int 馬番 PK
+        string 血統登録番号 FK
+        %% Core Identification
+        string 馬名
+        %% Core Index / Ratings
+        float ＩＤＭ
+        float 騎手指数
+        float 情報指数
+        float 総合指数
+        int 脚質 "コード"
+        int 距離適性 "コード"
+        int 上昇度 "コード"
+        int ローテーション
+        float 基準オッズ
+        int 基準人気順位
+        float 基準複勝オッズ
+        int 基準複勝人気順位
+        int 人気指数
+        float 調教指数
+        float 厩舎指数
+        int 調教矢印コード
+        int 厩舎評価コード
+        float 騎手期待連対率
+        int 激走指数
+        int 激走順位
+        int 枠番
+        int 取消フラグ "1:取消"
+        int 負担重量
+        int 枠確定馬体重
+        string ブリンカー
+        string 騎手名
+        string 調教師名
+        int 賞金情報_獲得賞金
+        int 賞金情報_収得賞金
+        int 激走タイプ "コード"
+        int 降級フラグ
+        string 放牧先ランク
+        int 厩舎ランク
+        %% (Many additional KYI columns omitted for brevity; can be expanded on request)
+    }
+
+    SED["SED 成績データ（１レース出走馬／１レコード：確定成績・指数・払戻）"] {
+        %% Keys (same grain as KYI)
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        int 馬番 PK, FK
+        string 血統登録番号 FK "競走成績キー(血統登録番号+年月日)はKYIで保持"
+        %% Result Core
+        int 着順
+        int 異常区分 "競走中止等"
+        int タイム_分秒10分1 "MSSd(0.1秒)"
+        int 斤量 "0.1Kg単位"
+        float 確定単勝オッズ
+        int 確定単勝人気順位
+        float 確定複勝オッズ下
+    float 時10単勝オッズ "10時単勝オッズ"
+    float 時10複勝オッズ "10時複勝オッズ"
+        %% Pace / Indexes
+        float ＩＤＭ
+        float 素点
+        float 馬場差
+        int ペース "コード"
+        int 出遅 "コード"
+        int 位置取 "コード"
+        int 不利 "総合"
+        int 前不利
+        int 中不利
+        int 後不利
+        int コース取り "1..5"
+        int 上昇度コード
+        int クラスコード
+        int 馬体コード
+        int 気配コード
+        string レースペース "H/M/S"
+        string 馬ペース "H/M/S"
+        float テン指数
+        float 上がり指数
+        float ペース指数
+        float レースＰ指数
+        int 前３Ｆタイム "0.1秒"
+        int 後３Ｆタイム "0.1秒"
+        int コーナー順位1
+        int コーナー順位2
+        int コーナー順位3
+        int コーナー順位4
+        int 前３Ｆ先頭差 "0.1秒"
+        int 後３Ｆ先頭差 "0.1秒"
+        int 馬体重
+        string 馬体重増減 "+NN/-NN"
+        int 天候コード
+        string コース "1:A..6:D"
+        string レース脚質
+        %% Payout & Prize
+        int 単勝払戻金 "円"
+        int 複勝払戻金 "円"
+        int 本賞金 "万円"
+        int 収得賞金 "万円"
+        int レースペース流れ
+        int 馬ペース流れ
+        int ４角コース取り
+        string 備考
+        string 発走時間 "HHMM"
+    }
+
+    CHA["CHA 調教本追切データ（１レース出走馬／１レコード：最終追切指標）"] {
+        %% Keys (same grain as KYI)
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        int 馬番 PK, FK
+        %% Core Identification
+        string 曜日 "水/木"
+        int 調教年月日 "yyyyMMdd"
+        int 回数 "当日追切回数合計"
+        string 調教コースコード "コード表1"
+        int 追切種類 "1:一杯 2:強目 3:馬なり"
+        int 追い状態 "コード"
+        int 乗り役 "1助手 2調教師 3本番騎手 4調教騎手 5見習"
+        int 調教Ｆ "ハロン長さ"
+        %% Clock Analysis (Times & Indexes) (ZZ9 -> 0.1秒単位想定)
+        int 時計分析_テンＦ
+        int 時計分析_中間Ｆ
+        int 時計分析_終いＦ
+        int 時計分析_テンＦ指数
+        int 時計分析_中間Ｆ指数
+        int 時計分析_終いＦ指数
+        int 時計分析_追切指数
+        %% 併せ馬データ
+        string 併せ結果 "1先着 2同入 3遅れ"
+        int 併せ追切種類 "1:一杯 2:強目 3:馬なり"
+        int 併せ相手年齢
+        string 併せ相手クラス "条件コード"
+    }
+
+    CYB["CYB 調教分析データ（１レース出走馬／１レコード：総合調教評価）"] {
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        int 馬番 PK, FK
+        string 調教タイプ "コード"
+        string 調教コース種別 "コード"
+        int 調教コース種類_坂
+        int 調教コース種類_Ｗ
+        int 調教コース種類_ダ
+        int 調教コース種類_芝
+        int 調教コース種類_プ
+        int 調教コース種類_障
+        int 調教コース種類_ポ
+        string 調教距離 "1長 2普 3短 4二本 0他"
+        string 調教重点 "1テン 2中間 3終い 4平均 0他"
+        int 追切指数
+        int 仕上指数
+        string 調教量評価 "A/B/C/D"
+        string 仕上指数変化
+        string 調教コメント
+        string コメント年月日 "yyyyMMdd"
+        string 調教評価 "1=◎ 2=○ 3=△"
+        int 一週前追切指数
+        int 一週前追切コース
+    }
+
+    SKB["SKB 成績拡張データ（１レース出走馬／１レコード：特記・馬具・脚元・パドック）"] {
+        %% Keys (same grain as KYI / SED)
+        int レースキー_場コード PK, FK
+        int レースキー_年 PK, FK
+        int レースキー_回 PK, FK
+        hex レースキー_日 PK, FK "F"
+        int レースキー_Ｒ PK, FK
+        int 馬番 PK, FK
+        string 血統登録番号 FK "競走成績キー(血統登録番号+年月日)はKYI参照"
+        %% 特記コード (最大6)
+        int 特記コード1
+        int 特記コード2
+        int 特記コード3
+        int 特記コード4
+        int 特記コード5
+        int 特記コード6
+        %% 馬具コード (最大8)
+        int 馬具コード1
+        int 馬具コード2
+        int 馬具コード3
+        int 馬具コード4
+        int 馬具コード5
+        int 馬具コード6
+        int 馬具コード7
+        int 馬具コード8
+        %% 脚元コード 各部位それぞれ最大3 (総合/左前/右前/左後/右後)
+        int 脚元コード_総合1
+        int 脚元コード_総合2
+        int 脚元コード_総合3
+        int 脚元コード_左前1
+        int 脚元コード_左前2
+        int 脚元コード_左前3
+        int 脚元コード_右前1
+        int 脚元コード_右前2
+        int 脚元コード_右前3
+        int 脚元コード_左後1
+        int 脚元コード_左後2
+        int 脚元コード_左後3
+        int 脚元コード_右後1
+        int 脚元コード_右後2
+        int 脚元コード_右後3
+        %% コメント (全角半角混在)
+        string パドックコメント
+        string 脚元コメント
+        string 馬具その他コメント
+        string レースコメント
+        %% 分析用データ（第2版追加）
+        int 分析用データ_ハミ
+        int 分析用データ_バンテージ
+        int 分析用データ_蹄鉄
+        int 分析用データ_蹄状態
+        int 分析用データ_ソエ
+        int 分析用データ_骨瘤
+    }
+
+    %% Relationships (all consolidated below)
+    BAC ||--o{ KYI : レースキー
+    BAC ||--|| SRB : レースキー
+    UKC ||--o{ KYI : 血統登録番号
+    KYI ||--|| SED : レースキー_馬番
+    KYI ||--|| CHA : レースキー_馬番
+    KYI ||--|| CYB : レースキー_馬番
+    KYI ||--|| SKB : レースキー_馬番
+    
+    %% Styling Classes
+    classDef dim fill:#d4f1ff,stroke:#1b6b93,stroke-width:1px,color:#000;
+    classDef fact fill:#ffe9cc,stroke:#c46a00,stroke-width:1px,color:#000;
+    classDef snapshot fill:#f2e5ff,stroke:#7a3fb8,stroke-width:1px,color:#000;
+
+    %% Class Assignments
+    class BAC dim
+    class SRB dim
+    class UKC snapshot
+    class KYI fact
+    class SED fact
+    class CHA fact
+    class CYB fact
+    class SKB fact

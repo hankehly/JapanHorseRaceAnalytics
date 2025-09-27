@@ -1,0 +1,20 @@
+grant {
+    // Allow reading all environment variables
+    permission java.lang.RuntimePermission "getenv.*";
+    
+    // Allow logging configuration control
+    permission java.util.logging.LoggingPermission "control";
+    
+    // Allow reading specific system properties
+    permission java.util.PropertyPermission "java.net.preferIPv6Addresses", "read";
+    permission java.util.PropertyPermission "scala.reflect.classtag.cache.disable", "read";
+    
+    // Allow reading the PostgreSQL JDBC jar file
+    permission java.io.FilePermission "/Users/hankehly/Projects/JapanHorseRaceAnalytics/jars/postgresql-42.7.1.jar", "read";
+    
+    // Allow reading the Spark defaults configuration file
+    permission java.io.FilePermission "/Users/hankehly/Projects/JapanHorseRaceAnalytics/.venv/lib/python3.11/site-packages/pyspark/conf/-", "read";
+    
+    // Grant permission to read and write all system properties
+    permission java.util.PropertyPermission "*", "read,write";
+};

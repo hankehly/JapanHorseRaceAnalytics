@@ -1,0 +1,73 @@
+erDiagram
+    %% =============================================
+    %% Generic Bet Type & Combination Modeling
+    %% (Replaces OZ / OW / HJC / HJCW specialized tables)
+    %% =============================================
+
+    BET_TYPE["BET_TYPE ベット種別マスタ（券種定義）"] {
+        string bet_type_code PK "例: TAN,FUK,WIDE,UMAREN,UMATAN,SANRENPUKU,SANRENTAN"
+        string label_ja
+        string label_en
+        int leg_count
+        int ordered_flag "0/1"
+        int uses_bracket_flag "枠連=1"
+        string notes
+    }
+
+    RACE_COMBINATION["RACE_COMBINATION レース別組合せ（券種+参加馬集合）"] {
+        string combination_id PK
+        int レースキー_場コード FK
+        int レースキー_年 FK
+        int レースキー_回 FK
+        hex レースキー_日 FK "F"
+        int レースキー_Ｒ FK
+        string bet_type_code FK
+    }
+
+    RACE_COMBINATION_PARTICIPANT["RACE_COMBINATION_PARTICIPANT 組合せ参加要素"] {
+        string combination_id PK, FK
+        int leg_position PK "1..leg_count"
+        int 馬番 FK "枠連の場合NULL"
+        int 枠番 "枠連のみ"
+        int scratched_flag "0/1"
+    }
+
+    RACE_COMBINATION_ODDS["RACE_COMBINATION_ODDS オッズスナップショット"] {
+        string combination_id PK, FK
+        string snapshot_time PK "ISO8601 or hhmm"
+        float odds
+        int popularity_rank
+        string snapshot_type "t-30 / final 等"
+    }
+
+    RACE_COMBINATION_PAYOUT["RACE_COMBINATION_PAYOUT 払戻結果"] {
+        string combination_id PK, FK
+        int payout_amount "Z(8)"
+    }
+
+    %% Generic combination relationships
+    BET_TYPE ||--o{ RACE_COMBINATION : bet_type_code
+    RACE_COMBINATION ||--o{ RACE_COMBINATION_PARTICIPANT : combination_id
+    RACE_COMBINATION ||--o{ RACE_COMBINATION_ODDS : odds
+    RACE_COMBINATION ||--o{ RACE_COMBINATION_PAYOUT : payouts
+
+    %% ---------------------------
+    %% Legend & Modeling Notes
+    %% ---------------------------
+    %% Type Codes: 9=int, Z=int(blank when 0 originally), X=string, F=hex digit; decimal patterns (ZZ9.9) => float.
+    %% Race Key = (レースキー_場コード, 年, 回, 日(F), Ｒ). 馬番 added for per-horse tables.
+    %% Normalization Evolution (SPECIALIZED -> GENERIC):
+    %%   (REMOVED) OZ / HJC (単勝・複勝 per-horse) → TAN / FUK combinations (leg_count=1) in generic model.
+    %%   (REMOVED) OW / HJCW (ワイド pair)       → WIDE combinations (leg_count=2, ordered_flag=0).
+    %%   Future: 馬連/馬単/３連複/３連単 etc. simply new BET_TYPE rows; no schema change.
+    %% Generic Pattern:
+    %%   BET_TYPE: 券種メタデータ
+    %%   RACE_COMBINATION: (race + bet_type + canonical participant set/order)
+    %%   RACE_COMBINATION_PARTICIPANT: legs (馬番 or 枠番)
+    %%   RACE_COMBINATION_ODDS: time snapshots (odds drift)
+    %%   RACE_COMBINATION_PAYOUT: realized payouts
+    %% Canonical Key Rules:
+    %%     unordered -> sort ascending & join with '-'; ordered -> join with '>' in semantic order.
+    %% Dead Heats: multiple RACE_COMBINATION rows become winning (multiple payouts).
+    %% Migration: legacy specialized tables can be exposed as dbt views selecting from generic core.
+    %% Styling: classDef dim (dimension), fact (fact), snapshot (point-in-time)
