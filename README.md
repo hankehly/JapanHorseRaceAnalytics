@@ -23,20 +23,12 @@ brew install hadoop
 
 Download newest postgresql jdbc driver.
 
-[Download hive](https://dlcdn.apache.org/hive/hive-3.1.3/).
-
-Replace (hive-folder)/lib/postgresql-9.4.1208.jre7 with the newest postgresql jdbc driver.
+https://jdbc.postgresql.org/download/
 
 Start postgres (init script will create metastore database)
 
 ```
 docker compose up
-```
-
-Run schematool on metastore_db in postgres.
-
-```
-./apache-hive-3.1.3-bin/bin/schematool -dbType postgres -initSchema -url 'jdbc:postgresql://127.0.0.1:5432/metastore_db' -passWord admin -userName admin -driver org.postgresql.Driver -verbose
 ```
 
 Start hive
