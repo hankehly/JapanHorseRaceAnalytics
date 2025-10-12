@@ -5,7 +5,7 @@ import pandas as pd
 from pyspark.sql import SparkSession
 from sqlalchemy import create_engine
 
-from JapanHorseRaceAnalytics.utilities.structured_logger import logger
+from jhra.utilities.structured_logger import logger
 
 
 def get_base_dir() -> Path:

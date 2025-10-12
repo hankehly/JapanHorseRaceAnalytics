@@ -1,10 +1,10 @@
-JapanHorseRaceAnalytics:
+jhra:
   target: local
   outputs:
     local:
       type: spark
       method: thrift
-      host: localhost
+      host: thriftserver
       port: 10000
       user: admin
       # This is the target schema name.

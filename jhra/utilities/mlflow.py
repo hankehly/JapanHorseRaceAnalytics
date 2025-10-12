@@ -1,7 +1,7 @@
 import pandas as pd
 from mlflow.types.schema import ColSpec
 
-from JapanHorseRaceAnalytics.utilities.structured_logger import logger
+from jhra.utilities.structured_logger import logger
 
 
 def get_mlflow_col_spec_type_for_pandas_dtype(dtype) -> str:

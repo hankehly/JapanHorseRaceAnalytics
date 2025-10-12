@@ -2,7 +2,7 @@ from typing import List
 
 import yaml
 
-from JapanHorseRaceAnalytics.models.base import Feature, FeatureSet
+from jhra.models.base import Feature, FeatureSet
 
 
 def get_features() -> List[Feature]:

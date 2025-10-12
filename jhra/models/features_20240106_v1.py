@@ -1,6 +1,6 @@
 from typing import List
 
-from JapanHorseRaceAnalytics.models.base import Feature
+from jhra.models.base import Feature
 
 
 def get_features() -> List[Feature]:

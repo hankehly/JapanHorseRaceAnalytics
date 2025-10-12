@@ -1,4 +1,19 @@
 services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: docker/devcontainer/dev.Dockerfile
+    environment:
+      DBT_PROJECT_DIR: /workspace
+      DBT_PROFILES_DIR: /workspace
+      SPARK_WAREHOUSE_DIR: /spark-warehouse
+      SPARK_JARS_PATH: /app/lib/postgresql.jar
+      MLFLOW_TRACKING_URI: http://mlflow:5005
+    volumes:
+      - .:/workspace:cached
+      - spark-warehouse:/spark-warehouse
+    command: sleep infinity
+
   # psql -U admin -h localhost -p 5432 -d jrdb
   # https://hub.docker.com/_/postgres
   postgres:
@@ -9,13 +24,13 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./.postgres/:/var/lib/postgresql/data
-      - ./docker/postgres-docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - postgres:/var/lib/postgresql/data
+      - ./docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d jrdb || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   # http://localhost:5050
   # https://hub.docker.com/r/dpage/pgadmin4
@@ -25,12 +40,15 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@example.com
       - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_SERVER_JSON_FILE=/pgadmin4/servers.json
+      - PGADMIN_REPLACE_SERVERS_ON_STARTUP=True
     ports:
       - 5050:80
     depends_on:
       - postgres
     volumes:
       - pgadmin:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
     healthcheck:
       test:
         [
@@ -43,7 +61,7 @@ services:
 
   thriftserver:
     build:
-      context: ./docker
+      context: ./docker/thriftserver
       dockerfile: spark.Dockerfile
     ports:
       - "10000:10000"
@@ -54,20 +72,49 @@ services:
       --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
       --name Thrift JDBC/ODBC Server
     volumes:
-      - ./.spark-warehouse/:/spark-warehouse/
-      - ./docker/hive-site.xml:/usr/spark/conf/hive-site.xml
-      - ./docker/spark-defaults.conf:/usr/spark/conf/spark-defaults.conf
+      - spark-warehouse:/spark-warehouse/
+      - ./docker/thriftserver/hive-site.xml:/usr/spark/conf/hive-site.xml
+      - ./docker/thriftserver/spark-defaults.conf:/usr/spark/conf/spark-defaults.conf
     environment:
       - WAIT_FOR=postgres:5432
 
-  # dbt-hive-metastore:
-  #   image: postgres:9-alpine
-  #   volumes:
-  #     - ./.hive-metastore/:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_USER=dbt
-  #     - POSTGRES_PASSWORD=dbt
-  #     - POSTGRES_DB=metastore
+  mlflow:
+    image: ghcr.io/mlflow/mlflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://admin:admin@postgres:5432/mlflow
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlruns
+      MLFLOW_HOST: 0.0.0.0
+      MLFLOW_PORT: 5005
+    command: >
+      /bin/bash -c "
+        pip install --no-cache-dir psycopg2-binary boto3 &&
+        mlflow server \
+          --backend-store-uri postgresql://admin:admin@postgres:5432/mlflow \
+          --default-artifact-root /mlruns \
+          --host 0.0.0.0 \
+          --port 5005
+      "
+    ports:
+      - 5005:5005
+    volumes:
+      - mlruns:/mlruns
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:5005/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
 volumes:
+  postgres:
   pgadmin:
+  spark-warehouse:
+  mlruns:

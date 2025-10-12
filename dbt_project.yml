@@ -1,7 +1,7 @@
-name: "JapanHorseRaceAnalytics"
+name: "jhra"
 version: "1.0.0"
 config-version: 2
-profile: JapanHorseRaceAnalytics
+profile: jhra
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -12,7 +12,7 @@ clean-targets:
   - "target"
   - "dbt_packages"
 models:
-  JapanHorseRaceAnalytics:
+  jhra:
     +materialized: table
     +file_format: parquet
     staging:
@@ -25,7 +25,7 @@ seeds:
   # Globally quote all seed columns
   # https://docs.getdbt.com/reference/resource-configs/quote_columns
   +quote_columns: true
-  JapanHorseRaceAnalytics:
+  jhra:
     +schema: seed
     # Make sure "code" columns are parsed as strings, not integers.
     # This workaround is really buggy. If it fails to parse a column as a string,

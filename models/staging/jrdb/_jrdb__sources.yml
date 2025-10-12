@@ -1,6 +1,6 @@
 sources:
   - name: jrdb
-    schema: jhra_raw
+    schema: raw
     tables:
       - name: raw_jrdb__bac
         description: 番組データ仕様

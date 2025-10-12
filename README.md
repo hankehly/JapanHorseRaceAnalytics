@@ -156,6 +156,58 @@ The horse track condition is usually the same or 1 off between SED and KAB.
 
 ## Modeling methodology
 
+### Spark / PySpark / ThriftServer / dbt version alignment
+
+The project uses a single Spark version across:
+* ThriftServer container (`docker/thriftserver/spark.Dockerfile`)
+* PySpark dependency in `pyproject.toml`
+* dbt-spark adapter runtime
+
+Current alignment:
+* Spark (ThriftServer): 3.5.7
+* PySpark (devcontainer): 3.5.7
+* Java: 17 (required for Spark 3.5+ and forward-compatible with Spark 4)
+* dbt-spark: 1.9.x (compatible with Spark 3.x)
+
+Rationale:
+* Avoids subtle planner/serialization incompatibilities.
+* Ensures SQL feature parity between interactive notebooks and dbt models.
+* Simplifies debugging (one Catalyst / ANSI dialect version).
+
+Upgrade procedure (example: move to Spark 3.5.2):
+1. Change `ARG SPARK_VERSION=3.5.2` in `docker/thriftserver/spark.Dockerfile`.
+2. Change `pyspark==3.5.2` in `pyproject.toml`.
+3. Rebuild images:
+	```bash
+	docker compose build thriftserver devcontainer
+	```
+4. Bring up stack:
+	```bash
+	docker compose up -d thriftserver devcontainer
+	```
+5. Validate versions:
+	```bash
+	docker compose exec devcontainer python -c "import pyspark; print(pyspark.__version__)"
+	docker compose exec thriftserver /usr/spark/bin/spark-submit --version | grep 'version'
+	```
+6. Run quick dbt check:
+	```bash
+	dbt debug
+	dbt run --select 1 --threads 1
+	```
+
+If moving to Spark 4.x:
+* Confirm dbt-spark release notes for official support (may require newer adapter).
+* Ensure Java 17+ already present (this repo already uses 17).
+* Pin exact `pyspark==4.0.x` rather than a loose range to avoid accidental mismatches.
+
+Metastore considerations:
+* Keep a backup before major version jumps (export Hive Metastore DB schema / snapshot Postgres volume).
+* Run a smoke test: list tables, select a few rows, verify partition discovery.
+
+Centralizing version numbers: optionally create a `.env` file consumed by `docker-compose.yaml` (e.g., `SPARK_VERSION`, `PYSPARK_VERSION`) to reduce the risk of drift.
+
+
 ### Metrics to track for each binary classifier model
 
 * Payoff rate overall

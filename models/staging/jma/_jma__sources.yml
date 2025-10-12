@@ -1,6 +1,6 @@
 sources:
   - name: jma
-    schema: jhra_raw
+    schema: raw
     description: 気象庁のデータ
     tables:
       - name: raw_jma__weather_hourly

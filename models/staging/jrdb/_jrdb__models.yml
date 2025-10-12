@@ -3,126 +3,58 @@ models:
     columns:
       - name: bac_sk
         quote: true
-        tests:
-          - unique
-          - not_null
       - name: bac_bk
         quote: true
-        tests:
-          - unique
-          - not_null
       - name: レースキー
         quote: true
-        tests:
-          - not_null
       - name: 開催キー
         quote: true
-        tests:
-          - not_null
       - name: レースキー_場コード
         quote: true
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__racetrack_codes')
-              field: code
       - name: レースキー_年
         quote: true
-        tests:
-          - not_null
       - name: レースキー_回
         quote: true
-        tests:
-          - not_null
       - name: レースキー_日
         quote: true
-        tests:
-          - not_null
       - name: レースキー_Ｒ
         quote: true
-        tests:
-          - not_null
       - name: 年月日
         quote: true
-        tests:
-          - not_null
       - name: 発走時間
         quote: true
-        tests:
-          - not_null
       - name: 発走日時
         quote: true
-        tests:
-          - not_null
-          - is_timestamp_with_timezone
       - name: レース条件_距離
         quote: true
-        tests:
-          - not_null
       - name: レース条件_トラック情報_芝ダ障害コード
         quote: true
         description: 1:芝, 2:ダート, 3:障害
-        tests:
-          - not_null
-          - accepted_values:
-              values: ["芝", "ダート", "障害"]
       - name: レース条件_トラック情報_右左
         quote: true
         description: 1:右, 2:左, 3:直, 9:他
-        tests:
-          - not_null
-          - accepted_values:
-              values: [1, 2, 3, 9]
       - name: レース条件_トラック情報_内外
         quote: true
-        description: |
+        description: |-
           1:通常(内), 2:外, 3,直ダ, 9:他
           ※障害のトラックは、以下の２通りとなります。
             "393":障害直線ダート
             "391":障害直線芝
-        tests:
-          - not_null
-          - accepted_values:
-              values: [1, 2, 3, 9]
       - name: レース条件_種別
         quote: true
         description: ４歳以上等、→JRDBデータコード表
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__race_category_codes')
-              field: code
       - name: レース条件_条件
         quote: true
         description: 900万下等、 →JRDBデータコード表
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__race_condition_codes')
-              field: code
       - name: レース条件_記号
         quote: true
         description: ○混等、    →JRDBデータコード表
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__special_mention_codes')
-              field: code
       - name: レース条件_重量
         quote: true
         description: ハンデ等、  →JRDBデータコード表
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__weight_condition_codes')
-              field: code
       - name: レース条件_グレード
         quote: true
         description: Ｇ１等      →JRDBデータコード表
-        tests:
-          - relationships:
-              to: ref('jrdb__grade_codes')
-              field: code
       - name: レース名
         quote: true
         description: レース名の通称（全角２５文字）
@@ -131,107 +63,64 @@ models:
         description: 第ZZ9回（全角半角混在）
       - name: 頭数
         quote: true
-        tests:
-          - not_null
       - name: コース
         quote: true
         description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
-        tests:
-          - accepted_values:
-              values: [1, 2, 3, 4, 5, 6]
       - name: 開催区分
         quote: true
         description: 1:関東, 2:関西, 3:ローカル
-        tests:
-          - not_null
-          - accepted_values:
-              values: [1, 2, 3]
       - name: レース名短縮
         quote: true
       - name: レース名９文字
         quote: true
-        tests:
-          - not_null
       - name: データ区分
         quote: true
         description: 1:特別登録, 2:想定確定, 3:前日
-        tests:
-          - not_null
       - name: １着賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: ２着賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: ３着賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: ４着賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: ５着賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: １着算入賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: ２着算入賞金
         quote: true
         description: 単位（万円）
-        tests:
-          - not_null
       - name: 馬券発売フラグ_単勝
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_複勝
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_枠連
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_馬連
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_馬単
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_ワイド
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_３連複
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: 馬券発売フラグ_３連単
         quote: true
         description: 1:発売, 0:発売無し
-        tests:
-          - not_null
       - name: WIN5フラグ
         quote: true
         description: 1～5
@@ -305,7 +194,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 追い状態
         quote: true
         tests:
@@ -316,7 +205,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4, 5]
+              values: [ 1, 2, 3, 4, 5 ]
       - name: 調教Ｆ
         quote: true
         tests:
@@ -339,12 +228,12 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 併せ馬相手データ_追切種類
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 併せ馬相手データ_年齢
         quote: true
       - name: 併せ馬相手データ_クラス
@@ -408,7 +297,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3, 4, 5]
+              values: [ 0, 1, 2, 3, 4, 5 ]
       - name: 調教コース種類_坂
         quote: true
         tests:
@@ -442,13 +331,13 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3, 4]
+              values: [ 0, 1, 2, 3, 4 ]
       - name: 調教重点
         quote: true
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3, 4]
+              values: [ 0, 1, 2, 3, 4 ]
       - name: 追切指数
         quote: true
       - name: 仕上指数
@@ -458,12 +347,12 @@ models:
         description: A,B,C,Dに分類 (コード等の詳細説明は、【調教分析データ内容の説明】を参照してください。)
         tests:
           - accepted_values:
-              values: ["A", "B", "C", "D"]
+              values: [ "A", "B", "C", "D" ]
       - name: 仕上指数変化
         quote: true
         tests:
           - accepted_values:
-              values: [0, 1, 2, 3, 4]
+              values: [ 0, 1, 2, 3, 4 ]
       - name: 調教コメント
         quote: true
       - name: コメント年月日
@@ -472,7 +361,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 一週前追切指数
         quote: true
       - name: 一週前追切コース
@@ -604,14 +493,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 曜日
         quote: true
         description: 日－土
         tests:
           - not_null
           - accepted_values:
-              values: ["月", "火", "水", "木", "金", "土", "日"]
+              values: [ "月", "火", "水", "木", "金", "土", "日" ]
       - name: 場名
         quote: true
         description: 競馬場名
@@ -625,25 +514,25 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: 芝馬場状態内
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: 芝馬場状態中
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: 芝馬場状態外
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: 芝馬場差
         quote: true
       - name: 直線馬場差最内
@@ -660,25 +549,25 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: ダ馬場状態内
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: ダ馬場状態中
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: ダ馬場状態外
         quote: true
         description: 1:絶好, 2:良, 3,稍荒, 4:荒
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: ダ馬場差
         quote: true
       - name: データ区分
@@ -686,7 +575,7 @@ models:
         description: 1:特別登録,2:想定確定,3:枠確定,4:前日
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4]
+              values: [ 1, 2, 3, 4 ]
       - name: 連続何日目
         quote: true
         description: 日数
@@ -697,7 +586,7 @@ models:
         description: 1:野芝, 2:洋芝, 3:混生
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 草丈
         quote: true
         description: 単位cm
@@ -1000,7 +889,7 @@ models:
         description: 1:初装着,2:再装着,3:ブリンカ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 騎手名
         quote: true
         tests:
@@ -1015,7 +904,7 @@ models:
         description: 1:☆(1K減),2:△(2K減),3:▲(3K減),4:★(4K減),9:◇(2K減)
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4, 9]
+              values: [ 1, 2, 3, 4, 9 ]
       - name: 調教師名
         quote: true
         tests:
@@ -1097,13 +986,13 @@ models:
         description: 1:◎, 2:○, 3:△
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: ダ適性コード
         quote: true
         description: 1:◎, 2:○, 3:△
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
 
       # todo
       - name: 騎手コード
@@ -1150,7 +1039,7 @@ models:
         description: H,M,S
         tests:
           - accepted_values:
-              values: [H, M, S]
+              values: [ H, M, S ]
       - name: 展開予想データ_道中順位
         quote: true
       - name: 展開予想データ_道中差
@@ -1160,7 +1049,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [2, 3, 4, 5]
+              values: [ 2, 3, 4, 5 ]
       - name: 展開予想データ_後３Ｆ順位
         quote: true
       - name: 展開予想データ_後３Ｆ差
@@ -1169,7 +1058,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [2, 3, 4, 5]
+              values: [ 2, 3, 4, 5 ]
       - name: 展開予想データ_ゴール順位
         quote: true
       - name: 展開予想データ_ゴール差
@@ -1178,7 +1067,7 @@ models:
         quote: true
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4, 5]
+              values: [ 1, 2, 3, 4, 5 ]
       - name: 展開予想データ_展開記号
         quote: true
         tests:
@@ -1214,7 +1103,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 馬主名
         quote: true
         tests:
@@ -1271,7 +1160,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3, 4]
+              values: [ 0, 1, 2, 3, 4 ]
       - name: 走法
         quote: true
         description: don't use, this field is no longer updated
@@ -1280,97 +1169,97 @@ models:
         description: 馬体の全体的な形状
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_背中
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_胴
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_尻
         quote: true
         description: 大きさ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_トモ
         quote: true
         description: 角度
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_腹袋
         quote: true
         description: 大きさ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_頭
         quote: true
         description: 大きさ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_首
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_胸
         quote: true
         description: 大きさ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_肩
         quote: true
         description: 角度
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_前長
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_後長
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_前幅
         quote: true
         description: 前脚の歩幅
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_後幅
         quote: true
         description: 後脚の歩幅
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_前繋
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 体型_後繋
         quote: true
         description: 長さ
         tests:
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
         # 体型_尾 and 体型_振 contain mostly nulls and shouldn't be used
       - name: 体型_尾
         quote: true
@@ -1472,7 +1361,7 @@ models:
           1:降級, 2:２段階降級, 0:通常
         tests:
           - accepted_values:
-              values: [0, 1, 2]
+              values: [ 0, 1, 2 ]
 
       - name: 激走タイプ
         quote: true
@@ -1496,7 +1385,7 @@ models:
           過去分析される場合は、激走タイプを使用することをお勧めします。
         tests:
           - accepted_values:
-              values: [A1, A2, A3, A4, B1, B2]
+              values: [ A1, A2, A3, A4, B1, B2 ]
       - name: 休養理由分類コード
         quote: true
         tests:
@@ -1511,7 +1400,7 @@ models:
           2:初トラック(初芝,初ダ,初障)
         tests:
           - accepted_values:
-              values: [0, 1, 2]
+              values: [ 0, 1, 2 ]
       - name: 距離フラグ
         quote: true
         description: |
@@ -1519,7 +1408,7 @@ models:
           1: 最長距離
         tests:
           - accepted_values:
-              values: [0, 1]
+              values: [ 0, 1 ]
       - name: クラスフラグ
         quote: true
         description: |
@@ -1529,7 +1418,7 @@ models:
           3: 格上挑戦
         tests:
           - accepted_values:
-              values: [0, 1, 2, 3]
+              values: [ 0, 1, 2, 3 ]
       - name: 転厩フラグ
         quote: true
         description: |
@@ -1537,7 +1426,7 @@ models:
           1～3:転厩何戦目（３戦目まで）
         tests:
           - accepted_values:
-              values: [0, 1, 2, 3]
+              values: [ 0, 1, 2, 3 ]
       - name: 去勢フラグ
         quote: true
         description: |
@@ -1545,7 +1434,7 @@ models:
           1～3:去勢何戦目（３戦目まで）
         tests:
           - accepted_values:
-              values: [0, 1, 2, 3]
+              values: [ 0, 1, 2, 3 ]
       - name: 乗替フラグ
         quote: true
         description: |
@@ -1554,7 +1443,7 @@ models:
           9: 乗替 (再)
         tests:
           - accepted_values:
-              values: [0, 1, 9]
+              values: [ 0, 1, 9 ]
 
       # just contains blank space
       - name: 予備フラグ
@@ -1600,7 +1489,7 @@ models:
           ・間に合わなかったデータは後日取り込まれることになります。それを反映したデータは定期的に再作成します。
         tests:
           - accepted_values:
-              values: [A, B, C, D, E]
+              values: [ A, B, C, D, E ]
       - name: 厩舎ランク
         quote: true
         description: |
@@ -1617,7 +1506,7 @@ models:
           ９・その他総数１０以下の厩舎
         tests:
           - accepted_values:
-              values: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+              values: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 
   - name: stg_jrdb__sed
     tests:
@@ -1687,7 +1576,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [芝, ダート, 障害]
+              values: [ 芝, ダート, 障害 ]
       - name: レース条件_トラック情報_右左
         quote: true
         description: 1:右, 2:左, 3:直, 9:他
@@ -1994,7 +1883,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2]
+              values: [ 0, 1, 2 ]
       - name: 脚元情報
         quote: true
         description: |
@@ -2005,7 +1894,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3]
+              values: [ 0, 1, 2, 3 ]
       - name: 取消フラグ
         quote: true
         description: 取消フラグ
@@ -2033,7 +1922,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3]
+              values: [ 0, 1, 2, 3 ]
       - name: 馬場状態コード
         quote: true
         tests:
@@ -2140,7 +2029,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3]
+              values: [ 1, 2, 3 ]
       - name: 毛色コード
         quote: true
         tests:

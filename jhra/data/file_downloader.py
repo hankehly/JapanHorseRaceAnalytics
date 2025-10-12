@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, ConfigDict, HttpUrl, constr, validator
 
-from JapanHorseRaceAnalytics.utilities.structured_logger import logger
+from jhra.utilities.structured_logger import logger
 
 
 def is_year_file(filename) -> bool:

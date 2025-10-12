@@ -1,0 +1,21 @@
+{
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "files.associations": {
+                "*.yml": "jinja-yaml",
+                "*.sql": "jinja-sql"
+            },
+            "extensions": [
+                "ms-python.black-formatter",
+                "ms-toolsai.jupyter",
+                "ms-python.python",
+                "innoverio.vscode-dbt-power-user",
+                "MermaidChart.vscode-mermaid-chart",
+                "ms-python.isort"
+            ]
+        }
+    }
+}
