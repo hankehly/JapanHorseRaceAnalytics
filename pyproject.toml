@@ -22,7 +22,7 @@ dependencies = [
     "mlxtend>=0.23.4",
     "pandas>=2.3.2",
     "pydantic>=2.11.9",
-    "pyspark==3.5.7",
+    "pyspark==3.3.2",
     "requests>=2.32.5",
     "scikit-learn>=1.7.2",
     "seaborn>=0.13.2",
