@@ -20,4 +20,8 @@
         <name>hive.metastore.schema.verification</name>
         <value>false</value>
     </property>
+    <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>/spark-warehouse</value>
+    </property>
 </configuration>

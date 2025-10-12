@@ -2,6 +2,7 @@ from typing import List
 
 import yaml
 from pydantic import BaseModel, TypeAdapter
+from pyspark.sql import Row
 from pyspark.sql.types import ArrayType, StringType, StructField, StructType
 
 
@@ -31,3 +32,21 @@ def load_schema(file_path: str) -> List[FieldModel]:
         schema_data = yaml.safe_load(file)
     schema = TypeAdapter(List[FieldModel]).validate_python(schema_data)
     return schema
+
+
+def parse_line(line: bytes, schema: List[FieldModel]) -> Row:
+    parsed_fields = []
+    for field in schema:
+        if field.repeat_factor == 1:
+            start = field.relative - 1
+            end = start + field.byte_length
+            parsed_fields.append(line[start:end].decode("cp932").strip())
+        else:
+            repeated_fields = []
+            start = field.relative - 1
+            for _ in range(field.repeat_factor):
+                end = start + field.byte_length
+                repeated_fields.append(line[start:end].decode("cp932").strip())
+                start = end
+            parsed_fields.append(repeated_fields)
+    return Row(*parsed_fields)
