@@ -4,10 +4,7 @@ services:
       context: .
       dockerfile: docker/devcontainer/dev.Dockerfile
     environment:
-      DBT_PROJECT_DIR: /workspace
-      DBT_PROFILES_DIR: /workspace
       SPARK_WAREHOUSE_DIR: /spark-warehouse
-      SPARK_JARS_PATH: /app/lib/postgresql.jar
       MLFLOW_TRACKING_URI: http://mlflow:5005
     volumes:
       - .:/workspace:cached
