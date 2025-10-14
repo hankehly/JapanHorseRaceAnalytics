@@ -11,7 +11,7 @@ jhra:
       # When combined with custom schema name (e.g. in dbt_profile.yml)
       # the resulting schema name is "jhra_<custom_schema_name>".
       # https://docs.getdbt.com/docs/build/custom-schemas#understanding-custom-schemas
-      schema: jrdb
+      schema: raw
       connect_retries: 5
       connect_timeout: 15
       retry_all: true

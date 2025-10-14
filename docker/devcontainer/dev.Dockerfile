@@ -1,10 +1,10 @@
 # Stage providing uv binaries (avoid unsupported variable expansion in COPY --from)
-ARG PYTHON_VERSION=3.12.5
+ARG PYTHON_VERSION=3.10
 ARG UV_VERSION=0.9.2
 
 FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uvbin
 
-FROM python:${PYTHON_VERSION} AS base
+FROM python:${PYTHON_VERSION}-bookworm AS base
 
 ARG POSTGRES_JDBC_VERSION=42.7.8
 ENV PYTHONUNBUFFERED=1 \
