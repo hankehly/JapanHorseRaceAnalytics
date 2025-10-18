@@ -37,6 +37,15 @@ Start hive
 make start_hive_server
 ```
 
+## Schemas
+
+* jhra_raw: Raw JRDB data as ingested from text files
+* jhra_staging: Cleaned and conformed JRDB data
+* jhra_seed: Static reference data
+* jhra_intermediate: Engineered features for modeling
+* jhra_model: Final modeling tables
+
+
 ## Data sources
 
 ### JRDB
@@ -99,7 +108,7 @@ Some datasets have identitical rows. Others have rows that are identical except 
 
 | dataset | duplicates | different columns | notes                                                                                                      |
 | ------- | ---------- | ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| BAC     | yes        | 年月日            | E.g., see 開催キー in '061345', '091115', '101125'. Keep rows with the latest date (verified in netkeiba). |
+| BAC     | yes        | 年月日             | E.g., see 開催キー in '061345', '091115', '101125'. This is likely due to rescheduling due to bad weather. Keep rows with the latest date (verified in netkeiba).  |
 | CHA     |            |                   | todo                                                                                                       |
 | CYB     |            |                   | todo                                                                                                       |
 | HJC     |            |                   | todo                                                                                                       |
@@ -118,7 +127,7 @@ Some datasets have identitical rows. Others have rows that are identical except 
 
 #### Other data notes
 
-bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも少ないので無視することにする。`runner_count_difference`に特定するためのクエリを書いておく。
+bacとkyi/sedの頭数が1頭で異なる場合があるけど、あまりにも少ないので無視する。`runner_count_difference`に特定するためのクエリを書いておく。
 
 | レースキー | 頭数_kyi | 頭数_bac |
 | ---------- | -------- | -------- |
@@ -152,7 +161,6 @@ The horse track condition is usually the same or 1 off between SED and KAB.
 *同着*
 
 同じレースで着順が同じの場合がある。
-
 
 ## Modeling methodology
 
@@ -272,3 +280,24 @@ Example:
 | 2     | `(2,*15)-(4,10)11,6(1,12)(7,14)9,8(5,13)3` |
 | 3     | `15,2(10,11)(4,6,12,14)1(7,5,3)9,8,13` |
 | 4     | `(*15,2)-(4,10)1(12,11)3(6,5,14)(9,7)-8,13` |
+
+
+# Note about JRDB filenames
+
+### Format
+
+All files are named as follows:
+`{dataset name prefix}dddddd.txt`
+
+Where:
+* `{dataset name prefix}` is a 2 or 3-letter code representing the dataset (e.g., SED, BAC, OZ, etc.)
+* `dddddd` is a 6-digit date code in the format `YYMMDD` representing the data's effective date.
+
+### `_t` suffix
+
+JRDB/システム班より：
+```
+_t　付のデータは、テスト用に作成したデータです。
+年度パックデータ作成の際に紛れ込んでしまいました。
+不要ですので、削除していただけますでしょうか？
+```

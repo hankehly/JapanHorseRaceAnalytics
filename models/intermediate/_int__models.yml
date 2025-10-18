@@ -2,10 +2,11 @@ models:
   - name: int_combinations
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_int_combinations_レースキー
-            - meta_int_combinations_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_int_combinations_レースキー
+              - meta_int_combinations_馬番
+            quote_columns: true
     columns:
       - name: meta_int_combinations_レースキー
         quote: true
@@ -19,10 +20,11 @@ models:
   - name: int_place_odds
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
     columns:
       - name: レースキー
         quote: true
@@ -40,10 +42,11 @@ models:
   - name: int_win_odds
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
     columns:
       - name: レースキー
         quote: true
@@ -61,10 +64,11 @@ models:
   - name: int_place_payouts
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
     columns:
       - name: レースキー
         quote: true
@@ -82,10 +86,11 @@ models:
   - name: int_win_payouts
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
     columns:
       - name: レースキー
         quote: true
@@ -106,10 +111,11 @@ models:
       調教師は同じレースに複数の馬を出走させることがあるから、集計方法に注意が必要。
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_int_race_trainers_レースキー
-            - meta_int_race_trainers_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_int_race_trainers_レースキー
+              - meta_int_race_trainers_馬番
+            quote_columns: true
     columns:
       - name: meta_int_race_trainers_レースキー
         quote: true
@@ -126,10 +132,11 @@ models:
       騎手は同じ日に複数のレースに出走することがある。
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_int_race_jockeys_レースキー
-            - meta_int_race_jockeys_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_int_race_jockeys_レースキー
+              - meta_int_race_jockeys_馬番
+            quote_columns: true
     columns:
       - name: meta_int_race_jockeys_レースキー
         quote: true
@@ -146,10 +153,11 @@ models:
       馬は必ず一日に一度だけ出走する (find_horses_multiple_races_single_day.sql)
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_int_race_horses_レースキー
-            - meta_int_race_horses_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_int_race_horses_レースキー
+              - meta_int_race_horses_馬番
+            quote_columns: true
     columns:
       - name: meta_int_race_horses_レースキー
         quote: true
@@ -163,10 +171,11 @@ models:
   - name: int_race_horses_v2
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_レースキー
-            - meta_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_レースキー
+              - meta_馬番
+            quote_columns: true
     columns:
       - name: meta_レースキー
         quote: true

@@ -1,38 +1,140 @@
+sources:
+  - name: jrdb
+    schema: jhra_raw
+    tables:
+      - name: raw_jrdb__bac
+      - name: raw_jrdb__cha
+        description: 調教本追切データ仕様
+      - name: raw_jrdb__cyb
+        description: 調教分析データ仕様
+      - name: raw_jrdb__hjc
+        description: 払戻情報データ仕様
+      - name: raw_jrdb__kab
+        description: 開催データ仕様
+      - name: raw_jrdb__kyi
+        description: 競走馬データ仕様
+      - name: raw_jrdb__ot
+        description: 基準オッズ３連複データ仕様
+      - name: raw_jrdb__ou
+        description: 基準オッズ馬単データ仕様
+      - name: raw_jrdb__ov
+        description: 基準オッズ３連単データ仕様
+      - name: raw_jrdb__ow
+        description: 基準オッズワイドデータ仕様
+      - name: raw_jrdb__oz
+        description: 基準オッズデータ仕様
+      - name: raw_jrdb__sed
+        description: 成績データ仕様
+      - name: raw_jrdb__skb
+        description: 成績拡張データ仕様
+      - name: raw_jrdb__tyb
+        description: 直前情報データ仕様
+      - name: raw_jrdb__ukc
+        description: 馬基本データ仕様
+
+
 models:
   - name: stg_jrdb__bac
+    description: 番組データ仕様
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - レースキー_場コード
+              - レースキー_年
+              - レースキー_回
+              - レースキー_日
+              - レースキー_Ｒ
+            quote_columns: true
+
     columns:
-      - name: bac_sk
-        quote: true
+      - name: file_name
+        data_tests:
+          - not_null
+
+      - name: sha256
+        data_tests:
+          - not_null
+
       - name: bac_bk
-        quote: true
+        data_tests:
+          - not_null
+
       - name: レースキー
         quote: true
+        data_tests:
+          - not_null
+
       - name: 開催キー
         quote: true
+        data_tests:
+          - not_null
+
       - name: レースキー_場コード
         quote: true
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('jrdb__racetrack_codes')
+              field: code
+
       - name: レースキー_年
         quote: true
+        data_tests:
+          - not_null
+
       - name: レースキー_回
         quote: true
+        data_tests:
+          - not_null
+
       - name: レースキー_日
         quote: true
+        data_tests:
+          - not_null
+
       - name: レースキー_Ｒ
         quote: true
+        data_tests:
+          - not_null
+
       - name: 年月日
         quote: true
+        data_tests:
+          - not_null
+
       - name: 発走時間
         quote: true
+        data_tests:
+          - not_null
+
       - name: 発走日時
         quote: true
+        data_tests:
+          - not_null
+
       - name: レース条件_距離
         quote: true
+        data_tests:
+          - not_null
+
       - name: レース条件_トラック情報_芝ダ障害コード
         quote: true
         description: 1:芝, 2:ダート, 3:障害
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
       - name: レース条件_トラック情報_右左
         quote: true
         description: 1:右, 2:左, 3:直, 9:他
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3, 9 ]
+
       - name: レース条件_トラック情報_内外
         quote: true
         description: |-
@@ -40,6 +142,11 @@ models:
           ※障害のトラックは、以下の２通りとなります。
             "393":障害直線ダート
             "391":障害直線芝
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3, 9, 393, 391 ]
+
       - name: レース条件_種別
         quote: true
         description: ４歳以上等、→JRDBデータコード表
@@ -1511,14 +1618,15 @@ models:
   - name: stg_jrdb__sed
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー_場コード
-            - レースキー_年
-            - レースキー_回
-            - レースキー_日
-            - レースキー_Ｒ
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー_場コード
+              - レースキー_年
+              - レースキー_回
+              - レースキー_日
+              - レースキー_Ｒ
+              - 馬番
+            quote_columns: true
     columns:
       - name: sed_sk
         quote: true
@@ -2000,10 +2108,11 @@ models:
   - name: stg_jrdb__ukc
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - 血統登録番号
-            - データ年月日
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - 血統登録番号
+              - データ年月日
+            quote_columns: true
     columns:
       - name: ukc_sk
         # https://docs.getdbt.com/reference/resource-properties/quote

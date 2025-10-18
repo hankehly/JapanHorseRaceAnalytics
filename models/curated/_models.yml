@@ -20,10 +20,11 @@ models:
       enabled: false
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
     columns:
       - name: レースキー
         quote: true
@@ -39,27 +40,30 @@ models:
       enabled: false
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - レースキー
-            - 馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - レースキー
+              - 馬番
+            quote_columns: true
 
   - name: features_20240217_v1
     config:
       enabled: false
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_レースキー
-            - meta_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_レースキー
+              - meta_馬番
+            quote_columns: true
 
   - name: features_20240304_v1
     config:
       enabled: true
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - meta_レースキー
-            - meta_馬番
-          quote_columns: true
+          arguments:
+            combination_of_columns:
+              - meta_レースキー
+              - meta_馬番
+            quote_columns: true

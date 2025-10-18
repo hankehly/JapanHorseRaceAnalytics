@@ -2,10 +2,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from loguru import logger
 from pyspark.sql import SparkSession
 from sqlalchemy import create_engine
-
-from jhra.utilities.structured_logger import logger
 
 
 def get_base_dir() -> Path:

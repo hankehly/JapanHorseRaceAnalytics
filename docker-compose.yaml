@@ -6,6 +6,7 @@ services:
     environment:
       SPARK_WAREHOUSE_DIR: /spark-warehouse
       MLFLOW_TRACKING_URI: http://mlflow:5005
+      HIVE_METASTORE_URL: jdbc:postgresql://postgres/metastore
     volumes:
       - .:/workspace:cached
       - spark-warehouse:/spark-warehouse
