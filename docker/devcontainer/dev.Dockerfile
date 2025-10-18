@@ -21,6 +21,7 @@ RUN apt-get update && \
     ca-certificates \
     curl \
     libpq5 \
+    jq \
     tini && \
     rm -rf /var/lib/apt/lists/*
 
