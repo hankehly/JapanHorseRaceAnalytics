@@ -7,14 +7,17 @@ FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uvbin
 FROM python:${PYTHON_VERSION}-bookworm AS base
 
 ARG POSTGRES_JDBC_VERSION=42.7.8
+ARG NODE_VERSION=25
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/opt/venv \
     VIRTUAL_ENV=/opt/venv \
     POSTGRES_JDBC_DIR=/opt/jdbc \
     POSTGRES_JDBC_JAR=/opt/jdbc/postgresql.jar \
-    CLASSPATH=/opt/jdbc/postgresql.jar:$CLASSPATH
-
+    CLASSPATH=/opt/jdbc/postgresql.jar:$CLASSPATH \
+    NVM_DIR=/root/.nvm
+    
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openjdk-17-jdk-headless \
@@ -24,6 +27,10 @@ RUN apt-get update && \
     jq \
     tini && \
     rm -rf /var/lib/apt/lists/*
+    
+# Install nvm and Node.js and npm packages
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && npm install -g rust-just"
 
 # Install uv (copy from named stage) pinned version
 COPY --from=uvbin /uv /uvx /bin/
