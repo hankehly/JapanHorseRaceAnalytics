@@ -14,4 +14,4 @@ jhra:
       connect_retries: 5
       connect_timeout: 15
       retry_all: true
-      threads: 4
+      threads: 8

@@ -63,7 +63,7 @@ make start_hive_server
 
 #### Table grain
 
-| file |                                                                                                           | grain          | ユニークキー                             | 更新時間   | 実績/予測 |
+| file | description                                                                                               | grain          | ユニークキー                             | 更新時間   | 実績/予測 |
 | ---- | --------------------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------- | ---------- | --------- |
 | SED  | 成績分析用                                                                                                | 1 race + horse | レースキー・馬番・競走成績キー           | 木 17:00   | 成績情報  |
 | SKB  | 成績分析用・拡張データ                                                                                    | 1 race + horse | レースキー・馬番・競走成績キー           | 木 17:00   | 成績情報  |
@@ -100,30 +100,6 @@ Notes:
 | 馬番         | 1-16など                                                             |
 | 血統登録番号 | 99101712　など                                                       |
 | 開催キー     | 「場コード・年・回・日」の組み合わせ。レースキーの一部とリンク可能。 |
-
-
-#### Duplicates
-
-Some datasets have identitical rows. Others have rows that are identical except for specific columns. The following table shows which datasets have duplicates and which columns are different.
-
-| dataset | duplicates | different columns | notes                                                                                                      |
-| ------- | ---------- | ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| BAC     | yes        | 年月日             | E.g., see 開催キー in '061345', '091115', '101125'. This is likely due to rescheduling due to bad weather. Keep rows with the latest date (verified in netkeiba).  |
-| CHA     |            |                   | todo                                                                                                       |
-| CYB     |            |                   | todo                                                                                                       |
-| HJC     |            |                   | todo                                                                                                       |
-| KAB     |            |                   | todo                                                                                                       |
-| KYI     |            |                   | todo                                                                                                       |
-| OZ      |            |                   | todo                                                                                                       |
-| OT      |            |                   | todo                                                                                                       |
-| OU      |            |                   | todo                                                                                                       |
-| OV      |            |                   | todo                                                                                                       |
-| OW      |            |                   | todo                                                                                                       |
-| SED     |            |                   | todo                                                                                                       |
-| SKB     |            |                   | todo                                                                                                       |
-| TYB     |            |                   | todo                                                                                                       |
-| UKC     | yes        |                   | Identical rows, take whichever you please                                                                  |
-
 
 #### Other data notes
 
@@ -163,57 +139,6 @@ The horse track condition is usually the same or 1 off between SED and KAB.
 同じレースで着順が同じの場合がある。
 
 ## Modeling methodology
-
-### Spark / PySpark / ThriftServer / dbt version alignment
-
-The project uses a single Spark version across:
-* ThriftServer container (`docker/thriftserver/spark.Dockerfile`)
-* PySpark dependency in `pyproject.toml`
-* dbt-spark adapter runtime
-
-Current alignment:
-* Spark (ThriftServer): 3.5.7
-* PySpark (devcontainer): 3.5.7
-* Java: 17 (required for Spark 3.5+ and forward-compatible with Spark 4)
-* dbt-spark: 1.9.x (compatible with Spark 3.x)
-
-Rationale:
-* Avoids subtle planner/serialization incompatibilities.
-* Ensures SQL feature parity between interactive notebooks and dbt models.
-* Simplifies debugging (one Catalyst / ANSI dialect version).
-
-Upgrade procedure (example: move to Spark 3.5.2):
-1. Change `ARG SPARK_VERSION=3.5.2` in `docker/thriftserver/spark.Dockerfile`.
-2. Change `pyspark==3.5.2` in `pyproject.toml`.
-3. Rebuild images:
-	```bash
-	docker compose build thriftserver devcontainer
-	```
-4. Bring up stack:
-	```bash
-	docker compose up -d thriftserver devcontainer
-	```
-5. Validate versions:
-	```bash
-	docker compose exec devcontainer python -c "import pyspark; print(pyspark.__version__)"
-	docker compose exec thriftserver /usr/spark/bin/spark-submit --version | grep 'version'
-	```
-6. Run quick dbt check:
-	```bash
-	dbt debug
-	dbt run --select 1 --threads 1
-	```
-
-If moving to Spark 4.x:
-* Confirm dbt-spark release notes for official support (may require newer adapter).
-* Ensure Java 17+ already present (this repo already uses 17).
-* Pin exact `pyspark==4.0.x` rather than a loose range to avoid accidental mismatches.
-
-Metastore considerations:
-* Keep a backup before major version jumps (export Hive Metastore DB schema / snapshot Postgres volume).
-* Run a smoke test: list tables, select a few rows, verify partition discovery.
-
-Centralizing version numbers: optionally create a `.env` file consumed by `docker-compose.yaml` (e.g., `SPARK_VERSION`, `PYSPARK_VERSION`) to reduce the risk of drift.
 
 
 ### Metrics to track for each binary classifier model
@@ -301,3 +226,4 @@ _t　付のデータは、テスト用に作成したデータです。
 年度パックデータ作成の際に紛れ込んでしまいました。
 不要ですので、削除していただけますでしょうか？
 ```
+These `_t` files are test datasets created for testing purposes. They were inadvertently included in the annual pack data. You can safely delete them.

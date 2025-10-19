@@ -27,48 +27,28 @@ sources:
         description: 成績データ仕様
       - name: raw_jrdb__skb
         description: 成績拡張データ仕様
+      - name: raw_jrdb__srb
       - name: raw_jrdb__tyb
         description: 直前情報データ仕様
       - name: raw_jrdb__ukc
         description: 馬基本データ仕様
 
-
 models:
   - name: stg_jrdb__bac
-    description: 番組データ仕様
-
-    data_tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns:
-              - レースキー_場コード
-              - レースキー_年
-              - レースキー_回
-              - レースキー_日
-              - レースキー_Ｒ
-            quote_columns: true
+    description: >
+      番組データ仕様
+      開催キー contains duplicates. E.g., see 開催キー in '061345', '091115', '101125'. This is likely due to rescheduling due to bad weather. Keep rows with the latest date (verified in netkeiba).
 
     columns:
-      - name: file_name
-        data_tests:
-          - not_null
-
-      - name: sha256
-        data_tests:
-          - not_null
-
-      - name: bac_bk
-        data_tests:
+      - name: bac_sk
+        tests:
+          - unique
           - not_null
 
       - name: レースキー
         quote: true
         data_tests:
-          - not_null
-
-      - name: 開催キー
-        quote: true
-        data_tests:
+          - unique
           - not_null
 
       - name: レースキー_場コード
@@ -348,9 +328,14 @@ models:
       - name: WIN5フラグ
         quote: true
         description: 1～5
+      
+      - name: _file_name
         data_tests:
-          - accepted_values:
-              values: [ 1, 2, 3, 4, 5 ]
+          - not_null
+
+      - name: _sha256
+        data_tests:
+          - not_null
 
   - name: stg_jrdb__cha
     columns:
@@ -2228,63 +2213,34 @@ models:
   - name: stg_jrdb__ukc
     tests:
       - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns:
-              - 血統登録番号
-              - データ年月日
-            quote_columns: true
+          combination_of_columns:
+            - 血統登録番号
+            - データ年月日
+          quote_columns: true
     columns:
       - name: ukc_sk
         # https://docs.getdbt.com/reference/resource-properties/quote
         quote: true
-        tests:
-          - unique
-          - not_null
       - name: ukc_bk
         quote: true
-        tests:
-          - unique
-          - not_null
       - name: 血統登録番号
         quote: true
-        tests:
-          - not_null
       - name: 馬名
         quote: true
-        tests:
-          - not_null
       - name: 性別コード
         quote: true
-        tests:
-          - not_null
-          - accepted_values:
-              values: [ 1, 2, 3 ]
       - name: 毛色コード
         quote: true
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__hair_color_codes')
-              field: code
       - name: 馬記号コード
         quote: true
-        tests:
-          - not_null
-          - relationships:
-              to: ref('jrdb__horse_symbol_codes')
-              field: code
       - name: 血統情報_父馬名
         quote: true
-        tests:
-          - not_null
       - name: 血統情報_母馬名
         quote: true
         # tests:
         #   - not_null
       - name: 血統情報_母父馬名
         quote: true
-        tests:
-          - not_null
       - name: 生年月日
         quote: true
         description: yyyyMMdd
@@ -2310,20 +2266,11 @@ models:
         quote: true
       - name: データ年月日
         quote: true
-        tests:
-          - not_null
       - name: 父系統コード
         quote: true
-        tests:
-          - relationships:
-              to: ref('jrdb__lineage_codes')
-              field: code
       - name: 母父系統コード
         quote: true
-        tests:
-          - relationships:
-              to: ref('jrdb__lineage_codes')
-              field: code
+    description: "Duplicates: Identical rows, take whichever you please"
 
   - name: stg_jrdb__oz
     description: 基準オッズデータ
@@ -2524,3 +2471,111 @@ models:
         quote: true
       - name: 分析用データ_骨瘤
         quote: true
+
+  - name: stg_jrdb__srb
+    description: 成績レースデータ仕様
+
+    columns:
+      - name: srb_sk
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー
+        quote: true
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー_場コード
+        quote: true
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('jrdb__racetrack_codes')
+              field: code
+
+      - name: レースキー_年
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_回
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_日
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_Ｒ
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: ハロンタイム
+        quote: true
+        description: |
+          3*18=54BYTE 先頭馬の１ハロン毎のタイム 0.1秒単位
+          1レース距離が200Mで割れない場合（1700や2100Mのとき）1ハロン目のデータは、100Mのタイムとなります。
+          例: 1150Mの場合は、150M
+        data_tests:
+          - not_null
+          - array_length_equals:
+              length: 18
+
+      - name: コーナー位置取り_１コーナー
+        quote: true
+
+      - name: コーナー位置取り_２コーナー
+        quote: true
+
+      - name: コーナー位置取り_３コーナー
+        quote: true
+
+      - name: コーナー位置取り_４コーナー
+        quote: true
+        description: |
+          芝直線1000mなど、コーナーが無い場合はNULLとなります。
+          E.g., https://db.netkeiba.com/race/200804010310/
+
+      - name: ペースアップ位置
+        quote: true
+        description: 残りハロン数
+
+      - name: トラックバイアス_１角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_２角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_向正
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_３角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_４角
+        quote: true
+        description: （最内、内、中、外、大外）
+
+      - name: トラックバイアス_直線
+        quote: true
+        description: （最内、内、中、外、大外）
+
+      - name: レースコメント
+        quote: true
+    
+      - name: _file_name
+        data_tests:
+          - not_null
+
+      - name: _sha256
+        data_tests:
+          - not_null

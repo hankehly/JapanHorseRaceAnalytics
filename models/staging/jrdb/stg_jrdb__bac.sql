@@ -12,9 +12,6 @@ with
   from (
     select
       *,
-      -- bac has rows with duplicate race keys but different 年月日.
-      -- E.g., see 開催キー in '061345', '091115', '101125'
-      -- we want the rows with the latest 年月日
       -- Note: the 'YYYYMMDD' format maintains chronological ordering when sorted alphabetically as strings,
       -- so we don't need to cast to date or integer when sorting
       row_number() over(partition by `レースキー_場コード`, `レースキー_年`, `レースキー_回`, `レースキー_日`, `レースキー_Ｒ` order by `年月日` desc) AS rn
@@ -27,28 +24,20 @@ with
 
   final as (
   select
-    file_name,
-    sha256,
+    {{ dbt_utils.generate_surrogate_key([
+      "`レースキー_場コード`",
+      "`レースキー_年`",
+      "`レースキー_回`",
+      "`レースキー_日`",
+      "`レースキー_Ｒ`"
+    ]) }} as bac_sk,
     concat(
-      nullif(trim(`レースキー_場コード`), ''),
-      nullif(trim(`レースキー_年`), ''),
-      nullif(trim(`レースキー_回`), ''),
-      nullif(trim(`レースキー_日`), ''),
-      nullif(trim(`レースキー_Ｒ`), '')
-    ) as bac_bk,
-    concat(
-      nullif(trim(`レースキー_場コード`), ''),
-      nullif(trim(`レースキー_年`), ''),
-      nullif(trim(`レースキー_回`), ''),
-      nullif(trim(`レースキー_日`), ''),
-      nullif(trim(`レースキー_Ｒ`), '')
+      `レースキー_場コード`,
+      `レースキー_年`,
+      `レースキー_回`,
+      `レースキー_日`,
+      `レースキー_Ｒ`
     ) as `レースキー`,
-    concat(
-      nullif(trim(`レースキー_場コード`), ''),
-      nullif(trim(`レースキー_年`), ''),
-      nullif(trim(`レースキー_回`), ''),
-      nullif(trim(`レースキー_日`), '')
-    ) as `開催キー`,
     nullif(trim(`レースキー_場コード`), '') as `レースキー_場コード`,
     nullif(trim(`レースキー_年`), '') as `レースキー_年`,
     nullif(trim(`レースキー_回`), '') as `レースキー_回`,
@@ -96,7 +85,10 @@ with
     cast(coalesce(nullif(trim(`馬券発売フラグ_ワイド`), ''), '0') as boolean) as `馬券発売フラグ_ワイド`,
     cast(coalesce(nullif(trim(`馬券発売フラグ_３連複`), ''), '0') as boolean) as `馬券発売フラグ_３連複`,
     cast(coalesce(nullif(trim(`馬券発売フラグ_３連単`), ''), '0') as boolean) as `馬券発売フラグ_３連単`,
-    nullif(trim(`WIN5フラグ`), '') as `WIN5フラグ`
+    nullif(trim(`WIN5フラグ`), '') as `WIN5フラグ`,
+    -- Audit columns
+    file_name AS _file_name,
+    sha256 AS _sha256
   from
     source_deduped
   )
