@@ -21,6 +21,11 @@ models:
         data_tests:
           - unique
           - not_null
+          # TODO: There are a handful of keys in BAC that do not exist in KYI
+          # - relationships:
+          #     arguments:
+          #       to: ref('stg_jrdb__kyi')
+          #       field: "`レースキー`"
 
       - name: レースキー_場コード
         quote: true

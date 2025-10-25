@@ -1,0 +1,1020 @@
+sources:
+  - name: jrdb
+    schema: jhra_raw
+    tables:
+      - name: raw_jrdb__kyi
+        description: 競走馬データ仕様
+
+models:
+  - name: stg_jrdb__kyi
+    description: 競走馬ごとのデータ。IDM、各指数を格納、放牧先を追加。
+    columns:
+      - name: kyi_sk
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_場コード
+        quote: true
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__racetrack_codes')
+                field: code
+
+      - name: レースキー_年
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_回
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_日
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_Ｒ
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 馬番
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 血統登録番号
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 馬名
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: ＩＤＭ
+        quote: true
+        description: |
+          □ＩＤＭ（インデックスメモリー）
+          IDMとは、スピード指値に記憶（レース内容、馬場状態、当日の馬のコンディショ
+          ン等）を数値化したものです。勿論、馬の状態、馬装具点検を肉眼で同じ場所で
+          客観的に観るようにしています。ようするに競馬は時計だけではなく”記憶”も
+          重要ではないかとの理論です。詳細なファクターは下記の通りです。
+
+          　IDM「インデックス（スピード能力）・メモリー（記憶）」の算出方法。
+          　　Ａ   基準タイム…  各競馬場 （距離・芝・ダート）別走破タイム。
+          　　Ｂ   馬場差…      芝、ダート馬場状態（速良・良・遅良・速稍重・
+          　　                   稍重・遅稍重・速重・重・遅い重・速不・不・遅不）
+          　　                   天候（雨・雪・風・雷・霧）
+          　　Ｃ   斤量…        別定・ハンディ・馬齢・基準0.5kg。
+          　　Ｄ   レース内容…  出遅れ・不利・落鉄・放馬・勝ち振り等。
+          　　Ｅ   位地取り…    最内・内・中・外・大外の馬場差。
+          　　                   各コーナー差。
+          　　Ｆ   ペース…      レースペース．前３F/５F．後３F/２F。
+
+          等をレース毎に数値化した数値に他のファクター（秘）を取り入れ該当レース条
+          件に調整した数値です。 現在、馬柱にIDMと表記されていますが、実際はIDM調
+          整値です。
+        data_tests:
+          - not_null
+
+      - name: 騎手指数
+        quote: true
+        description: 基準オッズと騎手の連対率の関係を基に算出された指数値。
+        data_tests:
+          - not_null
+
+      - name: 情報指数
+        quote: true
+        description: 基準オッズ、厩舎指数、調教指数等様々な情報を基に算出された指数値。
+        data_tests:
+          - not_null
+
+      - name: 総合指数
+        quote: true
+        description: ＩＤＭ、騎手指数、情報指数を合計した値。
+        data_tests:
+          - not_null
+
+      - name: 脚質
+        quote: true
+        description: 過去の競走実績よりその馬の脚質を判断したコード。
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__run_style_codes')
+                field: code
+
+      - name: 距離適性
+        quote: true
+        description: 該当馬の実績、血統、馬体から判断される距離適性をコード化。
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__distance_aptitude_codes')
+                field: code
+
+      - name: 上昇度
+        quote: true
+        description: 前走から（次走へ向けて）の上積みの度合い
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__improvement_codes')
+                field: code
+
+      - name: ローテーション
+        quote: true
+        description: 間に金曜日が入っている数で決定、連闘は０、初出走はスペースとなる。
+
+      - name: 基準オッズ
+        quote: true
+        description: |
+          関西・関東の各専門情報紙(予想・評論家等)(関東約9紙150人前後・関西約8紙100人前後)
+          の印を独自に分析し算出した単勝基準オッズ(時系列分析対応)になっています。
+        data_tests:
+          - not_null
+
+      - name: 基準人気順位
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 基準複勝オッズ
+        quote: true
+        description: |
+          関西・関東の各専門情報紙(予想・評論家等)(関東約9紙150人前後・関西約8紙100人前後)
+          の印を独自に分析し算出した複勝基準オッズ(時系列分析対応)になっています。
+        data_tests:
+          - not_null
+
+      - name: 基準複勝人気順位
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 特定情報◎
+        quote: true
+        description: 専門情報紙の特定の情報値。
+        data_tests:
+          - not_null
+
+      - name: 特定情報○
+        quote: true
+        description: 専門情報紙の特定の情報値。
+        data_tests:
+          - not_null
+
+      - name: 特定情報▲
+        quote: true
+        description: 専門情報紙の特定の情報値。
+        data_tests:
+          - not_null
+      - name: 特定情報△
+        quote: true
+        description: 専門情報紙の特定の情報値。
+        data_tests:
+          - not_null
+
+
+      - name: 特定情報×
+        quote: true
+        description: 専門情報紙の特定の情報値。
+        data_tests:
+          - not_null
+
+      - name: 総合情報◎
+        quote: true
+        description: 情報・専門紙の印数（総合）
+        data_tests:
+          - not_null
+
+      - name: 総合情報○
+        quote: true
+        description: 情報・専門紙の印数（総合）
+        data_tests:
+          - not_null
+
+      - name: 総合情報▲
+        quote: true
+        description: 情報・専門紙の印数（総合）
+        data_tests:
+          - not_null
+
+      - name: 総合情報△
+        quote: true
+        description: 情報・専門紙の印数（総合）
+        data_tests:
+          - not_null
+
+      - name: 総合情報×
+        quote: true
+        description: 情報・専門紙の印数（総合）
+        data_tests:
+          - not_null
+
+      - name: 人気指数
+        quote: true
+        description: その馬の人気を指数化した値。
+        data_tests:
+          - not_null
+
+      - name: 調教指数
+        quote: true
+        description: |
+          関西・関東の各専門情報紙を分析し、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
+          各専門紙・情報紙の予想・評論家等が担当の調教コースにおいてどれだけ正確に馬の状態を判断しているかを数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
+        data_tests:
+          - not_null
+
+      - name: 厩舎指数
+        quote: true
+        description: |
+          調教指数同様、独自のデータベースを作成、そのデータベースをもとに下記の指数を算出しています。
+          各専門紙・情報紙の予想・評論家等と厩舎との密接度を数値化したデータベースをもとに、専門情報紙の印を分析して算出した数値。
+        data_tests:
+          - not_null
+
+      - name: 調教矢印コード
+        quote: true
+        description: |
+          調教から見た馬の調子をわかりやすく５段階評価したもの。
+          (JRDBデータコード表参照)
+          Raw data contains 2 nulls from 1999, replaced with most common value.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__trainer_evaluation_codes')
+                field: code
+
+      - name: 厩舎評価コード
+        quote: true
+        description: |
+          厩舎サイドの期待度をわかりやすく４段階評価したもの。
+          (JRDBデータコード表参照)
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__stable_evaluation_codes')
+                field: code
+
+      - name: 騎手期待連対率
+        quote: true
+        description: |
+          騎手別に、基準オッズ範囲毎の連対成績を集計したもの。
+          騎手Ａが単勝基準オッズＢの馬に乗った場合の過去の成績を集計し、算出された連対率を騎手期待連対率としています。
+          データには、今回の基準オッズにおける騎手期待連対率が入ります。
+        data_tests:
+          - not_null
+
+      - name: 激走指数
+        quote: true
+        description: |
+          過去の高配当レースを分析し得られた激走するさまざまな要素を数値化し合計したもの。主な要素を以下に示します。
+          コース枠脚質、騎手、騎手乗り替り、馬具変更、距離適正、クラス、馬体、気配、上昇度、激走情報指数（専門情報紙の印を激走用に分析したもの）
+          ※競馬新聞の大穴激走注目馬は、人気が低く、激走指数の高い馬です。
+        data_tests:
+          - not_null
+
+      - name: 蹄コード
+        quote: true
+        description: |
+          パドックでの観察により馬の蹄を分類したもの。
+          各馬の蹄の大きさを大・中・小・細の４種類に、形状を立・標準・標準立・標準ベ・ベタの５種類に分類しています。
+          「中ベタ」なら蹄の大きさは中ぐらいでベタ蹄という意味です。
+          芝の重馬場、荒馬場では蹄の立っている馬が有利になります。但しダート戦に関してはこの限りではありません。
+          (JRDBデータコード表参照)
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__paddock_observed_hoof_codes')
+                field: code
+
+      - name: 重適性コード
+        quote: true
+        description: |
+          過去の成績、蹄の形状等よりその馬の重馬場への適性を３段階評価したもの。
+          (JRDBデータコード表参照)
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__heavy_ground_aptitude_codes')
+                field: code
+
+      - name: クラスコード
+        quote: true
+        description: |
+          馬の能力をクラスで分けたもの。
+          芝ＯＰＡ　・・・　芝のオープン戦で勝つ能力のある馬。
+          芝ＯＰＢ　・・・　芝のオープン戦で好戦できる能力のある馬。
+          芝ＯＰＣ　・・・　芝のオープン戦で頭打ちの馬。
+          (JRDBデータコード表参照)
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__class_codes')
+                field: code
+
+      - name: ブリンカー
+        quote: true
+        description: 1:初装着,2:再装着,3:ブリンカ
+        data_tests:
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
+      - name: 騎手名
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 負担重量
+        quote: true
+        description: 0.1Kg単位
+        data_tests:
+          - not_null
+
+      - name: 見習い区分
+        quote: true
+        description: 1:☆(1K減),2:△(2K減),3:▲(3K減),4:★(4K減),9:◇(2K減)
+        data_tests:
+          - accepted_values:
+              values: [ 1, 2, 3, 4, 9 ]
+
+      - name: 調教師名
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 調教師所属
+        quote: true
+        description: 美浦など. Only like 6 null rows.
+
+      - name: 他データリンク用キー_前走１競走成績キー
+        description: 0610412120090222, etc.
+        quote: true
+      - name: 他データリンク用キー_前走２競走成績キー
+        quote: true
+      - name: 他データリンク用キー_前走３競走成績キー
+        quote: true
+      - name: 他データリンク用キー_前走４競走成績キー
+        quote: true
+      - name: 他データリンク用キー_前走５競走成績キー
+        quote: true
+
+      - name: 他データリンク用キー_前走１レースキー
+        quote: true
+      - name: 他データリンク用キー_前走２レースキー
+        quote: true
+      - name: 他データリンク用キー_前走３レースキー
+        quote: true
+      - name: 他データリンク用キー_前走４レースキー
+        quote: true
+      - name: 他データリンク用キー_前走５レースキー
+        quote: true
+
+      - name: 枠番
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 印コード_総合印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_ＩＤＭ印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_情報印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_騎手印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_厩舎印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_調教印
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__symbol_codes')
+              field: code
+
+      - name: 印コード_激走印
+        quote: true
+        description: 1:激走馬
+        data_tests:
+          - not_null
+
+      - name: 芝適性コード
+        quote: true
+        description: |
+          1:◎, 2:○, 3:△
+          The value 4 is undocumented but appears a handful of times in the data.
+
+      - name: ダ適性コード
+        quote: true
+        description: |
+          1:◎, 2:○, 3:△
+          The values 4, 5, 6 are undocumented but appear a handful of times in the data.
+
+      # TODO: Link to master
+      - name: 騎手コード
+        quote: true
+        description: 騎手マスタとリンク
+        data_tests:
+          - not_null
+
+      # TODO: Link to master
+      - name: 調教師コード
+        quote: true
+        description: |
+          調教師マスタとリンク
+          1 null value present.
+
+      - name: 賞金情報_獲得賞金
+        quote: true
+        description: |
+          単位万円(含む付加賞)
+          Includes a handful of nulls, some of which should be greater than 0.
+          E.g., レースキー:10042709,馬番:10
+
+      - name: 賞金情報_収得賞金
+        quote: true
+        description: 単位万円
+        data_tests:
+          - not_null
+
+      - name: 賞金情報_条件クラス
+        quote: true
+        description: |
+          収得賞金から出走できるクラス
+          14 nulls.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_condition_codes')
+                field: group_code
+
+      - name: 展開予想データ_テン指数
+        quote: true
+        description: 予想テン指数. Many nulls.
+
+      - name: 展開予想データ_ペース指数
+        quote: true
+        description: 予想ペース指数
+
+      - name: 展開予想データ_上がり指数
+        quote: true
+        description: 予想上がり指数
+
+      - name: 展開予想データ_位置指数
+        quote: true
+        description: 予想位置指数
+
+      - name: 展開予想データ_ペース予想
+        quote: true
+        description: |
+          H,M,S
+          Years 2019,2020 have values 0,1,2,3,4 but schema says only S,M,H
+          So we mapped 0,1 to S; 2 to M; 3,4 to H; and kept existing S,M,H as is.
+        data_tests:
+          - accepted_values:
+              values: [ H, M, S ]
+
+      - name: 展開予想データ_道中順位
+        quote: true
+        description: Many nulls.
+
+      - name: 展開予想データ_道中差
+        quote: true
+        description: 半馬身(約0.1秒)単位. Many nulls.
+
+      - name: 展開予想データ_道中内外
+        quote: true
+        data_tests:
+          - accepted_values:
+              values: [ 2, 3, 4, 5 ]
+  
+      - name: 展開予想データ_後３Ｆ順位
+        quote: true
+
+      - name: 展開予想データ_後３Ｆ差
+        quote: true
+
+      - name: 展開予想データ_後３Ｆ内外
+        quote: true
+        data_tests:
+          - accepted_values:
+              values: [ 2, 3, 4, 5 ]
+
+      - name: 展開予想データ_ゴール順位
+        quote: true
+      
+      - name: 展開予想データ_ゴール差
+        quote: true
+      
+      - name: 展開予想データ_ゴール内外
+        quote: true
+        data_tests:
+          - accepted_values:
+              values: [ 1, 2, 3, 4, 5 ]
+      
+      - name: 展開予想データ_展開記号
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__race_development_codes')
+              field: code
+
+      - name: 距離適性２
+        quote: true
+        description: What does this field mean given we already have 距離適性?
+        data_tests:
+          - relationships:
+              to: ref('jrdb__distance_aptitude_codes')
+              field: code
+
+      # - name: 枠確定馬体重
+      #   quote: true
+      #   description: |
+      #     Note: Useless. Only contains null values.
+      # - name: 枠確定馬体重増減
+      #   quote: true
+      #   description: |
+      #     符号+数字２桁,データ無:スペース
+      #     Note: Useless. Only contains null values.
+
+      - name: 取消フラグ
+        quote: true
+        description: 1:取消
+        data_tests:
+          - not_null
+
+      - name: 性別コード
+        quote: true
+        description: 1:牡,2:牝,3,セン
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
+      - name: 馬主名
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 馬主会コード
+        quote: true
+        description: |
+          競馬場毎にあり、コードは、場コードと同じです。馬主会に所属されていない馬主の方もおられます。
+          馬主会が「不明」の方は、スペースになっています。
+          例）京都馬主会 ⇒ "08"
+          ※"10" は、九州馬主会です。
+          "00":無所属,スペース:不明
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__owner_association_codes')
+                field: code
+
+      - name: 馬記号コード
+        quote: true
+        data_tests:
+          - relationships:
+              to: ref('jrdb__horse_symbol_codes')
+              field: code
+
+      - name: 激走順位
+        quote: true
+
+        description: レース出走馬中での順位
+      - name: LS指数順位
+        quote: true
+
+      - name: テン指数順位
+        quote: true
+
+      - name: ペース指数順位
+        quote: true
+
+      - name: 上がり指数順位
+        quote: true
+
+      - name: 位置指数順位
+        quote: true
+
+      - name: 騎手期待単勝率
+        quote: true
+
+      - name: 騎手期待３着内率
+        quote: true
+
+      - name: 輸送区分
+        quote: true
+        description: |
+          滞在、遠征などの輸送過程を表します。直前輸送（直輸）を通常／遠征に分けました。
+          1 滞在 ローカル競馬場で、競馬場に入厩している馬を表します。
+          2 通常 栗東→京都、美浦→中山等や、札幌→函館を通常としています。
+          3 遠征 栗東→中山、栗東→小倉等の長距離輸送を遠征としています。
+          4 連闘 下記【滞在】の説明参照
+          0 不明 
+
+          輸送区分は、レース週の最終追い切り（通常は、水or木）の場所で判断しています。
+
+          【滞在】の定義
+          　ローカル競馬場（札幌、函館、福島、新潟、小倉）開催において
+          　レース週の最終追い切りを、当該競馬場で行っている場合、【滞在】としています。
+          　連闘馬の場合、おそらく滞在と思われますが、"連闘"と分類しています。
+          　滞在馬で分析する場合、"滞在" あるいは"連闘"と指定すると実際的です。
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 0, 1, 2, 3, 4 ]
+
+      # - name: 走法
+      #   quote: true
+      #   description: don't use, this field is no longer updated
+
+      - name: 体型_全体
+        quote: true
+        description: 馬体の全体的な形状
+        data_tests:
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
+      # - name: 体型_背中
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_胴
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_尻
+      #   quote: true
+      #   description: 大きさ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_トモ
+      #   quote: true
+      #   description: 角度
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_腹袋
+      #   quote: true
+      #   description: 大きさ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_頭
+      #   quote: true
+      #   description: 大きさ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_首
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_胸
+      #   quote: true
+      #   description: 大きさ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_肩
+      #   quote: true
+      #   description: 角度
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_前長
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_後長
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_前幅
+      #   quote: true
+      #   description: 前脚の歩幅
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_後幅
+      #   quote: true
+      #   description: 後脚の歩幅
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_前繋
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      # - name: 体型_後繋
+      #   quote: true
+      #   description: 長さ
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3 ]
+      #   # 体型_尾 and 体型_振 contain mostly nulls and shouldn't be used
+      # - name: 体型_尾
+      #   quote: true
+      #   description: つけ根の上げ方	1:上げる,2:下げる
+      # - name: 体型_振
+      #   quote: true
+      #   description: 尾の振り方	1:激しい,2:少し,3:あまり振らない
+      # - name: 体型_予備1
+      #   quote: true
+      # - name: 体型_予備2
+      #   quote: true
+      # - name: 体型_予備3
+      #   quote: true
+      # - name: 体型_予備4
+      #   quote: true
+      # - name: 体型_予備5
+      #   quote: true
+      # - name: 体型_予備6
+      #   quote: true
+      # - name: 体型_予備7
+      #   quote: true
+      # - name: 体型_予備8
+      #   quote: true
+      # - name: 体型総合１
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 体型総合２
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 体型総合３
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 馬特記１
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 馬特記２
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 馬特記３
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__special_mention_codes')
+      #         field: code
+      # - name: 展開参考データ_馬スタート指数
+      #   quote: true
+      # - name: 展開参考データ_馬出遅率
+      #   quote: true
+
+      # # このフィールドの意味/形式が分からない
+      # - name: 展開参考データ_参考前走
+      #   quote: true
+      #   description: 参考となる前走（２走分格納）
+
+      # # todo: relationship with 騎手 master
+      # - name: 展開参考データ_参考前走騎手コード
+      #   quote: true
+      #   description: 参考となる前走の騎手
+
+      # - name: 万券指数
+      #   quote: true
+      #   description: |
+      #     ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を加え、
+      #     さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
+
+      # # 1-8が格納されている
+      # - name: 万券印
+      #   quote: true
+      #   description: |
+      #     ＪＲＤＢでの穴馬分析は激走指数ですが、これをベースに穴得意の展開予想を加え、
+      #     さらには人気となりがちな情報を減点し、万券に狙いを定めた分析です。
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__symbol_codes')
+      #         field: code
+
+      # # このフィールドは19'以降全部「0:通常」になっているので使わない方が良さそう
+      # - name: 降級フラグ
+      #   quote: true
+      #   description: |
+      #     ４歳馬の場合６月中旬ごろクラス編成が行なわれます。この後、出走可能なレース
+      #     条件が下がり前半より下のレース条件で出走する場合、このフラグがONとなります。
+      #     クラスが２つ下のレースに出走できる２段階降級もあります。
+      #     1:降級, 2:２段階降級, 0:通常
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 2 ]
+
+      # - name: 激走タイプ
+      #   quote: true
+      #   description: |
+      #     激走馬選定の候補に上がった馬を含めた、激走馬のタイプです。
+      #     穴馬分析用データとして出力しました。
+
+      #     タイプ
+      #     A1 激走馬、中位人気グループで激走指数１番手
+      #     A2 激走馬、中位人気グループで激走指数２番手
+      #     A3 激走馬、中位人気グループで激走指数３番手
+      #     A4 中位人気グループで激走指数４番手
+      #     B1 下位人気グループで激走指数１番手
+      #     B2 下位人気グループで激走指数１番手
+
+      #     基本的によく来ている激走馬は、"A1"と"A2"です。
+      #     現在"A4","B1","B2"は、激走馬としていません。
+
+      #     ※以前は、３頭目の激走馬は"B1"にしていましたが、成績が良くないため、"A3"に変更しました。
+      #     激走馬は分析により、最適な激走馬タイプに変更される可能性があります。
+      #     過去分析される場合は、激走タイプを使用することをお勧めします。
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ A1, A2, A3, A4, B1, B2 ]
+      # - name: 休養理由分類コード
+      #   quote: true
+      #   data_tests:
+      #     - relationships:
+      #         to: ref('jrdb__rest_reason_codes')
+      #         field: code
+      # - name: 芝ダ障害フラグ
+      #   quote: true
+      #   description: |
+      #     0:変化なし
+      #     1:トラック替り(芝ダ替り)
+      #     2:初トラック(初芝,初ダ,初障)
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 2 ]
+      # - name: 距離フラグ
+      #   quote: true
+      #   description: |
+      #     0: 経験有り
+      #     1: 最長距離
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1 ]
+      # - name: クラスフラグ
+      #   quote: true
+      #   description: |
+      #     0: 変化なし
+      #     1: 昇級初戦
+      #     2: 降級
+      #     3: 格上挑戦
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 2, 3 ]
+      # - name: 転厩フラグ
+      #   quote: true
+      #   description: |
+      #     0:変化なし
+      #     1～3:転厩何戦目（３戦目まで）
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 2, 3 ]
+      # - name: 去勢フラグ
+      #   quote: true
+      #   description: |
+      #     0:変化なし
+      #     1～3:去勢何戦目（３戦目まで）
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 2, 3 ]
+      # - name: 乗替フラグ
+      #   quote: true
+      #   description: |
+      #     0: 変化なし
+      #     1: 乗替 (初)
+      #     9: 乗替 (再)
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 0, 1, 9 ]
+
+      # # just contains blank space
+      # - name: 予備フラグ
+      #   quote: true
+
+      # - name: 入厩何走目
+      #   quote: true
+      #   description: 例）2:入厩後２走目
+      # - name: 入厩年月日
+      #   quote: true
+      # - name: 入厩何日前
+      #   quote: true
+      #   description: |
+      #     レース日から遡っての入厩の日数
+      #     （今走前に入厩の場合）
+      # - name: 放牧先
+      #   quote: true
+      #   description: |
+      #     判明した分だけ出力されます。
+      #     地域名だけの場合もあります。
+      #     「放牧先」には最近入厩してきた元の出発地（主に牧場名）が入ります。
+      #     入厩何走目が１の場合は、この中間で放牧に出されていたことになり、２なら、放牧から帰厩して、２走目となります。
+      #     入厩何日前は、この中間で放牧に出されていた場合にセットされます。
+      # - name: 放牧先ランク
+      #   quote: true
+      #   description: |
+      #     休み明けの放牧先データを分析して放牧先ランクを作成。
+
+      #     連対率を放牧先別に分析し、ランク分けを行いました。
+      #     １３％以上　　Ａランク　「休み明けのハンデが無い」ということ
+      #     １１－１３％　Ｂランク
+      #     ９－１１％　　Ｃランク　普通
+      #     ７－９％　　　Ｄランク
+      #     ７％以下　　　Ｅランク
+
+      #     ※データが２０件以下はランク未設定としています。
+
+      #     ※入厩・放牧先データについての注意事項
+      #     ・放牧先に関して「○○県」「○○町」など、地域のみ掲載する場合があります。
+      #     ・入厩のパターン等によっては、入厩データがない場合もあります。
+      #     ・入厩情報に関してはレース前日にＪＲＤＢが入手しているデータまでが反映されます。
+      #     ・入厩データが出走に間に合っていない場合、また入厩データがない場合は「情報無し」となります。
+      #     ・間に合わなかったデータは後日取り込まれることになります。それを反映したデータは定期的に再作成します。
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ A, B, C, D, E ]
+      # - name: 厩舎ランク
+      #   quote: true
+      #   description: |
+      #     ランクと色付けの対応について。 
+      #     デフォルトは５。→何も色無し。
+      #     ４は欠番
+      #     １・S級　ピンク
+      #     ２・A級　オレンジ
+      #     ３・B級　黄色
+      #     ５・ノーマル
+      #     ６・D級　青
+      #     ７・E級　紫
+      #     ８・F級　灰色
+      #     ９・その他総数１０以下の厩舎
+      #   data_tests:
+      #     - accepted_values:
+      #         values: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+
+      - name: _file_name
+        data_tests:
+          - not_null
+
+      - name: _sha256
+        data_tests:
+          - not_null

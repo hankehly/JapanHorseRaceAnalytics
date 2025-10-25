@@ -1,4 +1,5 @@
 code,name
+"00",00_undefined
 "01",芝Ｇ１
 "02",芝Ｇ２
 "03",芝Ｇ３
@@ -17,6 +18,8 @@ code,name
 "16",芝未 A
 "17",芝未 B
 "18",芝未 C
+"19",19_undefined
+"20",20_undefined
 "21",ダＧ１
 "22",ダＧ２
 "23",ダＧ３
@@ -47,3 +50,7 @@ code,name
 "60",障未 Ａ
 "61",障未 Ｂ
 "62",障未 Ｃ
+"63",63_undefined
+"64",64_undefined
+"65",65_undefined
+"66",66_undefined

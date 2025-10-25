@@ -21,6 +21,10 @@ models:
         data_tests:
           - unique
           - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_jrdb__kyi')
+                field: "`レースキー`"
 
       - name: レースキー_場コード
         quote: true
