@@ -87,8 +87,8 @@ with
     cast(coalesce(nullif(trim(`馬券発売フラグ_３連単`), ''), '0') as boolean) as `馬券発売フラグ_３連単`,
     nullif(trim(`WIN5フラグ`), '') as `WIN5フラグ`,
     -- Audit columns
-    file_name AS _file_name,
-    sha256 AS _sha256
+    file_name as _file_name,
+    sha256 as _sha256
   from
     source_deduped
   )

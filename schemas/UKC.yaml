@@ -81,7 +81,9 @@
   byte_length: 2
   format: "99"
   relative: 218
-  comments: 競馬場毎にある。場コードと同じ
+  comments: |
+    競馬場毎にある。場コードと同じ。
+    参考データです。設定されていないデータが有ります。
 - name: 生産者名
   repeat_factor: 1
   byte_length: 40
@@ -111,10 +113,14 @@
   byte_length: 4
   format: "9"
   relative: 277
-  comments: ""
+  comments: |
+    前２桁：血統を１２系統に分けた大系統コードです。
+    後２桁：小系統コードです。
 - name: 母父系統コード
   repeat_factor: 1
   byte_length: 4
   format: "9"
   relative: 281
-  comments: ""
+  comments: |
+    前２桁：血統を１２系統に分けた大系統コードです。
+    後２桁：小系統コードです。

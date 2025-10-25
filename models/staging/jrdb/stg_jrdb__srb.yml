@@ -1,0 +1,117 @@
+sources:
+  - name: jrdb
+    schema: jhra_raw
+    tables:
+      - name: raw_jrdb__srb
+
+models:
+  - name: stg_jrdb__srb
+    description: |
+      成績レースデータ仕様
+      Duplicates: No
+
+    columns:
+      - name: srb_sk
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー
+        quote: true
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー_場コード
+        quote: true
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__racetrack_codes')
+                field: code
+
+      - name: レースキー_年
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_回
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_日
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_Ｒ
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: ハロンタイム
+        quote: true
+        description: |
+          3*18=54BYTE 先頭馬の１ハロン毎のタイム 0.1秒単位
+          1レース距離が200Mで割れない場合（1700や2100Mのとき）1ハロン目のデータは、100Mのタイムとなります。
+          例: 1150Mの場合は、150M
+        data_tests:
+          - not_null
+          - array_length_equals:
+              length: 18
+
+      - name: コーナー位置取り_１コーナー
+        quote: true
+
+      - name: コーナー位置取り_２コーナー
+        quote: true
+
+      - name: コーナー位置取り_３コーナー
+        quote: true
+
+      - name: コーナー位置取り_４コーナー
+        quote: true
+        description: |
+          芝直線1000mなど、コーナーが無い場合はNULLとなります。
+          E.g., https://db.netkeiba.com/race/200804010310/
+
+      - name: ペースアップ位置
+        quote: true
+        description: 残りハロン数
+
+      - name: トラックバイアス_１角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_２角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_向正
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_３角
+        quote: true
+        description: （内、中、外）
+
+      - name: トラックバイアス_４角
+        quote: true
+        description: （最内、内、中、外、大外）
+
+      - name: トラックバイアス_直線
+        quote: true
+        description: （最内、内、中、外、大外）
+
+      - name: レースコメント
+        quote: true
+    
+      - name: _file_name
+        data_tests:
+          - not_null
+
+      - name: _sha256
+        data_tests:
+          - not_null

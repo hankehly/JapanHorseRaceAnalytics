@@ -2,6 +2,6 @@
 show_failed_sql:
     @jq -r '.results[] | select(.status=="fail").compiled_code' target/run_results.json
 
-[doc("Print the netkeiba link for a given race key")]
+[doc("Print the netkeiba link for a given race or horse")]
 netkeiba_link *args:
     @uv run python scripts/netkeiba_link.py {{args}}

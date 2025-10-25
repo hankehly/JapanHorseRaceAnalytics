@@ -41,8 +41,8 @@ with
         nullif(trim(`トラックバイアス_直線`), '') as `トラックバイアス_直線`,
         nullif(trim(`レースコメント`), '') as `レースコメント`,
         -- Audit columns
-        file_name AS _file_name,
-        sha256 AS _sha256
+        file_name as _file_name,
+        sha256 as _sha256
     from
         source
     )

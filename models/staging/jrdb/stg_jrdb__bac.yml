@@ -1,0 +1,317 @@
+sources:
+  - name: jrdb
+    schema: jhra_raw
+    tables:
+      - name: raw_jrdb__bac
+
+models:
+  - name: stg_jrdb__bac
+    description: >
+      番組データ仕様
+      開催キー contains duplicates. E.g., see 開催キー in '061345', '091115', '101125'. This is likely due to rescheduling due to bad weather. Keep rows with the latest date (verified in netkeiba).
+
+    columns:
+      - name: bac_sk
+        tests:
+          - unique
+          - not_null
+
+      - name: レースキー
+        quote: true
+        data_tests:
+          - unique
+          - not_null
+
+      - name: レースキー_場コード
+        quote: true
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__racetrack_codes')
+                field: code
+
+      - name: レースキー_年
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_回
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_日
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レースキー_Ｒ
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 年月日
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 発走時間
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: 発走日時
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レース条件_距離
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: レース条件_トラック情報_芝ダ障害コード
+        quote: true
+        description: 1:芝, 2:ダート, 3:障害
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
+      - name: レース条件_トラック情報_右左
+        quote: true
+        description: 1:右, 2:左, 3:直, 9:他
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3, 9 ]
+
+      - name: レース条件_トラック情報_内外
+        quote: true
+        description: |-
+          1:通常(内), 2:外, 3,直ダ, 9:他
+          ※障害のトラックは、以下の２通りとなります。
+            "393":障害直線ダート
+            "391":障害直線芝
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3, 9, 393, 391 ]
+
+      - name: レース条件_種別
+        quote: true
+        description: ４歳以上等、→JRDBデータコード表
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_category_codes')
+                field: code
+
+      - name: レース条件_条件
+        quote: true
+        description: 900万下等 →JRDBデータコード表
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_condition_codes')
+                field: code
+
+      - name: レース条件_記号_馬の種類
+        quote: true
+        description: １桁目　馬の種類による条件
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_symbol_1')
+                field: code
+
+      - name: レース条件_記号_馬の性別
+        quote: true
+        description: ２桁目　馬の性別による条件
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_symbol_2')
+                field: code
+
+      - name: レース条件_記号_交流競走
+        quote: true
+        description: ３桁目　交流競走の指定
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__race_symbol_3')
+                field: code
+
+      - name: レース条件_重量
+        quote: true
+        description: ハンデ等 →JRDBデータコード表
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('jrdb__weight_condition_codes')
+                field: code
+
+      - name: レース条件_グレード
+        quote: true
+        description: Ｇ１等 →JRDBデータコード表
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('jrdb__grade_codes')
+                field: code
+
+      - name: レース名
+        quote: true
+        description: レース名の通称（全角２５文字）（札幌日刊スポーツ杯など）
+
+      - name: 回数
+        quote: true
+        description: 第ZZ9回（全角半角混在）（第53回など）
+
+      - name: 頭数
+        quote: true
+        data_tests:
+          - not_null
+
+      - name: コース
+        quote: true
+        description: 1:A, 2:A1, 3:A2, 4:B, 5:C, 6:D
+        data_tests:
+          - accepted_values:
+              values: [ 1, 2, 3, 4, 5, 6 ]
+
+      - name: 開催区分
+        quote: true
+        description: 1:関東, 2:関西, 3:ローカル
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3 ]
+
+      - name: レース名短縮
+        quote: true
+        description: 藻岩山特など
+
+      - name: レース名９文字
+        quote: true
+        description: 藻岩山特別、３歳上５００万下など
+
+      - name: データ区分
+        quote: true
+        description: >
+          1:特別登録, 2:想定確定, 3:前日
+          メモ: 4も結構入っているけど、意味は不明
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [ 1, 2, 3, 4 ]
+
+      - name: １着賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: ２着賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: ３着賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: ４着賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: ５着賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: １着算入賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: ２着算入賞金
+        quote: true
+        description: 単位（万円）
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_単勝
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_複勝
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_枠連
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_馬連
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_馬単
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_ワイド
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_３連複
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: 馬券発売フラグ_３連単
+        quote: true
+        description: 1:発売, 0:発売無し
+        data_tests:
+          - not_null
+
+      - name: WIN5フラグ
+        quote: true
+        description: 1～5
+      
+      - name: _file_name
+        data_tests:
+          - not_null
+
+      - name: _sha256
+        data_tests:
+          - not_null

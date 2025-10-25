@@ -112,6 +112,13 @@ seeds:
     jrdb__run_style_codes:
       +column_types:
         code: string
+    jrdb__horse_owner_association_codes:
+      description: |
+        Codes for 馬主会コード.
+        This is a copy of the seed file seeds/jrdb__racetrack_codes.csv with additional "unknown" values.
+        See UKC schema for details.
+      +column_types:
+        code: string
     jrdb__horse_gear_codes:
       +column_types:
         code: string
