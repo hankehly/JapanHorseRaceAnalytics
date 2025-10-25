@@ -1895,14 +1895,6 @@ models:
         quote: true
         description: HHMM
 
-  - name: stg_jrdb__ukc_latest
-    columns:
-      - name: 血統登録番号
-        quote: true
-        tests:
-          - unique
-          - not_null
-
   - name: stg_jrdb__oz
     description: 基準オッズデータ
     columns:

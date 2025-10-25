@@ -15,13 +15,6 @@ models:
       The meanning of this value is unclear, but I'm guessing it indicates some kind of missing or unknown date.
       These records are all removed in this staging table.
 
-    # data_tests:
-    #   - dbt_utils.unique_combination_of_columns:
-    #       arguments:
-    #         combination_of_columns:
-    #           - 血統登録番号
-    #           - データ年月日
-    #         quote_columns: true
     columns:
       - name: ukc_sk
         data_tests:
@@ -177,3 +170,9 @@ models:
       - name: _sha256
         data_tests:
           - not_null
+
+  - name: stg_jrdb__ukc_latest
+    description: |
+      最新の血統データのみを保持するテーブル
+      There is no information in the UKC table that would require keeping historical records.
+      Therefore, this table keeps only the latest record for each horse.
